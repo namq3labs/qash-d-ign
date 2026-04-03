@@ -1,0 +1,24 @@
+"use client";
+
+// Demo mode: re-export mock socket provider
+import React, { createContext, useContext } from "react";
+
+export const SocketContext = createContext<{
+  socket: null;
+  changeSocketUrl: (newUrl: string) => void;
+} | null>({
+  socket: null,
+  changeSocketUrl: () => {},
+});
+
+export const useSocket = () => {
+  return useContext(SocketContext);
+};
+
+export function SocketProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <SocketContext.Provider value={{ socket: null, changeSocketUrl: () => {} }}>
+      {children}
+    </SocketContext.Provider>
+  );
+}
