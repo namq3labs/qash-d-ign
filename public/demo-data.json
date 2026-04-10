@@ -2,34 +2,34 @@
   "company": {
     "id": 1,
     "uuid": "c0a80101-0000-0000-0000-000000000001",
-    "companyName": "NovaPay Labs",
-    "registrationNumber": "202401234K",
-    "country": "Singapore",
-    "industry": "Fintech / Crypto Payments",
+    "companyName": "Nabla Finance",
+    "registrationNumber": "EU-NAB-2025001",
+    "country": "Germany",
+    "industry": "DeFi / Liquidity Infrastructure",
     "companySize": "1-10",
-    "website": "https://novapay.io",
-    "logo": null,
-    "createdAt": "2025-09-15T08:00:00.000Z",
-    "updatedAt": "2026-03-28T10:30:00.000Z"
+    "website": "https://nabla.finance",
+    "logo": "/nabla-logo.jpeg",
+    "createdAt": "2025-08-01T08:00:00.000Z",
+    "updatedAt": "2026-04-05T10:30:00.000Z"
   },
   "user": {
     "id": 1,
     "uuid": "u0a80101-0000-0000-0000-000000000001",
-    "email": "alex@novapay.io",
+    "email": "mieszko@nabla.finance",
     "role": "ADMIN",
     "isActive": true,
     "teamMembership": {
       "id": 1,
       "uuid": "tm-0001",
-      "firstName": "Alex",
-      "lastName": "Chen",
-      "position": "CEO",
+      "firstName": "Mieszko",
+      "lastName": "Manijak",
+      "position": "CEO / Co-founder",
       "role": "OWNER",
       "companyId": 1,
       "profilePicture": null,
       "company": {
         "id": 1,
-        "companyName": "NovaPay Labs"
+        "companyName": "Nabla Finance"
       }
     }
   },
@@ -37,127 +37,82 @@
     {
       "id": 1,
       "uuid": "tm-0001",
-      "firstName": "Alex",
-      "lastName": "Chen",
-      "email": "alex@novapay.io",
-      "position": "CEO",
+      "firstName": "Mieszko",
+      "lastName": "Manijak",
+      "email": "mieszko@nabla.finance",
+      "position": "CEO / Co-founder",
       "role": "OWNER",
       "status": "ACTIVE",
       "walletAddress": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef01",
-      "salary": 12000,
+      "salary": 10000,
+      "salaryCurrency": "USDC",
+      "profilePicture": null,
+      "joinedAt": "2025-08-01T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "uuid": "tm-0002",
+      "firstName": "Mitja",
+      "lastName": "Belak",
+      "email": "mitja@nabla.finance",
+      "position": "CTO / Co-founder",
+      "role": "ADMIN",
+      "status": "ACTIVE",
+      "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
+      "salary": 10000,
+      "salaryCurrency": "USDC",
+      "profilePicture": null,
+      "joinedAt": "2025-08-01T08:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "uuid": "tm-0003",
+      "firstName": "Andre",
+      "lastName": "Gaul",
+      "email": "andre@nabla.finance",
+      "position": "Advisor",
+      "role": "MEMBER",
+      "status": "ACTIVE",
+      "walletAddress": "0x3c4d5e6f7890abcdef1234567890abcdef010203",
+      "salary": 3000,
       "salaryCurrency": "USDC",
       "profilePicture": null,
       "joinedAt": "2025-09-15T08:00:00.000Z"
     },
     {
-      "id": 2,
-      "uuid": "tm-0002",
-      "firstName": "Sarah",
-      "lastName": "Kim",
-      "email": "sarah@novapay.io",
-      "position": "CTO",
-      "role": "ADMIN",
-      "status": "ACTIVE",
-      "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
-      "salary": 11000,
-      "salaryCurrency": "USDC",
-      "profilePicture": null,
-      "joinedAt": "2025-09-20T08:00:00.000Z"
-    },
-    {
-      "id": 3,
-      "uuid": "tm-0003",
-      "firstName": "Marcus",
-      "lastName": "Rivera",
-      "email": "marcus@novapay.io",
-      "position": "Senior Backend Engineer",
+      "id": 4,
+      "uuid": "tm-0004",
+      "firstName": "Aaron",
+      "lastName": "Lindner",
+      "email": "aaron@nabla.finance",
+      "position": "Advisor / Angel Investor",
       "role": "MEMBER",
       "status": "ACTIVE",
-      "walletAddress": "0x3c4d5e6f7890abcdef1234567890abcdef010203",
-      "salary": 9000,
+      "walletAddress": "0x4d5e6f7890abcdef1234567890abcdef01020304",
+      "salary": 2000,
       "salaryCurrency": "USDC",
       "profilePicture": null,
       "joinedAt": "2025-10-01T08:00:00.000Z"
     },
     {
-      "id": 4,
-      "uuid": "tm-0004",
-      "firstName": "Priya",
-      "lastName": "Sharma",
-      "email": "priya@novapay.io",
-      "position": "Frontend Engineer",
-      "role": "MEMBER",
-      "status": "ACTIVE",
-      "walletAddress": "0x4d5e6f7890abcdef1234567890abcdef01020304",
-      "salary": 8500,
-      "salaryCurrency": "USDC",
-      "profilePicture": null,
-      "joinedAt": "2025-10-15T08:00:00.000Z"
-    },
-    {
       "id": 5,
       "uuid": "tm-0005",
-      "firstName": "James",
-      "lastName": "Okonkwo",
-      "email": "james@novapay.io",
-      "position": "Smart Contract Engineer",
-      "role": "MEMBER",
-      "status": "ACTIVE",
-      "walletAddress": "0x5e6f7890abcdef1234567890abcdef0102030405",
-      "salary": 9500,
-      "salaryCurrency": "USDC",
-      "profilePicture": null,
-      "joinedAt": "2025-11-01T08:00:00.000Z"
-    },
-    {
-      "id": 6,
-      "uuid": "tm-0006",
-      "firstName": "Luna",
-      "lastName": "Park",
-      "email": "luna@novapay.io",
+      "firstName": "Sasha",
+      "lastName": "Pylypenko",
+      "email": "sasha@nabla.finance",
       "position": "Product Designer",
       "role": "MEMBER",
       "status": "ACTIVE",
-      "walletAddress": "0x6f7890abcdef1234567890abcdef010203040506",
-      "salary": 7500,
+      "walletAddress": "0x5e6f7890abcdef1234567890abcdef0102030405",
+      "salary": 5000,
       "salaryCurrency": "USDC",
       "profilePicture": null,
-      "joinedAt": "2025-11-15T08:00:00.000Z"
-    },
-    {
-      "id": 7,
-      "uuid": "tm-0007",
-      "firstName": "Daniel",
-      "lastName": "Tan",
-      "email": "daniel@novapay.io",
-      "position": "Growth & Marketing",
-      "role": "MEMBER",
-      "status": "ACTIVE",
-      "walletAddress": "0x7890abcdef1234567890abcdef01020304050607",
-      "salary": 7000,
-      "salaryCurrency": "USDC",
-      "profilePicture": null,
-      "joinedAt": "2025-12-01T08:00:00.000Z"
-    },
-    {
-      "id": 8,
-      "uuid": "tm-0008",
-      "firstName": "Mei",
-      "lastName": "Wong",
-      "email": "mei@novapay.io",
-      "position": "Operations Manager",
-      "role": "MEMBER",
-      "status": "ACTIVE",
-      "walletAddress": "0x890abcdef1234567890abcdef0102030405060708",
-      "salary": 7500,
-      "salaryCurrency": "USDC",
-      "profilePicture": null,
-      "joinedAt": "2025-12-15T08:00:00.000Z"
+      "joinedAt": "2025-11-01T08:00:00.000Z"
     }
   ],
   "teamStats": {
-    "total": 8,
-    "active": 8,
+    "total": 5,
+    "active": 5,
     "suspended": 0,
     "pending": 0
   },
@@ -167,7 +122,7 @@
       "uuid": "acc-uuid-001",
       "accountId": "0xa1b2c3d4e5f60001",
       "name": "Treasury",
-      "description": "Main treasury wallet for NovaPay Labs",
+      "description": "Main treasury wallet for Nabla Finance",
       "threshold": 2,
       "companyId": 1,
       "logo": null,
@@ -177,12 +132,12 @@
       ],
       "members": [
         {
-          "name": "Alex Chen",
+          "name": "Mieszko Manijak",
           "commitment": "0xabc001",
           "role": "OWNER"
         },
         {
-          "name": "Sarah Kim",
+          "name": "Mitja Belak",
           "commitment": "0xabc002",
           "role": "ADMIN"
         }
@@ -192,7 +147,7 @@
         "highSigners": 2,
         "lowSigners": 1
       },
-      "createdAt": "2025-09-20T08:00:00.000Z"
+      "createdAt": "2025-08-15T08:00:00.000Z"
     },
     {
       "id": "acc-002",
@@ -205,17 +160,17 @@
       "logo": null,
       "publicKeys": [
         "0xabc001",
-        "0xabc008"
+        "0xabc005"
       ],
       "members": [
         {
-          "name": "Alex Chen",
+          "name": "Mieszko Manijak",
           "commitment": "0xabc001",
           "role": "OWNER"
         },
         {
-          "name": "Mei Wong",
-          "commitment": "0xabc008",
+          "name": "Sasha Pylypenko",
+          "commitment": "0xabc005",
           "role": "MEMBER"
         }
       ],
@@ -224,7 +179,7 @@
         "highSigners": 2,
         "lowSigners": 1
       },
-      "createdAt": "2025-10-01T08:00:00.000Z"
+      "createdAt": "2025-09-01T08:00:00.000Z"
     }
   ],
   "balances": {
@@ -232,88 +187,88 @@
       {
         "faucetId": "0xusdc0001",
         "symbol": "USDC",
-        "amount": 485230.5,
+        "amount": 420000,
         "decimals": 6
       },
       {
         "faucetId": "0xeth0001",
         "symbol": "ETH",
-        "amount": 12.5,
+        "amount": 8.5,
         "decimals": 18,
-        "usdValue": 41250.0
+        "usdValue": 28050.0
       }
     ],
     "0xa1b2c3d4e5f60002": [
       {
         "faucetId": "0xusdc0001",
         "symbol": "USDC",
-        "amount": 52180.75,
+        "amount": 38500,
         "decimals": 6
       },
       {
         "faucetId": "0xeth0001",
         "symbol": "ETH",
-        "amount": 0.85,
+        "amount": 0.5,
         "decimals": 18,
-        "usdValue": 2805.0
+        "usdValue": 1650.0
       }
     ]
   },
-  "totalBalance": 581466.25,
+  "totalBalance": 488200,
   "contacts": [
     {
       "id": 1,
       "uuid": "ct-0001",
-      "name": "Sequoia Capital",
+      "name": "Polygon Labs",
       "walletAddress": "0x5e0c01aabbccddee1234567890abcdef01020304",
-      "email": "deals@sequoiacap.com",
-      "category": "Investors",
-      "notes": "Series A lead investor"
+      "email": "partnerships@polygon.technology",
+      "category": "Partners",
+      "notes": "Layer 2 scaling partner, liquidity integrations"
     },
     {
       "id": 2,
       "uuid": "ct-0002",
-      "name": "Alchemy Platform",
+      "name": "Aave Foundation",
       "walletAddress": "0xa1c002aabbccddee1234567890abcdef01020304",
-      "email": "billing@alchemy.com",
-      "category": "Vendors",
-      "notes": "Node infrastructure provider"
+      "email": "grants@aave.com",
+      "category": "Partners",
+      "notes": "Lending protocol integration partner"
     },
     {
       "id": 3,
       "uuid": "ct-0003",
-      "name": "Chainalysis Inc",
+      "name": "Chainlink Labs",
       "walletAddress": "0xc4a003aabbccddee1234567890abcdef01020304",
-      "email": "enterprise@chainalysis.com",
+      "email": "integrations@chain.link",
       "category": "Vendors",
-      "notes": "Compliance and analytics"
+      "notes": "Oracle provider for price feeds"
     },
     {
       "id": 4,
       "uuid": "ct-0004",
-      "name": "Ryan Zhao",
+      "name": "Jan Kowalski",
       "walletAddress": "0x4a0044aabbccddee1234567890abcdef01020304",
-      "email": "ryan@freelance.dev",
+      "email": "jan@securityaudit.io",
       "category": "Contractors",
-      "notes": "Security audit contractor"
+      "notes": "Freelance smart contract auditor"
     },
     {
       "id": 5,
       "uuid": "ct-0005",
-      "name": "Meridian Ventures",
+      "name": "Greenfield Capital",
       "walletAddress": "0xbe4005aabbccddee1234567890abcdef01020304",
-      "email": "portfolio@meridianvc.com",
+      "email": "portfolio@greenfieldcap.eu",
       "category": "Investors",
-      "notes": "Angel round participant"
+      "notes": "Seed round lead, Berlin-based angel syndicate"
     },
     {
       "id": 6,
       "uuid": "ct-0006",
-      "name": "Skyline Digital Agency",
+      "name": "Studio Forma",
       "walletAddress": "0x54e006aabbccddee1234567890abcdef01020304",
-      "email": "projects@skylinedigital.co",
+      "email": "hello@studioforma.design",
       "category": "Vendors",
-      "notes": "Branding and design agency"
+      "notes": "UX/UI design agency based in Warsaw"
     }
   ],
   "contactCategories": [
@@ -341,236 +296,167 @@
   "employeeGroups": [
     {
       "id": 1,
-      "name": "Engineering",
+      "name": "Core Team",
       "shape": "CIRCLE",
       "color": "#35ADE9",
       "order": 1,
       "companyId": 1,
-      "createdAt": "2025-09-15T08:00:00.000Z",
-      "updatedAt": "2025-09-15T08:00:00.000Z"
+      "createdAt": "2025-08-01T08:00:00.000Z",
+      "updatedAt": "2025-08-01T08:00:00.000Z"
     },
     {
       "id": 2,
-      "name": "Operations",
+      "name": "Advisors",
       "shape": "SQUARE",
       "color": "#7D52F4",
       "order": 2,
       "companyId": 1,
-      "createdAt": "2025-09-15T08:00:00.000Z",
-      "updatedAt": "2025-09-15T08:00:00.000Z"
+      "createdAt": "2025-08-01T08:00:00.000Z",
+      "updatedAt": "2025-08-01T08:00:00.000Z"
     },
     {
       "id": 3,
-      "name": "Marketing",
+      "name": "Design",
       "shape": "DIAMOND",
       "color": "#E9358F",
       "order": 3,
       "companyId": 1,
-      "createdAt": "2025-09-15T08:00:00.000Z",
-      "updatedAt": "2025-09-15T08:00:00.000Z"
+      "createdAt": "2025-08-01T08:00:00.000Z",
+      "updatedAt": "2025-08-01T08:00:00.000Z"
     }
   ],
   "employees": [
     {
       "id": 1,
-      "name": "Alex Chen",
+      "name": "Mieszko Manijak",
       "walletAddress": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
-      "email": "alex@novapay.io",
+      "email": "mieszko@nabla.finance",
       "groupId": 1,
       "companyId": 1,
       "paymentMethod": "crypto",
       "token": {
         "address": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
-        "symbol": "QASH",
+        "symbol": "USDT",
         "decimals": 8,
-        "name": "QASH"
+        "name": "USDT"
       },
       "network": {
         "name": "Miden Testnet",
         "chainId": 0
       },
       "order": 1,
-      "createdAt": "2025-09-15T08:00:00.000Z",
-      "updatedAt": "2025-09-15T08:00:00.000Z",
+      "createdAt": "2025-08-01T08:00:00.000Z",
+      "updatedAt": "2025-08-01T08:00:00.000Z",
       "employeeType": "employee",
       "isActive": true
     },
     {
       "id": 2,
-      "name": "Sarah Kim",
+      "name": "Mitja Belak",
       "walletAddress": "mtst1bxk8u6mzrt4n6hqies5lvet9henoz48_rsvrrzyqzqi",
-      "email": "sarah@novapay.io",
+      "email": "mitja@nabla.finance",
       "groupId": 1,
       "companyId": 1,
       "paymentMethod": "crypto",
       "token": {
         "address": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
-        "symbol": "QASH",
+        "symbol": "USDT",
         "decimals": 8,
-        "name": "QASH"
+        "name": "USDT"
       },
       "network": {
         "name": "Miden Testnet",
         "chainId": 0
       },
       "order": 2,
-      "createdAt": "2025-10-01T08:00:00.000Z",
-      "updatedAt": "2025-10-01T08:00:00.000Z",
+      "createdAt": "2025-08-01T08:00:00.000Z",
+      "updatedAt": "2025-08-01T08:00:00.000Z",
       "employeeType": "employee",
       "isActive": true
     },
     {
       "id": 3,
-      "name": "Marcus Rivera",
-      "walletAddress": "mtst1cyk7v5nzsu5o7irjft6mwfu0ifopy59_qtwssaxrari",
-      "email": "marcus@novapay.io",
+      "name": "Andre Gaul",
+      "walletAddress": "",
+      "email": "andre@nabla.finance",
+      "groupId": 2,
+      "companyId": 1,
+      "paymentMethod": "fiat",
+      "fiatDetails": {
+        "country": "Germany",
+        "bank": "Commerzbank",
+        "currency": "EUR"
+      },
+      "token": null,
+      "network": null,
+      "order": 3,
+      "createdAt": "2025-09-15T08:00:00.000Z",
+      "updatedAt": "2025-09-15T08:00:00.000Z",
+      "employeeType": "contractor",
+      "isActive": true
+    },
+    {
+      "id": 4,
+      "name": "Aaron Lindner",
+      "walletAddress": "mtst1dzj6w4oatu6p8jskg7nvxgv1jgqpz60_ruxttbyrsrj",
+      "email": "aaron@nabla.finance",
       "groupId": 2,
       "companyId": 1,
       "paymentMethod": "crypto",
       "token": {
         "address": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
-        "symbol": "QASH",
+        "symbol": "USDT",
         "decimals": 8,
-        "name": "QASH"
+        "name": "USDT"
       },
       "network": {
         "name": "Miden Testnet",
         "chainId": 0
       },
-      "order": 3,
-      "createdAt": "2025-10-15T08:00:00.000Z",
-      "updatedAt": "2025-10-15T08:00:00.000Z",
-      "employeeType": "employee",
-      "isActive": true
-    },
-    {
-      "id": 4,
-      "name": "Priya Sharma",
-      "walletAddress": "mtst1dzj6w4oatu6p8jskg7nvxgv1jgqpz60_ruxttbyrsrj",
-      "email": "priya@novapay.io",
-      "groupId": 3,
-      "companyId": 1,
-      "paymentMethod": "fiat",
-      "fiatDetails": {
-        "country": "Vietnam",
-        "bank": "Vietcombank",
-        "currency": "VND"
-      },
-      "token": null,
-      "network": null,
       "order": 4,
-      "createdAt": "2025-11-01T08:00:00.000Z",
-      "updatedAt": "2025-11-01T08:00:00.000Z",
+      "createdAt": "2025-10-01T08:00:00.000Z",
+      "updatedAt": "2025-10-01T08:00:00.000Z",
       "employeeType": "contractor",
       "isActive": true
     },
     {
       "id": 5,
-      "name": "James Liu",
-      "walletAddress": "mtst1exk5w3pazvu7q9kths8nygw2khrdq71_suxuuczsusq",
-      "email": "james@novapay.io",
-      "groupId": 1,
-      "companyId": 1,
-      "paymentMethod": "crypto",
-      "token": {
-        "address": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
-        "symbol": "QASH",
-        "decimals": 8,
-        "name": "QASH"
-      },
-      "network": {
-        "name": "Miden Testnet",
-        "chainId": 0
-      },
-      "order": 5,
-      "createdAt": "2025-11-10T08:00:00.000Z",
-      "updatedAt": "2025-11-10T08:00:00.000Z",
-      "employeeType": "employee",
-      "isActive": true
-    },
-    {
-      "id": 6,
-      "name": "Linh Nguyen",
+      "name": "Sasha Pylypenko",
       "walletAddress": "",
-      "email": "linh@novapay.io",
-      "groupId": 2,
-      "companyId": 1,
-      "paymentMethod": "fiat",
-      "fiatDetails": {
-        "country": "Vietnam",
-        "bank": "Techcombank",
-        "currency": "VND"
-      },
-      "token": null,
-      "network": null,
-      "order": 6,
-      "createdAt": "2025-11-20T08:00:00.000Z",
-      "updatedAt": "2025-11-20T08:00:00.000Z",
-      "employeeType": "contractor",
-      "isActive": true
-    },
-    {
-      "id": 7,
-      "name": "Daniel Park",
-      "walletAddress": "mtst1fwl4x2qbawu8r0luiu9ozhx3liset82_tvyvvdatutl",
-      "email": "daniel@novapay.io",
-      "groupId": 1,
-      "companyId": 1,
-      "paymentMethod": "crypto",
-      "token": {
-        "address": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
-        "symbol": "QASH",
-        "decimals": 8,
-        "name": "QASH"
-      },
-      "network": {
-        "name": "Miden Testnet",
-        "chainId": 0
-      },
-      "order": 7,
-      "createdAt": "2025-12-01T08:00:00.000Z",
-      "updatedAt": "2025-12-01T08:00:00.000Z",
-      "employeeType": "employee",
-      "isActive": true
-    },
-    {
-      "id": 8,
-      "name": "Maria Santos",
-      "walletAddress": "",
-      "email": "maria@novapay.io",
+      "email": "sasha@nabla.finance",
       "groupId": 3,
       "companyId": 1,
       "paymentMethod": "fiat",
       "fiatDetails": {
-        "country": "Philippines",
-        "bank": "BDO Unibank",
-        "currency": "PHP"
+        "country": "Ukraine",
+        "bank": "PrivatBank",
+        "currency": "UAH"
       },
       "token": null,
       "network": null,
-      "order": 8,
-      "createdAt": "2025-12-10T08:00:00.000Z",
-      "updatedAt": "2025-12-10T08:00:00.000Z",
-      "employeeType": "contractor",
-      "isActive": false
+      "order": 5,
+      "createdAt": "2025-11-01T08:00:00.000Z",
+      "updatedAt": "2025-11-01T08:00:00.000Z",
+      "employeeType": "employee",
+      "isActive": true
     }
   ],
   "clients": [
     {
       "uuid": "cl-0001",
-      "email": "deals@sequoiacap.com",
-      "companyName": "Sequoia Capital",
-      "companyType": "Venture Capital",
-      "country": "United States",
-      "city": "Menlo Park",
+      "email": "treasury@aave.com",
+      "companyName": "Aave DAO",
+      "companyType": "DeFi Protocol",
+      "country": "United Kingdom",
+      "city": "London",
       "createdAt": "2025-10-15T08:00:00.000Z",
       "updatedAt": "2025-10-15T08:00:00.000Z"
     },
     {
       "uuid": "cl-0002",
-      "email": "billing@alchemy.com",
-      "companyName": "Alchemy Platform",
-      "companyType": "SaaS",
+      "email": "ops@compound.finance",
+      "companyName": "Compound Labs",
+      "companyType": "DeFi Protocol",
       "country": "United States",
       "city": "San Francisco",
       "createdAt": "2025-11-01T08:00:00.000Z",
@@ -578,63 +464,73 @@
     },
     {
       "uuid": "cl-0003",
-      "email": "enterprise@chainalysis.com",
-      "companyName": "Chainalysis Inc",
-      "companyType": "SaaS",
-      "country": "United States",
-      "city": "New York",
+      "email": "partnerships@dydx.exchange",
+      "companyName": "dYdX Foundation",
+      "companyType": "DeFi Protocol",
+      "country": "Switzerland",
+      "city": "Zug",
       "createdAt": "2025-11-15T08:00:00.000Z",
       "updatedAt": "2025-11-15T08:00:00.000Z"
     },
     {
       "uuid": "cl-0004",
-      "email": "portfolio@meridianvc.com",
-      "companyName": "Meridian Ventures",
-      "companyType": "Venture Capital",
-      "country": "Singapore",
-      "city": "Singapore",
+      "email": "finance@uniswap.org",
+      "companyName": "Uniswap Labs",
+      "companyType": "DeFi Protocol",
+      "country": "United States",
+      "city": "New York",
       "createdAt": "2025-12-01T08:00:00.000Z",
       "updatedAt": "2025-12-01T08:00:00.000Z"
     },
     {
       "uuid": "cl-0005",
-      "email": "finance@grab.com",
-      "companyName": "Grab Holdings",
-      "companyType": "Technology",
-      "country": "Singapore",
-      "city": "Singapore",
+      "email": "grants@ethereum.foundation",
+      "companyName": "Ethereum Foundation",
+      "companyType": "Foundation",
+      "country": "Switzerland",
+      "city": "Zug",
       "createdAt": "2026-01-05T08:00:00.000Z",
       "updatedAt": "2026-01-05T08:00:00.000Z"
     },
     {
       "uuid": "cl-0006",
-      "email": "ap@shopify.com",
-      "companyName": "Shopify Inc",
-      "companyType": "E-commerce",
-      "country": "Canada",
-      "city": "Ottawa",
+      "email": "partnerships@polygon.technology",
+      "companyName": "Polygon Labs",
+      "companyType": "Blockchain",
+      "country": "India",
+      "city": "Bangalore",
       "createdAt": "2026-01-15T08:00:00.000Z",
       "updatedAt": "2026-01-15T08:00:00.000Z"
     },
     {
       "uuid": "cl-0007",
-      "email": "payments@tokopedia.com",
-      "companyName": "Tokopedia",
-      "companyType": "E-commerce",
-      "country": "Indonesia",
-      "city": "Jakarta",
+      "email": "treasury@lido.fi",
+      "companyName": "Lido Finance",
+      "companyType": "DeFi Protocol",
+      "country": "Cayman Islands",
+      "city": "George Town",
       "createdAt": "2026-02-01T08:00:00.000Z",
       "updatedAt": "2026-02-01T08:00:00.000Z"
     },
     {
       "uuid": "cl-0008",
-      "email": "ops@polygon.technology",
-      "companyName": "Polygon Labs",
-      "companyType": "Blockchain",
-      "country": "India",
-      "city": "Bangalore",
+      "email": "biz@pendle.finance",
+      "companyName": "Pendle Finance",
+      "companyType": "DeFi Protocol",
+      "country": "Singapore",
+      "city": "Singapore",
       "createdAt": "2026-02-10T08:00:00.000Z",
       "updatedAt": "2026-02-10T08:00:00.000Z"
+    },
+    {
+      "uuid": "cl-0009",
+      "email": "grants@polygon.technology",
+      "companyName": "Miden",
+      "companyType": "Blockchain",
+      "country": "United States",
+      "city": "New York",
+      "createdAt": "2026-03-01T08:00:00.000Z",
+      "updatedAt": "2026-03-01T08:00:00.000Z"
     }
   ],
   "transactions": [
@@ -642,24 +538,41 @@
       "id": "tx-001",
       "type": "RECEIVE",
       "status": "COMPLETED",
-      "amount": 500000,
+      "amount": 200000,
       "currency": "USDC",
-      "from": "Sequoia Capital",
-      "fromAddress": "0x5e0c01aabbccddee1234567890abcdef01020304",
+      "from": "Greenfield Capital",
+      "fromAddress": "0xbe4005aabbccddee1234567890abcdef01020304",
       "to": "Treasury",
       "toAddress": "0xa1b2c3d4e5f60001",
       "accountId": "0xa1b2c3d4e5f60001",
       "category": "Grant",
-      "label": "Series A funding - Tranche 1",
+      "label": "Seed round - Tranche 1",
       "txHash": "0xfa001abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2025-10-15T14:30:00.000Z",
-      "note": "Initial funding received from Sequoia"
+      "timestamp": "2025-09-01T14:30:00.000Z",
+      "note": "Initial seed funding from Greenfield Capital"
     },
     {
       "id": "tx-002",
+      "type": "RECEIVE",
+      "status": "COMPLETED",
+      "amount": 150000,
+      "currency": "USDC",
+      "from": "Ethereum Foundation",
+      "fromAddress": "0xef0002aabbccddee1234567890abcdef01020304",
+      "to": "Treasury",
+      "toAddress": "0xa1b2c3d4e5f60001",
+      "accountId": "0xa1b2c3d4e5f60001",
+      "category": "Grant",
+      "label": "Ecosystem development grant",
+      "txHash": "0xfa002abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2025-11-15T10:00:00.000Z",
+      "note": "EF grant for liquidity infrastructure R&D"
+    },
+    {
+      "id": "tx-003",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 72000,
+      "amount": 50000,
       "currency": "USDC",
       "from": "Treasury",
       "fromAddress": "0xa1b2c3d4e5f60001",
@@ -668,15 +581,15 @@
       "accountId": "0xa1b2c3d4e5f60001",
       "category": "Internal Transfer",
       "label": "Q1 2026 operations budget",
-      "txHash": "0xfa002abc123def456789aabbccdd0011eeff2233",
+      "txHash": "0xfa003abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2025-12-28T09:00:00.000Z",
       "note": "Quarterly operations fund transfer"
     },
     {
-      "id": "tx-003",
+      "id": "tx-004",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 72000,
+      "amount": 30000,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
@@ -685,49 +598,32 @@
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Payroll",
       "label": "January 2026 Payroll",
-      "txHash": "0xfa003abc123def456789aabbccdd0011eeff2233",
+      "txHash": "0xfa004abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-01-31T10:00:00.000Z",
       "note": "Monthly payroll - January 2026"
-    },
-    {
-      "id": "tx-004",
-      "type": "SEND",
-      "status": "COMPLETED",
-      "amount": 2400,
-      "currency": "USDC",
-      "from": "Operations",
-      "fromAddress": "0xa1b2c3d4e5f60002",
-      "to": "Alchemy Platform",
-      "toAddress": "0xa1c002aabbccddee1234567890abcdef01020304",
-      "accountId": "0xa1b2c3d4e5f60002",
-      "category": "Vendor",
-      "label": "Alchemy Growth plan - Q1",
-      "txHash": "0xfa004abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2026-01-05T11:00:00.000Z",
-      "note": "Node infrastructure quarterly payment"
     },
     {
       "id": "tx-005",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 15000,
+      "amount": 25000,
       "currency": "USDC",
       "from": "Treasury",
       "fromAddress": "0xa1b2c3d4e5f60001",
-      "to": "Ryan Zhao",
+      "to": "Jan Kowalski",
       "toAddress": "0x4a0044aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60001",
       "category": "Contractor",
       "label": "Smart contract audit - Phase 1",
       "txHash": "0xfa005abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-01-12T15:30:00.000Z",
-      "note": "Security audit for payment contracts"
+      "note": "Security audit for liquidity pool contracts"
     },
     {
       "id": "tx-006",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 72000,
+      "amount": 30000,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
@@ -744,58 +640,58 @@
       "id": "tx-007",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 4500,
+      "amount": 3600,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
-      "to": "Chainalysis Inc",
+      "to": "Chainlink Labs",
       "toAddress": "0xc4a003aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Vendor",
-      "label": "Compliance tool - Annual license",
+      "label": "Oracle integration - Annual license",
       "txHash": "0xfa007abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-02-01T09:00:00.000Z",
-      "note": "Chainalysis KYT annual subscription"
+      "note": "Chainlink price feed annual subscription"
     },
     {
       "id": "tx-008",
       "type": "RECEIVE",
       "status": "COMPLETED",
-      "amount": 75000,
+      "amount": 100000,
       "currency": "USDC",
-      "from": "Meridian Ventures",
+      "from": "Greenfield Capital",
       "fromAddress": "0xbe4005aabbccddee1234567890abcdef01020304",
       "to": "Treasury",
       "toAddress": "0xa1b2c3d4e5f60001",
       "accountId": "0xa1b2c3d4e5f60001",
       "category": "Grant",
-      "label": "Follow-on investment",
+      "label": "Seed round - Tranche 2",
       "txHash": "0xfa008abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-02-10T16:00:00.000Z",
-      "note": "Bridge round from Meridian"
+      "note": "Second tranche from seed round"
     },
     {
       "id": "tx-009",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 8500,
+      "amount": 6500,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
-      "to": "Skyline Digital Agency",
+      "to": "Studio Forma",
       "toAddress": "0x54e006aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Vendor",
-      "label": "Brand identity package",
+      "label": "Brand identity and UI kit",
       "txHash": "0xfa009abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-02-15T13:00:00.000Z",
-      "note": "Complete rebrand and design system"
+      "note": "Complete brand identity and design system"
     },
     {
       "id": "tx-010",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 72000,
+      "amount": 30000,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
@@ -812,7 +708,7 @@
       "id": "tx-011",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 340,
+      "amount": 280,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
@@ -829,7 +725,7 @@
       "id": "tx-012",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 340,
+      "amount": 280,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
@@ -846,7 +742,7 @@
       "id": "tx-013",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 340,
+      "amount": 280,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
@@ -914,24 +810,24 @@
       "id": "tx-017",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 5000,
+      "amount": 8000,
       "currency": "USDC",
       "from": "Treasury",
       "fromAddress": "0xa1b2c3d4e5f60001",
-      "to": "Ryan Zhao",
+      "to": "Jan Kowalski",
       "toAddress": "0x4a0044aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60001",
       "category": "Contractor",
       "label": "Smart contract audit - Phase 2",
       "txHash": "0xfa017abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-03-05T15:30:00.000Z",
-      "note": "Follow-up security review"
+      "note": "Follow-up security review for AMM contracts"
     },
     {
       "id": "tx-018",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 1200,
+      "amount": 96,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
@@ -948,7 +844,7 @@
       "id": "tx-019",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 2.5,
+      "amount": 1.5,
       "currency": "ETH",
       "from": "Treasury",
       "fromAddress": "0xa1b2c3d4e5f60001",
@@ -965,18 +861,18 @@
       "id": "tx-020",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 3200,
+      "amount": 3500,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
-      "to": "Skyline Digital Agency",
+      "to": "Studio Forma",
       "toAddress": "0x54e006aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Vendor",
-      "label": "Website redesign - Milestone 2",
+      "label": "App redesign - Milestone 2",
       "txHash": "0xfa020abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-03-10T14:00:00.000Z",
-      "note": "Landing page and docs site"
+      "note": "Liquidity dashboard and docs site redesign"
     },
     {
       "id": "tx-021",
@@ -999,75 +895,75 @@
       "id": "tx-022",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 72,
+      "amount": 44,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
-      "to": "Google Workspace",
+      "to": "GitHub",
       "toAddress": "0x600022aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Subscription",
-      "label": "Google Workspace - March",
+      "label": "GitHub Team - March",
       "txHash": "0xfa022abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-03-01T08:00:00.000Z",
-      "note": "Email and productivity suite"
+      "note": "Source code hosting and CI/CD"
     },
     {
       "id": "tx-023",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 150000,
+      "amount": 5000,
       "currency": "USDC",
-      "from": "Meridian Ventures",
-      "fromAddress": "0xbe4005aabbccddee1234567890abcdef01020304",
-      "to": "Treasury",
-      "toAddress": "0xa1b2c3d4e5f60001",
+      "from": "Treasury",
+      "fromAddress": "0xa1b2c3d4e5f60001",
+      "to": "ETHDenver",
+      "toAddress": "0xe14023aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60001",
-      "category": "Grant",
-      "label": "Ecosystem grant - Miden Foundation",
+      "category": "Other",
+      "label": "ETHDenver 2026 sponsorship",
       "txHash": "0xfa023abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2025-11-01T10:00:00.000Z",
-      "note": "Miden ecosystem development grant"
+      "timestamp": "2026-02-20T10:00:00.000Z",
+      "note": "Bronze tier sponsor + booth"
     },
     {
       "id": "tx-024",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 29,
+      "amount": 10,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
-      "to": "ClickUp",
-      "toAddress": "0xc11024aabbccddee1234567890abcdef01020304",
+      "to": "Notion",
+      "toAddress": "0xd0f018aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Subscription",
-      "label": "ClickUp Business - March",
+      "label": "Notion - March",
       "txHash": "0xfa024abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-03-01T08:00:00.000Z",
-      "note": "Project management"
+      "note": "Team workspace monthly"
     },
     {
       "id": "tx-025",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 800,
+      "amount": 450,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
-      "to": "Alchemy Platform",
-      "toAddress": "0xa1c002aabbccddee1234567890abcdef01020304",
+      "to": "Hetzner Cloud",
+      "toAddress": "0xa1c025aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Vendor",
-      "label": "Alchemy Growth - March",
+      "label": "Dedicated server - March",
       "txHash": "0xfa025abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-03-01T09:00:00.000Z",
-      "note": "Node RPC monthly overage"
+      "note": "Node infrastructure and indexer hosting"
     },
     {
       "id": "tx-026",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 45,
+      "amount": 65,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
@@ -1075,98 +971,64 @@
       "toAddress": "0x0be026aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Other",
-      "label": "Team dinner transport",
+      "label": "Team dinner transport - Poznan",
       "txHash": "0xfa026abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-03-15T20:00:00.000Z",
-      "note": "Quarterly team gathering"
+      "note": "Quarterly co-founder meetup"
     },
     {
       "id": "tx-027",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 580,
+      "amount": 350,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
-      "to": "WeWork",
+      "to": "Regus Coworking",
       "toAddress": "0xbeb027aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Vendor",
-      "label": "Hot desk passes - March",
+      "label": "Coworking space - March",
       "txHash": "0xfa027abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-03-01T08:00:00.000Z",
-      "note": "Coworking space"
+      "note": "Hot desk passes Poznan"
     },
     {
       "id": "tx-028",
-      "type": "SEND",
-      "status": "COMPLETED",
-      "amount": 2000,
-      "currency": "USDC",
-      "from": "Treasury",
-      "fromAddress": "0xa1b2c3d4e5f60001",
-      "to": "ETH Singapore",
-      "toAddress": "0xe14028aabbccddee1234567890abcdef01020304",
-      "accountId": "0xa1b2c3d4e5f60001",
-      "category": "Other",
-      "label": "ETH Singapore sponsorship",
-      "txHash": "0xfa028abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2026-03-20T10:00:00.000Z",
-      "note": "Community sponsorship"
-    },
-    {
-      "id": "tx-029",
       "type": "RECEIVE",
       "status": "COMPLETED",
-      "amount": 3500,
+      "amount": 5000,
       "currency": "USDC",
-      "from": "Acme Corp",
-      "fromAddress": "0xacb029aabbccddee1234567890abcdef01020304",
+      "from": "Pendle Finance",
+      "fromAddress": "0xacb028aabbccddee1234567890abcdef01020304",
       "to": "Treasury",
       "toAddress": "0xa1b2c3d4e5f60001",
       "accountId": "0xa1b2c3d4e5f60001",
       "category": "Other",
-      "label": "API integration pilot payment",
-      "txHash": "0xfa029abc123def456789aabbccdd0011eeff2233",
+      "label": "Liquidity consulting engagement",
+      "txHash": "0xfa028abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-03-22T11:00:00.000Z",
-      "note": "Payment from first enterprise client"
+      "note": "Advisory payment for liquidity architecture review"
+    },
+    {
+      "id": "tx-029",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 2400,
+      "currency": "USDC",
+      "from": "Treasury",
+      "fromAddress": "0xa1b2c3d4e5f60001",
+      "to": "EthCC Paris",
+      "toAddress": "0xecc029aabbccddee1234567890abcdef01020304",
+      "accountId": "0xa1b2c3d4e5f60001",
+      "category": "Other",
+      "label": "EthCC 2026 tickets + travel",
+      "txHash": "0xfa029abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-03-18T10:00:00.000Z",
+      "note": "Conference tickets for team (3 people)"
     },
     {
       "id": "tx-030",
-      "type": "SEND",
-      "status": "COMPLETED",
-      "amount": 1500,
-      "currency": "USDC",
-      "from": "Operations",
-      "fromAddress": "0xa1b2c3d4e5f60002",
-      "to": "LegalForce Pte Ltd",
-      "toAddress": "0x1e6030aabbccddee1234567890abcdef01020304",
-      "accountId": "0xa1b2c3d4e5f60002",
-      "category": "Vendor",
-      "label": "Corporate secretary - Q1",
-      "txHash": "0xfa030abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2026-03-25T09:00:00.000Z",
-      "note": "Quarterly corporate secretary fees"
-    },
-    {
-      "id": "tx-031",
-      "type": "SEND",
-      "status": "COMPLETED",
-      "amount": 250,
-      "currency": "USDC",
-      "from": "Operations",
-      "fromAddress": "0xa1b2c3d4e5f60002",
-      "to": "Slack",
-      "toAddress": "0x51a031aabbccddee1234567890abcdef01020304",
-      "accountId": "0xa1b2c3d4e5f60002",
-      "category": "Subscription",
-      "label": "Slack Pro - Q1",
-      "txHash": "0xfa031abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2026-01-01T08:00:00.000Z",
-      "note": "Team communication quarterly"
-    },
-    {
-      "id": "tx-032",
       "type": "SEND",
       "status": "COMPLETED",
       "amount": 480,
@@ -1174,13 +1036,13 @@
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
       "to": "GitHub",
-      "toAddress": "0x61f032aabbccddee1234567890abcdef01020304",
+      "toAddress": "0x600022aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Subscription",
       "label": "GitHub Team - Annual",
-      "txHash": "0xfa032abc123def456789aabbccdd0011eeff2233",
+      "txHash": "0xfa030abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-01-10T08:00:00.000Z",
-      "note": "Source code hosting"
+      "note": "Source code hosting annual plan"
     }
   ],
   "pendingProposals": [
@@ -1190,18 +1052,19 @@
       "accountId": "0xa1b2c3d4e5f60001",
       "accountName": "Treasury",
       "type": "SEND",
-      "proposalCategory": "paying_bill",
-      "status": "PENDING",
-      "amount": 10000,
+      "proposalCategory": "paying_payroll",
+      "status": "READY",
+      "amount": 30000,
       "currency": "USDT",
-      "to": "Ryan Zhao",
-      "toAddress": "0x4a0044aabbccddee1234567890abcdef01020304",
-      "label": "Smart contract audit - Phase 3",
-      "note": "Final security audit milestone",
-      "createdBy": "Alex Chen",
-      "createdAt": "2026-03-30T14:00:00.000Z",
+      "to": "Payroll Batch",
+      "toAddress": "multiple",
+      "label": "April 2026 Payroll",
+      "note": "Monthly payroll for 5 team members",
+      "createdBy": "Mitja Belak",
+      "createdAt": "2026-03-28T09:00:00.000Z",
       "signatures": [
-        { "signer": "Alex Chen", "status": "SIGNED", "signedAt": "2026-03-30T14:00:00.000Z" }
+        { "signer": "Mitja Belak", "status": "SIGNED", "signedAt": "2026-03-28T09:00:00.000Z" },
+        { "signer": "Mieszko Manijak", "status": "SIGNED", "signedAt": "2026-03-28T10:30:00.000Z" }
       ],
       "requiredSignatures": 2
     },
@@ -1211,19 +1074,18 @@
       "accountId": "0xa1b2c3d4e5f60001",
       "accountName": "Treasury",
       "type": "SEND",
-      "proposalCategory": "paying_payroll",
-      "status": "READY",
-      "amount": 72000,
+      "proposalCategory": "paying_bill",
+      "status": "PENDING",
+      "amount": 15000,
       "currency": "USDT",
-      "to": "Payroll Batch",
-      "toAddress": "multiple",
-      "label": "April 2026 Payroll",
-      "note": "Monthly payroll for 8 employees",
-      "createdBy": "Sarah Kim",
-      "createdAt": "2026-03-28T09:00:00.000Z",
+      "to": "Jan Kowalski",
+      "toAddress": "0x4a0044aabbccddee1234567890abcdef01020304",
+      "label": "Smart contract audit - Phase 3",
+      "note": "Final security audit for mainnet deployment",
+      "createdBy": "Mieszko Manijak",
+      "createdAt": "2026-03-30T14:00:00.000Z",
       "signatures": [
-        { "signer": "Sarah Kim", "status": "SIGNED", "signedAt": "2026-03-28T09:00:00.000Z" },
-        { "signer": "Alex Chen", "status": "SIGNED", "signedAt": "2026-03-28T10:30:00.000Z" }
+        { "signer": "Mieszko Manijak", "status": "SIGNED", "signedAt": "2026-03-30T14:00:00.000Z" }
       ],
       "requiredSignatures": 2
     },
@@ -1233,18 +1095,20 @@
       "accountId": "0xa1b2c3d4e5f60001",
       "accountName": "Treasury",
       "type": "SEND",
-      "proposalCategory": "paying_reimbursement",
+      "proposalCategory": "deposit_card",
       "status": "PENDING",
-      "amount": 245.80,
+      "amount": 5000,
       "currency": "USDT",
-      "to": "Sarah Kim",
-      "toAddress": "0x54e006aabbccddee1234567890abcdef01020304",
-      "label": "Reimbursement - Client dinner at Marina Bay",
-      "note": "Expense reimbursement",
-      "createdBy": "Mei Wong",
-      "createdAt": "2026-04-01T11:00:00.000Z",
-      "signatures": [],
-      "requiredSignatures": 1
+      "to": "Card Pool",
+      "toAddress": "0xcard001",
+      "label": "Top up card pool",
+      "note": "Replenish corporate card spending pool",
+      "createdBy": "Mieszko Manijak",
+      "createdAt": "2026-04-01T15:00:00.000Z",
+      "signatures": [
+        { "signer": "Mieszko Manijak", "status": "SIGNED", "signedAt": "2026-04-01T15:00:00.000Z" }
+      ],
+      "requiredSignatures": 2
     },
     {
       "id": "prop-004",
@@ -1252,19 +1116,17 @@
       "accountId": "0xa1b2c3d4e5f60001",
       "accountName": "Treasury",
       "type": "SEND",
-      "proposalCategory": "deposit_card",
+      "proposalCategory": "deposit_earn",
       "status": "PENDING",
-      "amount": 10000,
+      "amount": 100000,
       "currency": "USDT",
-      "to": "Card Pool",
-      "toAddress": "0xcard001",
-      "label": "Top up card pool",
-      "note": "Replenish corporate card spending pool",
-      "createdBy": "Alex Chen",
-      "createdAt": "2026-04-01T15:00:00.000Z",
-      "signatures": [
-        { "signer": "Alex Chen", "status": "SIGNED", "signedAt": "2026-04-01T15:00:00.000Z" }
-      ],
+      "to": "Earn Vault",
+      "toAddress": "0xearn001",
+      "label": "Deposit to earn vault",
+      "note": "Deposit idle treasury into 4.85% APY vault",
+      "createdBy": "Mitja Belak",
+      "createdAt": "2026-04-02T09:00:00.000Z",
+      "signatures": [],
       "requiredSignatures": 2
     },
     {
@@ -1273,41 +1135,22 @@
       "accountId": "0xa1b2c3d4e5f60001",
       "accountName": "Treasury",
       "type": "SEND",
-      "proposalCategory": "deposit_earn",
+      "proposalCategory": "cashout",
       "status": "PENDING",
-      "amount": 50000,
+      "amount": 20000,
       "currency": "USDT",
-      "to": "Earn Vault",
-      "toAddress": "0xearn001",
-      "label": "Deposit to earn vault",
-      "note": "Deposit idle treasury into 4.85% APY vault",
-      "createdBy": "Sarah Kim",
-      "createdAt": "2026-04-02T09:00:00.000Z",
+      "to": "Bank (Commerzbank EUR)",
+      "toAddress": "0xofframp001",
+      "label": "Cashout to Commerzbank",
+      "note": "Off-ramp for quarterly tax obligations",
+      "createdBy": "Mieszko Manijak",
+      "createdAt": "2026-04-02T10:30:00.000Z",
       "signatures": [],
       "requiredSignatures": 2
     },
     {
       "id": "prop-006",
       "uuid": "prop-uuid-006",
-      "accountId": "0xa1b2c3d4e5f60001",
-      "accountName": "Treasury",
-      "type": "SEND",
-      "proposalCategory": "cashout",
-      "status": "PENDING",
-      "amount": 15000,
-      "currency": "USDT",
-      "to": "Bank (DBS SGD)",
-      "toAddress": "0xofframp001",
-      "label": "Cashout to DBS bank account",
-      "note": "Off-ramp for office rent payment",
-      "createdBy": "Mei Wong",
-      "createdAt": "2026-04-02T10:30:00.000Z",
-      "signatures": [],
-      "requiredSignatures": 1
-    },
-    {
-      "id": "prop-007",
-      "uuid": "prop-uuid-007",
       "accountId": "0xa1b2c3d4e5f60001",
       "accountName": "Treasury",
       "type": "CONFIG",
@@ -1317,18 +1160,18 @@
       "currency": "USDT",
       "to": "",
       "toAddress": "",
-      "label": "Add Daniel Park as signer",
-      "note": "Onboarding new team lead as Treasury signer",
-      "createdBy": "Alex Chen",
+      "label": "Add Sasha Pylypenko as Operations signer",
+      "note": "Onboarding product designer as backup signer for Operations wallet",
+      "createdBy": "Mieszko Manijak",
       "createdAt": "2026-04-02T14:00:00.000Z",
       "signatures": [
-        { "signer": "Alex Chen", "status": "SIGNED", "signedAt": "2026-04-02T14:00:00.000Z" }
+        { "signer": "Mieszko Manijak", "status": "SIGNED", "signedAt": "2026-04-02T14:00:00.000Z" }
       ],
       "requiredSignatures": 2
     },
     {
-      "id": "prop-008",
-      "uuid": "prop-uuid-008",
+      "id": "prop-007",
+      "uuid": "prop-uuid-007",
       "accountId": "0xa1b2c3d4e5f60001",
       "accountName": "Treasury",
       "type": "CONFIG",
@@ -1338,10 +1181,29 @@
       "currency": "USDT",
       "to": "",
       "toAddress": "",
-      "label": "Increase threshold to 2-of-3",
+      "label": "Increase Treasury threshold to 2-of-3",
       "note": "Strengthen security after adding new signer",
-      "createdBy": "Mei Wong",
+      "createdBy": "Mitja Belak",
       "createdAt": "2026-04-03T08:00:00.000Z",
+      "signatures": [],
+      "requiredSignatures": 2
+    },
+    {
+      "id": "prop-008",
+      "uuid": "prop-uuid-008",
+      "accountId": "0xa1b2c3d4e5f60002",
+      "accountName": "Operations",
+      "type": "SEND",
+      "proposalCategory": "paying_bill",
+      "status": "PENDING",
+      "amount": 3500,
+      "currency": "USDT",
+      "to": "Studio Forma",
+      "toAddress": "0x54e006aabbccddee1234567890abcdef01020304",
+      "label": "App redesign - Final milestone",
+      "note": "Final payment for liquidity dashboard redesign",
+      "createdBy": "Sasha Pylypenko",
+      "createdAt": "2026-04-03T11:00:00.000Z",
       "signatures": [],
       "requiredSignatures": 1
     }
@@ -1352,61 +1214,43 @@
       "uuid": "pr-0001",
       "name": "January 2026 Payroll",
       "status": "COMPLETED",
-      "totalAmount": 72000,
+      "totalAmount": 30000,
       "currency": "USDC",
-      "employeeCount": 8,
+      "employeeCount": 5,
       "executedAt": "2026-01-31T10:00:00.000Z",
       "createdAt": "2026-01-28T09:00:00.000Z",
       "accountId": "0xa1b2c3d4e5f60002",
       "accountName": "Operations",
-      "txHash": "0xfa003abc123def456789aabbccdd0011eeff2233",
+      "txHash": "0xfa004abc123def456789aabbccdd0011eeff2233",
       "recipients": [
         {
-          "name": "Alex Chen",
-          "amount": 12000,
+          "name": "Mieszko Manijak",
+          "amount": 10000,
           "walletAddress": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef01",
           "status": "PAID"
         },
         {
-          "name": "Sarah Kim",
-          "amount": 11000,
+          "name": "Mitja Belak",
+          "amount": 10000,
           "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
           "status": "PAID"
         },
         {
-          "name": "Marcus Rivera",
-          "amount": 9000,
+          "name": "Andre Gaul",
+          "amount": 3000,
           "walletAddress": "0x3c4d5e6f7890abcdef1234567890abcdef010203",
           "status": "PAID"
         },
         {
-          "name": "Priya Sharma",
-          "amount": 8500,
+          "name": "Aaron Lindner",
+          "amount": 2000,
           "walletAddress": "0x4d5e6f7890abcdef1234567890abcdef01020304",
           "status": "PAID"
         },
         {
-          "name": "James Okonkwo",
-          "amount": 9500,
+          "name": "Sasha Pylypenko",
+          "amount": 5000,
           "walletAddress": "0x5e6f7890abcdef1234567890abcdef0102030405",
-          "status": "PAID"
-        },
-        {
-          "name": "Luna Park",
-          "amount": 7500,
-          "walletAddress": "0x6f7890abcdef1234567890abcdef010203040506",
-          "status": "PAID"
-        },
-        {
-          "name": "Daniel Tan",
-          "amount": 7000,
-          "walletAddress": "0x7890abcdef1234567890abcdef01020304050607",
-          "status": "PAID"
-        },
-        {
-          "name": "Mei Wong",
-          "amount": 7500,
-          "walletAddress": "0x890abcdef1234567890abcdef0102030405060708",
           "status": "PAID"
         }
       ]
@@ -1416,9 +1260,9 @@
       "uuid": "pr-0002",
       "name": "February 2026 Payroll",
       "status": "COMPLETED",
-      "totalAmount": 72000,
+      "totalAmount": 30000,
       "currency": "USDC",
-      "employeeCount": 8,
+      "employeeCount": 5,
       "executedAt": "2026-02-28T10:00:00.000Z",
       "createdAt": "2026-02-25T09:00:00.000Z",
       "accountId": "0xa1b2c3d4e5f60002",
@@ -1426,51 +1270,33 @@
       "txHash": "0xfa006abc123def456789aabbccdd0011eeff2233",
       "recipients": [
         {
-          "name": "Alex Chen",
-          "amount": 12000,
+          "name": "Mieszko Manijak",
+          "amount": 10000,
           "walletAddress": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef01",
           "status": "PAID"
         },
         {
-          "name": "Sarah Kim",
-          "amount": 11000,
+          "name": "Mitja Belak",
+          "amount": 10000,
           "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
           "status": "PAID"
         },
         {
-          "name": "Marcus Rivera",
-          "amount": 9000,
+          "name": "Andre Gaul",
+          "amount": 3000,
           "walletAddress": "0x3c4d5e6f7890abcdef1234567890abcdef010203",
           "status": "PAID"
         },
         {
-          "name": "Priya Sharma",
-          "amount": 8500,
+          "name": "Aaron Lindner",
+          "amount": 2000,
           "walletAddress": "0x4d5e6f7890abcdef1234567890abcdef01020304",
           "status": "PAID"
         },
         {
-          "name": "James Okonkwo",
-          "amount": 9500,
+          "name": "Sasha Pylypenko",
+          "amount": 5000,
           "walletAddress": "0x5e6f7890abcdef1234567890abcdef0102030405",
-          "status": "PAID"
-        },
-        {
-          "name": "Luna Park",
-          "amount": 7500,
-          "walletAddress": "0x6f7890abcdef1234567890abcdef010203040506",
-          "status": "PAID"
-        },
-        {
-          "name": "Daniel Tan",
-          "amount": 7000,
-          "walletAddress": "0x7890abcdef1234567890abcdef01020304050607",
-          "status": "PAID"
-        },
-        {
-          "name": "Mei Wong",
-          "amount": 7500,
-          "walletAddress": "0x890abcdef1234567890abcdef0102030405060708",
           "status": "PAID"
         }
       ]
@@ -1480,9 +1306,9 @@
       "uuid": "pr-0003",
       "name": "March 2026 Payroll",
       "status": "COMPLETED",
-      "totalAmount": 72000,
+      "totalAmount": 30000,
       "currency": "USDC",
-      "employeeCount": 8,
+      "employeeCount": 5,
       "executedAt": "2026-03-31T10:00:00.000Z",
       "createdAt": "2026-03-28T09:00:00.000Z",
       "accountId": "0xa1b2c3d4e5f60002",
@@ -1490,87 +1316,69 @@
       "txHash": "0xfa010abc123def456789aabbccdd0011eeff2233",
       "recipients": [
         {
-          "name": "Alex Chen",
-          "amount": 12000,
+          "name": "Mieszko Manijak",
+          "amount": 10000,
           "walletAddress": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef01",
           "status": "PAID"
         },
         {
-          "name": "Sarah Kim",
-          "amount": 11000,
+          "name": "Mitja Belak",
+          "amount": 10000,
           "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
           "status": "PAID"
         },
         {
-          "name": "Marcus Rivera",
-          "amount": 9000,
+          "name": "Andre Gaul",
+          "amount": 3000,
           "walletAddress": "0x3c4d5e6f7890abcdef1234567890abcdef010203",
           "status": "PAID"
         },
         {
-          "name": "Priya Sharma",
-          "amount": 8500,
+          "name": "Aaron Lindner",
+          "amount": 2000,
           "walletAddress": "0x4d5e6f7890abcdef1234567890abcdef01020304",
           "status": "PAID"
         },
         {
-          "name": "James Okonkwo",
-          "amount": 9500,
+          "name": "Sasha Pylypenko",
+          "amount": 5000,
           "walletAddress": "0x5e6f7890abcdef1234567890abcdef0102030405",
-          "status": "PAID"
-        },
-        {
-          "name": "Luna Park",
-          "amount": 7500,
-          "walletAddress": "0x6f7890abcdef1234567890abcdef010203040506",
-          "status": "PAID"
-        },
-        {
-          "name": "Daniel Tan",
-          "amount": 7000,
-          "walletAddress": "0x7890abcdef1234567890abcdef01020304050607",
-          "status": "PAID"
-        },
-        {
-          "name": "Mei Wong",
-          "amount": 7500,
-          "walletAddress": "0x890abcdef1234567890abcdef0102030405060708",
           "status": "PAID"
         }
       ]
     }
   ],
   "payrollStats": {
-    "totalPaid": 216000,
+    "totalPaid": 90000,
     "totalPayrolls": 3,
-    "averagePerPayroll": 72000,
+    "averagePerPayroll": 30000,
     "nextPayrollDate": "2026-04-30T10:00:00.000Z"
   },
   "invoices": [
     {
       "id": 1,
       "uuid": "inv-0001",
-      "invoiceNumber": "INV-2026-001",
+      "invoiceNumber": "NAB-2026-001",
       "type": "SENT",
       "status": "PAID",
-      "amount": 3500,
+      "amount": 5000,
       "currency": "USDC",
-      "from": "NovaPay Labs",
-      "to": "Acme Corp",
-      "toEmail": "finance@acmecorp.io",
-      "description": "API integration pilot - Phase 1",
+      "from": "Nabla Finance",
+      "to": "Pendle Finance",
+      "toEmail": "biz@pendle.finance",
+      "description": "Liquidity architecture consulting - Q1",
       "dueDate": "2026-03-15T00:00:00.000Z",
       "paidAt": "2026-03-22T11:00:00.000Z",
       "createdAt": "2026-03-01T10:00:00.000Z",
       "items": [
         {
-          "description": "API setup and integration",
+          "description": "Liquidity pool architecture review",
           "quantity": 1,
-          "unitPrice": 2000
+          "unitPrice": 3000
         },
         {
-          "description": "Technical support (15 hours)",
-          "quantity": 15,
+          "description": "Technical advisory (20 hours)",
+          "quantity": 20,
           "unitPrice": 100
         }
       ]
@@ -1578,110 +1386,110 @@
     {
       "id": 2,
       "uuid": "inv-0002",
-      "invoiceNumber": "INV-2026-002",
+      "invoiceNumber": "NAB-2026-002",
       "type": "SENT",
       "status": "PENDING",
-      "amount": 8000,
+      "amount": 12000,
       "currency": "USDC",
-      "from": "NovaPay Labs",
-      "to": "BlockFi Solutions",
-      "toEmail": "accounts@blockfi-solutions.com",
-      "description": "Custom payment gateway integration",
+      "from": "Nabla Finance",
+      "to": "Lido Finance",
+      "toEmail": "treasury@lido.fi",
+      "description": "Custom liquidity integration for stETH pools",
       "dueDate": "2026-04-15T00:00:00.000Z",
       "paidAt": null,
       "createdAt": "2026-03-20T10:00:00.000Z",
       "items": [
         {
-          "description": "Payment gateway setup",
+          "description": "Liquidity integration setup",
           "quantity": 1,
-          "unitPrice": 5000
+          "unitPrice": 8000
         },
         {
-          "description": "Custom webhook development",
+          "description": "Custom routing module development",
           "quantity": 1,
-          "unitPrice": 3000
+          "unitPrice": 4000
         }
       ]
     },
     {
       "id": 3,
       "uuid": "inv-0003",
-      "invoiceNumber": "INV-2026-003",
+      "invoiceNumber": "NAB-2026-003",
       "type": "RECEIVED",
       "status": "PAID",
-      "amount": 15000,
+      "amount": 25000,
       "currency": "USDC",
-      "from": "Ryan Zhao",
-      "to": "NovaPay Labs",
-      "toEmail": "alex@novapay.io",
+      "from": "Jan Kowalski",
+      "to": "Nabla Finance",
+      "toEmail": "mieszko@nabla.finance",
       "description": "Smart contract security audit - Phase 1",
       "dueDate": "2026-01-31T00:00:00.000Z",
       "paidAt": "2026-01-12T15:30:00.000Z",
       "createdAt": "2026-01-02T10:00:00.000Z",
       "items": [
         {
-          "description": "Security audit",
+          "description": "Full security audit of AMM contracts",
           "quantity": 1,
-          "unitPrice": 12000
+          "unitPrice": 20000
         },
         {
           "description": "Detailed report and recommendations",
           "quantity": 1,
-          "unitPrice": 3000
+          "unitPrice": 5000
         }
       ]
     },
     {
       "id": 4,
       "uuid": "inv-0004",
-      "invoiceNumber": "INV-2026-004",
+      "invoiceNumber": "NAB-2026-004",
       "type": "RECEIVED",
       "status": "PENDING",
-      "amount": 10000,
+      "amount": 15000,
       "currency": "USDC",
-      "from": "Ryan Zhao",
-      "to": "NovaPay Labs",
-      "toEmail": "alex@novapay.io",
+      "from": "Jan Kowalski",
+      "to": "Nabla Finance",
+      "toEmail": "mieszko@nabla.finance",
       "description": "Smart contract security audit - Phase 3",
       "dueDate": "2026-04-15T00:00:00.000Z",
       "paidAt": null,
       "createdAt": "2026-03-28T10:00:00.000Z",
       "items": [
         {
-          "description": "Final security audit",
+          "description": "Mainnet deployment audit",
           "quantity": 1,
-          "unitPrice": 8000
+          "unitPrice": 12000
         },
         {
           "description": "Remediation verification",
           "quantity": 1,
-          "unitPrice": 2000
+          "unitPrice": 3000
         }
       ]
     },
     {
       "id": 5,
       "uuid": "inv-0005",
-      "invoiceNumber": "INV-2026-005",
+      "invoiceNumber": "NAB-2026-005",
       "type": "SENT",
       "status": "PENDING",
-      "amount": 12000,
+      "amount": 8000,
       "currency": "USDC",
-      "from": "NovaPay Labs",
-      "to": "Zenith Protocol",
-      "toEmail": "treasury@zenithprotocol.xyz",
-      "description": "Payment API licensing - Q2 2026",
+      "from": "Nabla Finance",
+      "to": "Compound Labs",
+      "toEmail": "ops@compound.finance",
+      "description": "Liquidity optimization module - Q2 2026",
       "dueDate": "2026-04-30T00:00:00.000Z",
       "paidAt": null,
       "createdAt": "2026-03-25T10:00:00.000Z",
       "items": [
         {
-          "description": "API license fee (quarterly)",
+          "description": "Liquidity optimization module license (quarterly)",
           "quantity": 1,
-          "unitPrice": 10000
+          "unitPrice": 6000
         },
         {
-          "description": "Premium support tier",
+          "description": "Integration support",
           "quantity": 1,
           "unitPrice": 2000
         }
@@ -1690,15 +1498,15 @@
     {
       "id": 6,
       "uuid": "inv-0006",
-      "invoiceNumber": "INV-2026-006",
+      "invoiceNumber": "NAB-2026-006",
       "type": "RECEIVED",
       "status": "PAID",
-      "amount": 8500,
+      "amount": 6500,
       "currency": "USDC",
-      "from": "Skyline Digital Agency",
-      "to": "NovaPay Labs",
-      "toEmail": "alex@novapay.io",
-      "description": "Brand identity package",
+      "from": "Studio Forma",
+      "to": "Nabla Finance",
+      "toEmail": "mieszko@nabla.finance",
+      "description": "Brand identity and UI kit",
       "dueDate": "2026-02-28T00:00:00.000Z",
       "paidAt": "2026-02-15T13:00:00.000Z",
       "createdAt": "2026-02-01T10:00:00.000Z",
@@ -1706,73 +1514,31 @@
         {
           "description": "Logo design and brand guidelines",
           "quantity": 1,
-          "unitPrice": 5000
+          "unitPrice": 4000
         },
         {
-          "description": "Marketing collateral design",
+          "description": "UI component kit for app",
           "quantity": 1,
-          "unitPrice": 3500
+          "unitPrice": 2500
         }
       ]
     }
   ],
   "invoiceStats": {
-    "totalSent": 23500,
-    "totalReceived": 33500,
+    "totalSent": 25000,
+    "totalReceived": 46500,
     "pendingSent": 20000,
-    "pendingReceived": 10000,
-    "paidSent": 3500,
-    "paidReceived": 23500
+    "pendingReceived": 15000,
+    "paidSent": 5000,
+    "paidReceived": 31500
   },
   "bills": [
     {
       "id": 1,
       "uuid": "bill-0001",
-      "vendor": "AWS",
-      "description": "Cloud infrastructure - Monthly",
-      "amount": 340,
-      "currency": "USDC",
-      "status": "PENDING",
-      "dueDate": "2026-04-03T00:00:00.000Z",
-      "category": "Subscription",
-      "recurring": true,
-      "frequency": "MONTHLY",
-      "createdAt": "2026-03-28T08:00:00.000Z"
-    },
-    {
-      "id": 2,
-      "uuid": "bill-0002",
-      "vendor": "Alchemy Platform",
-      "description": "Node infrastructure - Monthly",
-      "amount": 800,
-      "currency": "USDC",
-      "status": "PENDING",
-      "dueDate": "2026-04-05T00:00:00.000Z",
-      "category": "Vendor",
-      "recurring": true,
-      "frequency": "MONTHLY",
-      "createdAt": "2026-03-28T08:00:00.000Z"
-    },
-    {
-      "id": 3,
-      "uuid": "bill-0003",
-      "vendor": "WeWork",
-      "description": "Hot desk passes - Monthly",
-      "amount": 580,
-      "currency": "USDC",
-      "status": "OVERDUE",
-      "dueDate": "2026-03-31T00:00:00.000Z",
-      "category": "Vendor",
-      "recurring": true,
-      "frequency": "MONTHLY",
-      "createdAt": "2026-03-25T08:00:00.000Z"
-    },
-    {
-      "id": 4,
-      "uuid": "bill-0004",
-      "vendor": "Ryan Zhao",
+      "vendor": "Jan Kowalski",
       "description": "Smart contract audit - Phase 3",
-      "amount": 10000,
+      "amount": 15000,
       "currency": "USDC",
       "status": "PENDING",
       "dueDate": "2026-04-15T00:00:00.000Z",
@@ -1782,11 +1548,39 @@
       "createdAt": "2026-03-28T10:00:00.000Z"
     },
     {
-      "id": 5,
-      "uuid": "bill-0005",
-      "vendor": "Skyline Digital Agency",
-      "description": "Website redesign - Final milestone",
-      "amount": 5400,
+      "id": 2,
+      "uuid": "bill-0002",
+      "vendor": "Regus Coworking",
+      "description": "Hot desk passes - Monthly",
+      "amount": 350,
+      "currency": "USDC",
+      "status": "OVERDUE",
+      "dueDate": "2026-03-31T00:00:00.000Z",
+      "category": "Vendor",
+      "recurring": true,
+      "frequency": "MONTHLY",
+      "createdAt": "2026-03-25T08:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "uuid": "bill-0003",
+      "vendor": "Andre Gaul",
+      "description": "Advisory retainer - April",
+      "amount": 3000,
+      "currency": "USDC",
+      "status": "PENDING",
+      "dueDate": "2026-04-30T00:00:00.000Z",
+      "category": "Contractor",
+      "recurring": true,
+      "frequency": "MONTHLY",
+      "createdAt": "2026-04-01T08:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "uuid": "bill-0004",
+      "vendor": "Studio Forma",
+      "description": "App redesign - Final milestone",
+      "amount": 3500,
       "currency": "USDC",
       "status": "PENDING",
       "dueDate": "2026-04-10T00:00:00.000Z",
@@ -1794,35 +1588,49 @@
       "recurring": false,
       "frequency": null,
       "createdAt": "2026-04-01T11:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "uuid": "bill-0005",
+      "vendor": "Hetzner Cloud",
+      "description": "Dedicated server - Monthly",
+      "amount": 450,
+      "currency": "USDC",
+      "status": "PENDING",
+      "dueDate": "2026-04-05T00:00:00.000Z",
+      "category": "Vendor",
+      "recurring": true,
+      "frequency": "MONTHLY",
+      "createdAt": "2026-03-28T08:00:00.000Z"
     }
   ],
   "billStats": {
-    "totalPending": 17120,
-    "totalOverdue": 580,
-    "totalPaid": 28457,
+    "totalPending": 22300,
+    "totalOverdue": 350,
+    "totalPaid": 48296,
     "billCount": 5
   },
   "paymentLinks": [
     {
       "id": 1,
       "uuid": "pl-0001",
-      "code": "novapay-api-pilot",
-      "title": "API Integration Pilot",
-      "description": "Payment for NovaPay API integration pilot program",
+      "code": "nabla-liquidity-consulting",
+      "title": "Liquidity Consulting",
+      "description": "Payment for Nabla Finance liquidity consulting and advisory services",
       "amount": 5000,
       "currency": "USDC",
       "status": "ACTIVE",
       "recipientAddress": "0xa1b2c3d4e5f60001",
-      "recipientName": "NovaPay Labs",
-      "timesUsed": 2,
+      "recipientName": "Nabla Finance",
+      "timesUsed": 1,
       "maxUses": null,
       "expiresAt": null,
       "createdAt": "2026-02-15T10:00:00.000Z",
       "payments": [
         {
           "id": "pay-001",
-          "payerName": "Acme Corp",
-          "payerEmail": "finance@acmecorp.io",
+          "payerName": "Pendle Finance",
+          "payerEmail": "biz@pendle.finance",
           "payer": "0x7d3e8f1a2b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e",
           "amount": 5000,
           "status": "COMPLETED",
@@ -1830,32 +1638,20 @@
           "paymentMethod": "crypto",
           "paidAt": "2026-03-22T11:00:00.000Z",
           "createdAt": "2026-03-22T11:00:00.000Z"
-        },
-        {
-          "id": "pay-002",
-          "payerName": null,
-          "payerEmail": "payments@blockfi.io",
-          "payer": "0x4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b",
-          "amount": 5000,
-          "status": "COMPLETED",
-          "txid": "0xdef789abc012345678901234567890abcdef1234",
-          "paymentMethod": "card",
-          "paidAt": "2026-03-28T14:30:00.000Z",
-          "createdAt": "2026-03-28T14:30:00.000Z"
         }
       ]
     },
     {
       "id": 2,
       "uuid": "pl-0002",
-      "code": "novapay-consulting",
-      "title": "Consulting Services",
-      "description": "Hourly consulting for payment infrastructure",
+      "code": "nabla-integration-fee",
+      "title": "Protocol Integration Fee",
+      "description": "One-time fee for Nabla liquidity protocol integration",
       "amount": null,
       "currency": "USDC",
       "status": "ACTIVE",
       "recipientAddress": "0xa1b2c3d4e5f60001",
-      "recipientName": "NovaPay Labs",
+      "recipientName": "Nabla Finance",
       "timesUsed": 0,
       "maxUses": null,
       "expiresAt": "2026-06-30T00:00:00.000Z",
@@ -1865,17 +1661,17 @@
     {
       "id": 3,
       "uuid": "pl-0003",
-      "code": "novapay-hackathon-prize",
-      "title": "Hackathon Prize Pool",
-      "description": "Prize distribution for NovaPay Hackathon 2026",
-      "amount": 2500,
+      "code": "nabla-grant-contribution",
+      "title": "Ecosystem Grant Contribution",
+      "description": "Contribute to the Nabla ecosystem development fund",
+      "amount": 1000,
       "currency": "USDC",
       "status": "ACTIVE",
       "recipientAddress": "0xa1b2c3d4e5f60001",
-      "recipientName": "NovaPay Labs",
+      "recipientName": "Nabla Finance",
       "timesUsed": 0,
-      "maxUses": 3,
-      "expiresAt": "2026-05-01T00:00:00.000Z",
+      "maxUses": 10,
+      "expiresAt": "2026-12-31T00:00:00.000Z",
       "createdAt": "2026-03-15T10:00:00.000Z",
       "payments": []
     }
@@ -1893,7 +1689,7 @@
     {
       "id": "ctx-002",
       "merchant": "AWS",
-      "amount": 340,
+      "amount": 280,
       "currency": "USD",
       "category": "Cloud",
       "date": "2026-03-03T08:00:00.000Z",
@@ -1910,8 +1706,8 @@
     },
     {
       "id": "ctx-004",
-      "merchant": "Google Workspace",
-      "amount": 72,
+      "merchant": "Notion",
+      "amount": 10,
       "currency": "USD",
       "category": "Software",
       "date": "2026-03-01T08:00:00.000Z",
@@ -1919,8 +1715,8 @@
     },
     {
       "id": "ctx-005",
-      "merchant": "ClickUp",
-      "amount": 29,
+      "merchant": "GitHub",
+      "amount": 44,
       "currency": "USD",
       "category": "Software",
       "date": "2026-03-01T08:00:00.000Z",
@@ -1929,7 +1725,7 @@
     {
       "id": "ctx-006",
       "merchant": "Uber",
-      "amount": 45,
+      "amount": 65,
       "currency": "USD",
       "category": "Travel",
       "date": "2026-03-15T20:00:00.000Z",
@@ -1937,55 +1733,37 @@
     },
     {
       "id": "ctx-007",
-      "merchant": "GitHub",
-      "amount": 40,
+      "merchant": "Regus Coworking",
+      "amount": 350,
       "currency": "USD",
-      "category": "Software",
-      "date": "2026-03-10T08:00:00.000Z",
-      "status": "COMPLETED"
-    },
-    {
-      "id": "ctx-008",
-      "merchant": "Notion",
-      "amount": 100,
-      "currency": "USD",
-      "category": "Software",
-      "date": "2026-03-15T08:00:00.000Z",
-      "status": "COMPLETED"
-    },
-    {
-      "id": "ctx-009",
-      "merchant": "Grab",
-      "amount": 32,
-      "currency": "USD",
-      "category": "Travel",
-      "date": "2026-03-18T19:30:00.000Z",
-      "status": "COMPLETED"
-    },
-    {
-      "id": "ctx-010",
-      "merchant": "Starbucks",
-      "amount": 18,
-      "currency": "USD",
-      "category": "Meals",
-      "date": "2026-03-20T10:00:00.000Z",
-      "status": "COMPLETED"
-    },
-    {
-      "id": "ctx-011",
-      "merchant": "Linear",
-      "amount": 40,
-      "currency": "USD",
-      "category": "Software",
+      "category": "Office",
       "date": "2026-03-01T08:00:00.000Z",
       "status": "COMPLETED"
     },
     {
-      "id": "ctx-012",
-      "merchant": "1Password",
-      "amount": 20,
-      "currency": "USD",
-      "category": "Security",
+      "id": "ctx-008",
+      "merchant": "Lufthansa",
+      "amount": 320,
+      "currency": "EUR",
+      "category": "Travel",
+      "date": "2026-03-12T14:00:00.000Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "ctx-009",
+      "merchant": "Restaurant Concordia",
+      "amount": 85,
+      "currency": "EUR",
+      "category": "Meals",
+      "date": "2026-03-15T19:30:00.000Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "ctx-010",
+      "merchant": "Hetzner Cloud",
+      "amount": 450,
+      "currency": "EUR",
+      "category": "Cloud",
       "date": "2026-03-01T08:00:00.000Z",
       "status": "COMPLETED"
     }
@@ -1994,20 +1772,20 @@
     "id": "card-001",
     "last4": "4829",
     "brand": "Visa",
-    "cardholder": "NovaPay Labs",
+    "cardholder": "Mieszko Manijak",
     "expiryMonth": 12,
     "expiryYear": 2028,
     "cvv": "491",
     "spendingLimit": 5000,
-    "currentSpend": 771,
+    "currentSpend": 1639,
     "status": "ACTIVE",
     "frozen": false
   },
-  "cardPoolBalance": 25000,
+  "cardPoolBalance": 15000,
   "invoiceSettings": {
     "logo": null,
     "accentColor": "#194BFA",
-    "invoicePrefix": "INV-",
+    "invoicePrefix": "NAB-",
     "nextInvoiceNumber": 7,
     "defaultPaymentTerms": "Net 30",
     "defaultNote": "",
@@ -2021,12 +1799,12 @@
       "id": "card-001",
       "last4": "4829",
       "brand": "Visa",
-      "cardholder": "NovaPay Labs",
+      "cardholder": "Mieszko Manijak",
       "expiryMonth": 12,
       "expiryYear": 2028,
       "cvv": "491",
       "spendingLimit": 5000,
-      "currentSpend": 771,
+      "currentSpend": 1639,
       "status": "ACTIVE",
       "frozen": false,
       "dailyLimit": 2000,
@@ -2036,132 +1814,103 @@
     {
       "id": "card-002",
       "last4": "7213",
-      "brand": "Mastercard",
-      "cardholder": "Jupeng Ng",
+      "brand": "Visa",
+      "cardholder": "Mitja Belak",
       "expiryMonth": 6,
       "expiryYear": 2027,
       "cvv": "328",
-      "spendingLimit": 2000,
-      "currentSpend": 1420,
+      "spendingLimit": 3000,
+      "currentSpend": 870,
       "status": "ACTIVE",
       "frozen": false,
-      "dailyLimit": 500,
-      "weeklyLimit": 2000,
-      "monthlyLimit": 2000
-    },
-    {
-      "id": "card-003",
-      "last4": "9051",
-      "brand": "Visa",
-      "cardholder": "Operations",
-      "expiryMonth": 3,
-      "expiryYear": 2029,
-      "cvv": "615",
-      "spendingLimit": 10000,
-      "currentSpend": 3250,
-      "status": "ACTIVE",
-      "frozen": true,
-      "dailyLimit": 5000,
-      "weeklyLimit": 20000,
-      "monthlyLimit": 10000
+      "dailyLimit": 1000,
+      "weeklyLimit": 5000,
+      "monthlyLimit": 3000
     }
   ],
   "rampHistory": [
     {
       "id": "ramp-001",
       "type": "ON_RAMP",
-      "fromCurrency": "SGD",
+      "fromCurrency": "EUR",
       "toCurrency": "USDC",
-      "fromAmount": 13500,
-      "toAmount": 10000,
-      "rate": 1.35,
-      "fee": 25,
+      "fromAmount": 18500,
+      "toAmount": 20000,
+      "rate": 0.925,
+      "fee": 30,
       "status": "COMPLETED",
-      "bankAccount": "DBS Bank ****6721",
-      "completedAt": "2026-02-10T14:00:00.000Z"
+      "bankAccount": "Commerzbank ****3412",
+      "completedAt": "2026-01-15T14:00:00.000Z"
     },
     {
       "id": "ramp-002",
       "type": "OFF_RAMP",
       "fromCurrency": "USDC",
-      "toCurrency": "SGD",
-      "fromAmount": 5000,
-      "toAmount": 6700,
-      "rate": 1.34,
-      "fee": 15,
+      "toCurrency": "EUR",
+      "fromAmount": 10000,
+      "toAmount": 9250,
+      "rate": 0.925,
+      "fee": 20,
       "status": "COMPLETED",
-      "bankAccount": "DBS Bank ****6721",
+      "bankAccount": "Commerzbank ****3412",
       "completedAt": "2026-03-05T10:00:00.000Z"
     },
     {
       "id": "ramp-003",
       "type": "ON_RAMP",
-      "fromCurrency": "USD",
-      "toCurrency": "USDC",
-      "fromAmount": 20000,
-      "toAmount": 19975,
-      "rate": 1.0,
-      "fee": 25,
-      "status": "COMPLETED",
-      "bankAccount": "DBS Bank ****6721",
-      "completedAt": "2026-03-15T09:00:00.000Z"
-    },
-    {
-      "id": "ramp-004",
-      "type": "ON_RAMP",
       "fromCurrency": "EUR",
       "toCurrency": "USDC",
-      "fromAmount": 9000,
-      "toAmount": 9720,
-      "rate": 0.926,
-      "fee": 20,
+      "fromAmount": 9250,
+      "toAmount": 10000,
+      "rate": 0.925,
+      "fee": 25,
       "status": "COMPLETED",
-      "bankAccount": "DBS Bank ****6721",
-      "completedAt": "2026-01-20T11:00:00.000Z"
+      "bankAccount": "Commerzbank ****3412",
+      "completedAt": "2026-03-20T09:00:00.000Z"
     }
   ],
   "monthlyFinancials": [
     {
-      "month": "2025-10",
-      "income": 650000,
-      "expenses": 2400,
-      "payroll": 0,
-      "netFlow": 647600
-    },
-    {
-      "month": "2025-11",
-      "income": 150000,
-      "expenses": 0,
-      "payroll": 0,
-      "netFlow": 150000
-    },
-    {
-      "month": "2025-12",
-      "income": 0,
-      "expenses": 72000,
-      "payroll": 0,
-      "netFlow": -72000
-    },
-    {
       "month": "2026-01",
       "income": 0,
-      "expenses": 19761,
-      "payroll": 72000,
-      "netFlow": -91761
+      "expenses": 30376,
+      "payroll": 30000,
+      "netFlow": -60376
     },
     {
       "month": "2026-02",
-      "income": 75000,
-      "expenses": 13860,
-      "payroll": 72000,
-      "netFlow": -10860
+      "income": 100000,
+      "expenses": 10680,
+      "payroll": 30000,
+      "netFlow": 59320
     },
     {
       "month": "2026-03",
-      "income": 3500,
-      "expenses": 14456,
-      "payroll": 72000,
-      "netFlow": -82956
+      "income": 5000,
+      "expenses": 13929,
+      "payroll": 30000,
+      "netFlow": -38929
+    },
+    {
+      "month": "2026-04",
+      "income": 0,
+      "expenses": 0,
+      "payroll": 0,
+      "netFlow": 0
+    },
+    {
+      "month": "2026-05",
+      "income": 0,
+      "expenses": 0,
+      "payroll": 0,
+      "netFlow": 0
+    },
+    {
+      "month": "2026-06",
+      "income": 0,
+      "expenses": 0,
+      "payroll": 0,
+      "netFlow": 0
     }
   ]
 }

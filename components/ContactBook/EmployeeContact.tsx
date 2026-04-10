@@ -35,11 +35,11 @@ export const CategoryBadge = ({ shape, color, name }: { shape: CategoryShapeEnum
 
   return (
     <div
-      className={`flex flex-row items-center justify-center gap-3 px-5 py-1 rounded-full border w-fit`}
+      className={`flex flex-row items-center justify-center gap-1.5 px-2.5 py-1 rounded-full border w-fit`}
       style={{ borderColor: color, backgroundColor: `${color}20` }}
     >
       {createShapeElement(shape, color)}
-      <span className="font-semibold truncate" style={{ color: color }}>
+      <span className="font-medium text-xs truncate" style={{ color: color }}>
         {name}
       </span>
     </div>
@@ -379,7 +379,7 @@ export const EmployeeContact = () => {
           </div>
         ),
         Group: (
-          <div className="flex items-center">
+          <div className="flex items-center justify-center">
             <CategoryBadge
               shape={group?.shape || CategoryShapeEnum.CIRCLE}
               color={group?.color || "#35ADE9"}

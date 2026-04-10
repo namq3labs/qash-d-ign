@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { PageHeader } from "@/components/Common/PageHeader";
 import { PrimaryButton } from "@/components/Common/PrimaryButton";
 import { SecondaryButton } from "@/components/Common/SecondaryButton";
@@ -434,77 +435,13 @@ function ReceiptPreviewModal({
   );
 }
 
-// ---- Pay All Confirmation Modal ----
-
-function PayAllModal({
-  isOpen,
-  onClose,
-  pending,
-  total,
-  onConfirm,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  pending: Reimbursement[];
-  total: number;
-  onConfirm: () => void;
-}) {
-  if (!isOpen) return null;
-
-  return (
-    <BaseModal isOpen={isOpen} onClose={onClose}>
-      <ModalHeader title="Pay All Reimbursements" onClose={onClose} icon="/sidebar/bill.svg" />
-      <div className="flex flex-col w-[540px] rounded-b-2xl border-2 border-t-0 border-primary-divider bg-background">
-        {/* Summary */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-primary-divider">
-          <span className="text-text-secondary text-sm">{pending.length} reimbursements</span>
-          <span className="text-text-primary text-lg font-bold">${total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-        </div>
-
-        {/* List */}
-        <div className="max-h-[320px] overflow-y-auto">
-          {pending.map((r) => (
-            <div key={r.id} className="flex items-center justify-between px-5 py-3 border-b border-primary-divider last:border-b-0">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[#7D52F4]/10 flex items-center justify-center text-[#7D52F4] text-xs font-bold shrink-0">
-                  {r.employeeName.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2)}
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-text-primary text-sm font-medium">{r.employeeName}</span>
-                  <span className="text-text-secondary text-xs">{r.description}</span>
-                </div>
-              </div>
-              <span className="text-text-primary text-sm font-medium">${r.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Source info */}
-        <div className="flex items-center gap-3 mx-5 mt-4 p-3 rounded-xl bg-app-background border border-primary-divider">
-          <img src="/token/usdt.svg" alt="USDT" className="w-7 h-7" />
-          <div className="flex-1">
-            <p className="text-text-secondary text-xs">Paid from</p>
-            <p className="text-text-primary text-sm font-medium">USDT (Stablecoin)</p>
-          </div>
-          <span className="text-xs text-text-secondary bg-background px-2 py-1 rounded-full border border-primary-divider">Treasury</span>
-        </div>
-
-        {/* Actions */}
-        <div className="flex gap-2 p-5">
-          <SecondaryButton text="Cancel" onClick={onClose} variant="light" buttonClassName="flex-1" />
-          <PrimaryButton text={`Pay $${total.toLocaleString(undefined, { minimumFractionDigits: 2 })}`} onClick={onConfirm} containerClassName="flex-1" />
-        </div>
-      </div>
-    </BaseModal>
-  );
-}
 
 // ---- Main Page ----
 
 const ReimbursementPage = () => {
+  const router = useRouter();
   const [reimbursements, setReimbursements] = useState<Reimbursement[]>(MOCK_REIMBURSEMENTS);
   const [showSidebar, setShowSidebar] = useState(false);
-  const [showPayAll, setShowPayAll] = useState(false);
   const [previewItem, setPreviewItem] = useState<Reimbursement | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -517,15 +454,7 @@ const ReimbursementPage = () => {
   };
 
   const handlePayAll = () => {
-    setShowPayAll(true);
-  };
-
-  const handleConfirmPayAll = () => {
-    setReimbursements((prev) =>
-      prev.map((r) => (r.status === "pending" || r.status === "approved" ? { ...r, status: "paid" as const } : r))
-    );
-    setShowPayAll(false);
-    toast.success(`${pending.length} reimbursements paid successfully`);
+    router.push("/reimbursement/review");
   };
 
   const tableHeaders = ["Employee", "Description", "Category", "Date", "Amount", "Status", "Receipt"];
@@ -677,14 +606,7 @@ const ReimbursementPage = () => {
         reimbursement={previewItem}
       />
 
-      {/* Pay all confirmation modal */}
-      <PayAllModal
-        isOpen={showPayAll}
-        onClose={() => setShowPayAll(false)}
-        pending={pending}
-        total={pendingTotal}
-        onConfirm={handleConfirmPayAll}
-      />
+      {/* Pay all modal removed - now navigates to /reimbursement/review */}
     </div>
   );
 };

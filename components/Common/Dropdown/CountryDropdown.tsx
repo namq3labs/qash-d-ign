@@ -2,9 +2,15 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 
 const COUNTRY = [
-  // North America / Europe
-  { value: "US", label: "United States", icon: "/flag/us.svg" },
+  // Europe
+  { value: "DE", label: "Germany", icon: "/flag/de.svg" },
+  { value: "UA", label: "Ukraine", icon: "/flag/ua.svg" },
+  { value: "PL", label: "Poland", icon: "/flag/pl.svg" },
+  { value: "SI", label: "Slovenia", icon: "/flag/si.svg" },
   { value: "UK", label: "United Kingdom", icon: "/flag/uk.svg" },
+
+  // North America
+  { value: "US", label: "United States", icon: "/flag/us.svg" },
 
   // Southeast Asia (SEA)
   { value: "VN", label: "Vietnam", icon: "/flag/vn.svg" },

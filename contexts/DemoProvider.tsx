@@ -407,7 +407,7 @@ const DemoContext = createContext<DemoContextType | undefined>(undefined);
 
 const STORAGE_KEY = "qash_demo_state";
 const STORAGE_VERSION_KEY = "qash_demo_version";
-const CURRENT_VERSION = "6"; // Bump to invalidate stale localStorage data
+const CURRENT_VERSION = "7"; // Bump to invalidate stale localStorage data
 const LOGIN_KEY = "qash_demo_login";
 const ENTITY_KEY = "qash_demo_entity";
 
@@ -415,7 +415,6 @@ const ENTITY_KEY = "qash_demo_entity";
 const ENTITY_DATA_FILES: Record<string, string> = {
   primary: "/demo-data.json",
   "entity-2": "/demo-data-entity-2.json",
-  "entity-3": "/demo-data-entity-3.json",
 };
 
 export function DemoProvider({ children }: { children: ReactNode }) {

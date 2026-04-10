@@ -235,7 +235,7 @@ export const ClientContact = () => {
         </div>
       ),
       Company: (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 text-left">
           <div className="w-8 h-8 rounded-lg bg-[#7D52F4]/10 flex items-center justify-center text-[#7D52F4] text-xs font-bold flex-shrink-0">
             {initials}
           </div>

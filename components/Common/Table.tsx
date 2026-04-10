@@ -169,7 +169,7 @@ const SortableTableRow = ({
       {cells.map((cell, index) => (
         <td
           key={index}
-          className={`${tdPadding} text-table-row-text ${index === 0 ? "text-left" : "text-center"}`}
+          className={`${tdPadding} text-table-row-text ${index <= 1 ? "text-left" : "text-center"}`}
           style={{
             width: columnWidths[index.toString()],
             borderColor: "var(--color-table-row-border)",
@@ -229,7 +229,7 @@ const TableHeader = ({
           return (
             <th
               key={index}
-              className={`border-b-1 ${defaultHeaderClass} ${index === 0 ? "text-left" : "text-center"} ${
+              className={`border-b-1 ${defaultHeaderClass} ${index <= 1 ? "text-left" : "text-center"} ${
                 index === 0 && !draggable ? "rounded-tl-2xl" : ""
               } ${index === columns.length - 1 && !actionColumn ? "rounded-tr-2xl" : ""} ${headerClassName}`}
               style={{
@@ -287,7 +287,7 @@ const TableRow = ({
       {cells.map((cell, index) => (
         <td
           key={index}
-          className={`${tdPadding} text-table-row-text ${index === 0 ? "text-left" : "text-center"}`}
+          className={`${tdPadding} text-table-row-text ${index <= 1 ? "text-left" : "text-center"}`}
           style={{
             width: columnWidths[index.toString()],
             borderColor: "var(--color-table-row-border)",

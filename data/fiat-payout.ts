@@ -120,6 +120,67 @@ export const FIAT_COUNTRIES: FiatCountry[] = [
     ],
   },
 
+  // Europe - SEPA
+  {
+    code: "DE",
+    name: "Germany",
+    currency: "Euro",
+    currencyCode: "EUR",
+    rail: "sepa",
+    icon: "/flag/de.svg",
+    banks: [
+      { code: "COMMERZBANK", name: "Commerzbank" },
+      { code: "DEUTSCHE", name: "Deutsche Bank" },
+      { code: "SPARKASSE", name: "Sparkasse" },
+      { code: "N26", name: "N26" },
+      { code: "ING", name: "ING-DiBa" },
+    ],
+  },
+  {
+    code: "UA",
+    name: "Ukraine",
+    currency: "Ukrainian Hryvnia",
+    currencyCode: "UAH",
+    rail: "local",
+    icon: "/flag/ua.svg",
+    banks: [
+      { code: "PRIVAT", name: "PrivatBank" },
+      { code: "MONO", name: "Monobank" },
+      { code: "OSCHAD", name: "Oschadbank" },
+      { code: "UKRSIB", name: "UkrSibbank" },
+      { code: "RAIFFEISEN", name: "Raiffeisen Bank Aval" },
+    ],
+  },
+  {
+    code: "PL",
+    name: "Poland",
+    currency: "Polish Zloty",
+    currencyCode: "PLN",
+    rail: "sepa",
+    icon: "/flag/pl.svg",
+    banks: [
+      { code: "PKO", name: "PKO Bank Polski" },
+      { code: "MBANK", name: "mBank" },
+      { code: "ING", name: "ING Bank Slaski" },
+      { code: "SANTANDER", name: "Santander Bank Polska" },
+      { code: "PEKAO", name: "Bank Pekao" },
+    ],
+  },
+  {
+    code: "SI",
+    name: "Slovenia",
+    currency: "Euro",
+    currencyCode: "EUR",
+    rail: "sepa",
+    icon: "/flag/si.svg",
+    banks: [
+      { code: "NLB", name: "NLB" },
+      { code: "NOVA", name: "Nova KBM" },
+      { code: "SKB", name: "SKB Banka" },
+      { code: "INTESA", name: "Banka Intesa Sanpaolo" },
+    ],
+  },
+
   // US - ACH
   {
     code: "US",

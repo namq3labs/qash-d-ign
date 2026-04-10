@@ -3,7 +3,53 @@
 // Async function stubs
 export const getInvoices = async (_query?: any) => ({ invoices: [], pagination: {} });
 export const getInvoiceStats = async () => ({});
-export const getInvoiceByUUID = async (_uuid: string) => null;
+export const getInvoiceByUUID = async (_uuid: string) => {
+  // In demo mode, bill UUIDs are passed as invoiceUUID params.
+  // Look up the bill from demo data and return it in the invoice shape.
+  try {
+    if (typeof window === "undefined") return null;
+    const stored = JSON.parse(localStorage.getItem("qash_demo_state") || "{}");
+    const bill = (stored.bills ?? []).find((b: any) => b.uuid === _uuid);
+    if (!bill) return null;
+    return {
+      uuid: bill.uuid,
+      invoiceNumber: `BILL-${bill.id}`,
+      fromDetails: { name: bill.vendor, companyName: bill.vendor },
+      toDetails: {
+        companyName: stored.company?.companyName || "",
+        email: stored.user?.email || "",
+        address1: "",
+        address2: "",
+        city: "",
+        country: stored.company?.country || "",
+      },
+      toCompany: {
+        companyName: stored.company?.companyName || "",
+        companyType: stored.company?.industry || "",
+      },
+      total: bill.amount,
+      subtotal: bill.amount,
+      totalUsd: bill.amount,
+      paymentToken: { name: "USDT", symbol: "USDT" },
+      currency: bill.currency || "USDC",
+      status: bill.status,
+      issueDate: bill.createdAt,
+      dueDate: bill.dueDate,
+      paymentWalletAddress: stored.accounts?.[0]?.accountId || "",
+      items: [
+        {
+          description: bill.description,
+          quantity: 1,
+          unitPrice: bill.amount,
+          total: bill.amount,
+        },
+      ],
+      employee: null,
+    };
+  } catch {
+    return null;
+  }
+};
 export const downloadInvoicePdf = async (_uuid: string) => new Blob();
 export const createPayrollInvoice = async (_data: any) => ({});
 export const generateInvoice = async (_payrollId: number) => ({});
