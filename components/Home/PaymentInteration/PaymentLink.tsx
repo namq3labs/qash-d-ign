@@ -16,6 +16,7 @@ import { PaymentLink as PaymentLinkType, PaymentLinkStatus } from "@qash/types/d
 import { blo } from "blo";
 import { turnBechToHex } from "@/services/utils/turnBechToHex";
 import toast from "react-hot-toast";
+import { getAppUrl } from "@/services/utils/getAppUrl";
 import { PaymentLinkActionsTooltip } from "../../PaymentLink/PaymentLinkActionsTooltip";
 import { Tooltip } from "react-tooltip";
 import { FloatingFooter } from "../../Common/FloatingFooter";
@@ -165,7 +166,7 @@ export const PaymentLink: React.FC<PaymentLinkProps> = ({ checkedRows, setChecke
       ),
       Link: (
         <span className="text-text-primary text-sm leading-none underline">
-          {process.env.NEXT_PUBLIC_APP_URL}/payment/{link.code}
+          {getAppUrl()}/payment/{link.code}
         </span>
       ),
       Title: link.title,
@@ -193,7 +194,7 @@ export const PaymentLink: React.FC<PaymentLinkProps> = ({ checkedRows, setChecke
           <SecondaryButton
             text="Copy Link"
             onClick={() => {
-              const url = `${process.env.NEXT_PUBLIC_APP_URL}/payment/${link.code}`;
+              const url = `${getAppUrl()}/payment/${link.code}`;
               navigator.clipboard.writeText(url);
               toast.success("Payment link copied to clipboard");
             }}

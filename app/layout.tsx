@@ -83,6 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${barlow.className} ${repetitionScrolling.variable} ${nanumPenScript.variable} antialiased`}
+        suppressHydrationWarning
       >
         <ThemeProvider defaultTheme="light" storageKey="ui-theme">
           <ClientLayoutWrapper>{children}</ClientLayoutWrapper>

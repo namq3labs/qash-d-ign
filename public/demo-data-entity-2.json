@@ -1,0 +1,811 @@
+{
+  "company": {
+    "id": 2,
+    "uuid": "c0a80101-0000-0000-0000-000000000002",
+    "companyName": "NovaPay Asia",
+    "registrationNumber": "HK-78432156",
+    "country": "Hong Kong",
+    "industry": "Fintech / Crypto Payments",
+    "companySize": "1-10",
+    "website": "https://novapay.io/asia",
+    "logo": null,
+    "createdAt": "2025-11-01T08:00:00.000Z",
+    "updatedAt": "2026-03-20T10:00:00.000Z"
+  },
+  "user": {
+    "id": 1,
+    "uuid": "u0a80101-0000-0000-0000-000000000001",
+    "email": "alex@novapay.io",
+    "role": "ADMIN",
+    "isActive": true,
+    "teamMembership": {
+      "id": 1,
+      "uuid": "tm-2001",
+      "firstName": "Alex",
+      "lastName": "Chen",
+      "position": "CEO",
+      "role": "OWNER",
+      "companyId": 2,
+      "profilePicture": null,
+      "company": {
+        "id": 2,
+        "companyName": "NovaPay Asia"
+      }
+    }
+  },
+  "teamMembers": [
+    {
+      "id": 1,
+      "uuid": "tm-2001",
+      "firstName": "Alex",
+      "lastName": "Chen",
+      "email": "alex@novapay.io",
+      "position": "CEO",
+      "role": "OWNER",
+      "status": "ACTIVE",
+      "walletAddress": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef01",
+      "salary": 0,
+      "salaryCurrency": "USDC",
+      "profilePicture": null,
+      "joinedAt": "2025-11-01T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "uuid": "tm-2002",
+      "firstName": "Wei",
+      "lastName": "Lin",
+      "email": "wei@novapay.io",
+      "position": "Operations Lead",
+      "role": "ADMIN",
+      "status": "ACTIVE",
+      "walletAddress": "0xb2c3d4e5f6a70001abcdef1234567890abcdef02",
+      "salary": 8000,
+      "salaryCurrency": "USDC",
+      "profilePicture": null,
+      "joinedAt": "2025-11-15T08:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "uuid": "tm-2003",
+      "firstName": "Hiroshi",
+      "lastName": "Tanaka",
+      "email": "hiroshi@novapay.io",
+      "position": "BD Manager",
+      "role": "MEMBER",
+      "status": "ACTIVE",
+      "walletAddress": "0xc3d4e5f6a7b80002abcdef1234567890abcdef03",
+      "salary": 7000,
+      "salaryCurrency": "USDC",
+      "profilePicture": null,
+      "joinedAt": "2025-12-01T08:00:00.000Z"
+    }
+  ],
+  "teamStats": {
+    "total": 3,
+    "active": 3,
+    "suspended": 0,
+    "pending": 0
+  },
+  "accounts": [
+    {
+      "id": "acc-201",
+      "uuid": "acc-uuid-201",
+      "accountId": "0xb1c2d3e4f5a60001",
+      "name": "Asia Operations",
+      "description": "Primary wallet for NovaPay Asia operations",
+      "threshold": 1,
+      "companyId": 2,
+      "logo": null,
+      "publicKeys": [
+        "0xdef001"
+      ],
+      "members": [
+        {
+          "name": "Alex Chen",
+          "commitment": "0xdef001",
+          "role": "OWNER"
+        }
+      ],
+      "thresholdControl": {
+        "amountThreshold": 5000,
+        "highSigners": 1,
+        "lowSigners": 1
+      },
+      "createdAt": "2025-11-05T08:00:00.000Z"
+    }
+  ],
+  "balances": {
+    "0xb1c2d3e4f5a60001": [
+      {
+        "faucetId": "0xusdc0001",
+        "symbol": "USDC",
+        "amount": 280000,
+        "decimals": 6
+      },
+      {
+        "faucetId": "0xusdt0001",
+        "symbol": "USDT",
+        "amount": 44100.50,
+        "decimals": 6
+      }
+    ]
+  },
+  "totalBalance": 324100.50,
+  "contacts": [
+    {
+      "id": 1,
+      "uuid": "ct-2001",
+      "name": "HashKey Group",
+      "walletAddress": "0xha5001aabbccddee1234567890abcdef01020304",
+      "email": "partnerships@hashkey.com",
+      "category": "Partners",
+      "notes": "Licensed exchange partner in Hong Kong"
+    },
+    {
+      "id": 2,
+      "uuid": "ct-2002",
+      "name": "Animoca Brands",
+      "walletAddress": "0xan1002aabbccddee1234567890abcdef01020304",
+      "email": "treasury@animocabrands.com",
+      "category": "Partners",
+      "notes": "Web3 gaming and investment partner"
+    },
+    {
+      "id": 3,
+      "uuid": "ct-2003",
+      "name": "TZ APAC",
+      "walletAddress": "0xtz4003aabbccddee1234567890abcdef01020304",
+      "email": "ops@tzapac.com",
+      "category": "Vendors",
+      "notes": "Regional blockchain advisory"
+    }
+  ],
+  "contactCategories": [
+    {
+      "id": 1,
+      "name": "Investors",
+      "order": 1
+    },
+    {
+      "id": 2,
+      "name": "Vendors",
+      "order": 2
+    },
+    {
+      "id": 3,
+      "name": "Contractors",
+      "order": 3
+    },
+    {
+      "id": 4,
+      "name": "Partners",
+      "order": 4
+    }
+  ],
+  "employeeGroups": [
+    {
+      "id": 1,
+      "name": "Asia Team",
+      "shape": "CIRCLE",
+      "color": "#35ADE9",
+      "order": 1,
+      "companyId": 2,
+      "createdAt": "2025-11-01T08:00:00.000Z",
+      "updatedAt": "2025-11-01T08:00:00.000Z"
+    }
+  ],
+  "employees": [
+    {
+      "id": 1,
+      "name": "Alex Chen",
+      "walletAddress": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
+      "email": "alex@novapay.io",
+      "groupId": 1,
+      "companyId": 2,
+      "paymentMethod": "crypto",
+      "token": {
+        "address": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
+        "symbol": "QASH",
+        "decimals": 8,
+        "name": "QASH"
+      },
+      "network": {
+        "name": "Miden Testnet",
+        "chainId": 0
+      },
+      "order": 1,
+      "createdAt": "2025-11-01T08:00:00.000Z",
+      "updatedAt": "2025-11-01T08:00:00.000Z",
+      "employeeType": "employee",
+      "isActive": true
+    },
+    {
+      "id": 2,
+      "name": "Wei Lin",
+      "walletAddress": "mtst1bwl8u6nzrt4n6hqies5lvet9henoz48_rtvrrzxqzri",
+      "email": "wei@novapay.io",
+      "groupId": 1,
+      "companyId": 2,
+      "paymentMethod": "crypto",
+      "token": {
+        "address": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
+        "symbol": "QASH",
+        "decimals": 8,
+        "name": "QASH"
+      },
+      "network": {
+        "name": "Miden Testnet",
+        "chainId": 0
+      },
+      "order": 2,
+      "createdAt": "2025-11-15T08:00:00.000Z",
+      "updatedAt": "2025-11-15T08:00:00.000Z",
+      "employeeType": "employee",
+      "isActive": true
+    },
+    {
+      "id": 3,
+      "name": "Hiroshi Tanaka",
+      "walletAddress": "mtst1cxm7v5oasu5o7irjft6mwfu0ifopy59_qswssaxrasi",
+      "email": "hiroshi@novapay.io",
+      "groupId": 1,
+      "companyId": 2,
+      "paymentMethod": "crypto",
+      "token": {
+        "address": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
+        "symbol": "QASH",
+        "decimals": 8,
+        "name": "QASH"
+      },
+      "network": {
+        "name": "Miden Testnet",
+        "chainId": 0
+      },
+      "order": 3,
+      "createdAt": "2025-12-01T08:00:00.000Z",
+      "updatedAt": "2025-12-01T08:00:00.000Z",
+      "employeeType": "employee",
+      "isActive": true
+    }
+  ],
+  "clients": [
+    {
+      "uuid": "cl-2001",
+      "email": "partnerships@hashkey.com",
+      "companyName": "HashKey Group",
+      "companyType": "Exchange",
+      "country": "Hong Kong",
+      "city": "Hong Kong",
+      "createdAt": "2025-12-01T08:00:00.000Z",
+      "updatedAt": "2025-12-01T08:00:00.000Z"
+    },
+    {
+      "uuid": "cl-2002",
+      "email": "finance@matrixport.com",
+      "companyName": "Matrixport",
+      "companyType": "Digital Assets",
+      "country": "Singapore",
+      "city": "Singapore",
+      "createdAt": "2026-01-10T08:00:00.000Z",
+      "updatedAt": "2026-01-10T08:00:00.000Z"
+    },
+    {
+      "uuid": "cl-2003",
+      "email": "ops@xrex.io",
+      "companyName": "XREX",
+      "companyType": "Blockchain",
+      "country": "Taiwan",
+      "city": "Taipei",
+      "createdAt": "2026-02-05T08:00:00.000Z",
+      "updatedAt": "2026-02-05T08:00:00.000Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "tx-201",
+      "type": "RECEIVE",
+      "status": "COMPLETED",
+      "amount": 200000,
+      "currency": "USDC",
+      "from": "NovaPay Labs (HQ)",
+      "fromAddress": "0xa1b2c3d4e5f60001",
+      "to": "Asia Operations",
+      "toAddress": "0xb1c2d3e4f5a60001",
+      "accountId": "0xb1c2d3e4f5a60001",
+      "category": "Internal Transfer",
+      "label": "Initial funding from HQ",
+      "txHash": "0xfb201abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2025-11-10T10:00:00.000Z",
+      "note": "Seed capital for Asia operations"
+    },
+    {
+      "id": "tx-202",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 18000,
+      "currency": "USDC",
+      "from": "Asia Operations",
+      "fromAddress": "0xb1c2d3e4f5a60001",
+      "to": "Payroll Batch",
+      "toAddress": "multiple",
+      "accountId": "0xb1c2d3e4f5a60001",
+      "category": "Payroll",
+      "label": "March 2026 Payroll",
+      "txHash": "0xfb202abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-03-31T10:00:00.000Z",
+      "note": "Monthly payroll for 3 employees"
+    },
+    {
+      "id": "tx-203",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 1800,
+      "currency": "USDC",
+      "from": "Asia Operations",
+      "fromAddress": "0xb1c2d3e4f5a60001",
+      "to": "TZ APAC",
+      "toAddress": "0xtz4003aabbccddee1234567890abcdef01020304",
+      "accountId": "0xb1c2d3e4f5a60001",
+      "category": "Vendor",
+      "label": "Advisory retainer - Q1 2026",
+      "txHash": "0xfb203abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-01-15T09:00:00.000Z",
+      "note": "Blockchain advisory services"
+    },
+    {
+      "id": "tx-204",
+      "type": "RECEIVE",
+      "status": "COMPLETED",
+      "amount": 30000,
+      "currency": "USDC",
+      "from": "HashKey Group",
+      "fromAddress": "0xha5001aabbccddee1234567890abcdef01020304",
+      "to": "Asia Operations",
+      "toAddress": "0xb1c2d3e4f5a60001",
+      "accountId": "0xb1c2d3e4f5a60001",
+      "category": "Other",
+      "label": "Integration partnership payment",
+      "txHash": "0xfb204abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-02-01T14:00:00.000Z",
+      "note": "Payment for exchange integration work"
+    },
+    {
+      "id": "tx-205",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 2500,
+      "currency": "USDC",
+      "from": "Asia Operations",
+      "fromAddress": "0xb1c2d3e4f5a60001",
+      "to": "Cyberport HK",
+      "toAddress": "0xcy8005aabbccddee1234567890abcdef01020304",
+      "accountId": "0xb1c2d3e4f5a60001",
+      "category": "Vendor",
+      "label": "Cyberport coworking - Q1",
+      "txHash": "0xfb205abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-01-05T08:00:00.000Z",
+      "note": "Office space at Cyberport"
+    },
+    {
+      "id": "tx-206",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 15000,
+      "currency": "USDC",
+      "from": "Asia Operations",
+      "fromAddress": "0xb1c2d3e4f5a60001",
+      "to": "Matrixport",
+      "toAddress": "0xma6006aabbccddee1234567890abcdef01020304",
+      "accountId": "0xb1c2d3e4f5a60001",
+      "category": "Other",
+      "label": "API licensing fee - Matrixport",
+      "txHash": "0xfb206abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-02-20T11:00:00.000Z",
+      "note": "Custody API integration licensing"
+    },
+    {
+      "id": "tx-207",
+      "type": "RECEIVE",
+      "status": "COMPLETED",
+      "amount": 15000,
+      "currency": "USDT",
+      "from": "XREX",
+      "fromAddress": "0xxr3007aabbccddee1234567890abcdef01020304",
+      "to": "Asia Operations",
+      "toAddress": "0xb1c2d3e4f5a60001",
+      "accountId": "0xb1c2d3e4f5a60001",
+      "category": "Other",
+      "label": "Cross-border pilot payment",
+      "txHash": "0xfb207abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-03-10T15:00:00.000Z",
+      "note": "Revenue from XREX integration pilot"
+    },
+    {
+      "id": "tx-208",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 3500,
+      "currency": "USDC",
+      "from": "Asia Operations",
+      "fromAddress": "0xb1c2d3e4f5a60001",
+      "to": "ETH Hong Kong",
+      "toAddress": "0xet8008aabbccddee1234567890abcdef01020304",
+      "accountId": "0xb1c2d3e4f5a60001",
+      "category": "Other",
+      "label": "ETH Hong Kong 2026 sponsorship",
+      "txHash": "0xfb208abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-03-18T10:00:00.000Z",
+      "note": "Event sponsorship for brand visibility"
+    }
+  ],
+  "pendingProposals": [
+    {
+      "id": "prop-201",
+      "uuid": "prop-uuid-201",
+      "accountId": "0xb1c2d3e4f5a60001",
+      "accountName": "Asia Operations",
+      "type": "SEND",
+      "proposalCategory": "paying_bill",
+      "status": "PENDING",
+      "amount": 2500,
+      "currency": "USDC",
+      "to": "Cyberport HK",
+      "toAddress": "0xcy8005aabbccddee1234567890abcdef01020304",
+      "label": "Cyberport coworking - Q2",
+      "note": "Office space renewal for Q2 2026",
+      "createdBy": "Wei Lin",
+      "createdAt": "2026-04-01T09:00:00.000Z",
+      "signatures": [],
+      "requiredSignatures": 1
+    },
+    {
+      "id": "prop-202",
+      "uuid": "prop-uuid-202",
+      "accountId": "0xb1c2d3e4f5a60001",
+      "accountName": "Asia Operations",
+      "type": "SEND",
+      "proposalCategory": "paying_payroll",
+      "status": "PENDING",
+      "amount": 18000,
+      "currency": "USDC",
+      "to": "Payroll Batch",
+      "toAddress": "multiple",
+      "label": "April 2026 Payroll",
+      "note": "Monthly payroll for 3 employees",
+      "createdBy": "Alex Chen",
+      "createdAt": "2026-04-02T09:00:00.000Z",
+      "signatures": [],
+      "requiredSignatures": 1
+    }
+  ],
+  "payrolls": [
+    {
+      "id": 1,
+      "uuid": "pr-2001",
+      "name": "March 2026 Payroll",
+      "status": "COMPLETED",
+      "totalAmount": 18000,
+      "currency": "USDC",
+      "employeeCount": 3,
+      "executedAt": "2026-03-31T10:00:00.000Z",
+      "createdAt": "2026-03-28T09:00:00.000Z",
+      "accountId": "0xb1c2d3e4f5a60001",
+      "accountName": "Asia Operations",
+      "txHash": "0xfb202abc123def456789aabbccdd0011eeff2233",
+      "recipients": [
+        {
+          "name": "Alex Chen",
+          "amount": 3000,
+          "walletAddress": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef01",
+          "status": "PAID"
+        },
+        {
+          "name": "Wei Lin",
+          "amount": 8000,
+          "walletAddress": "0xb2c3d4e5f6a70001abcdef1234567890abcdef02",
+          "status": "PAID"
+        },
+        {
+          "name": "Hiroshi Tanaka",
+          "amount": 7000,
+          "walletAddress": "0xc3d4e5f6a7b80002abcdef1234567890abcdef03",
+          "status": "PAID"
+        }
+      ]
+    }
+  ],
+  "payrollStats": {
+    "totalPaid": 18000,
+    "totalPayrolls": 1,
+    "averagePerPayroll": 18000,
+    "nextPayrollDate": "2026-04-15T00:00:00.000Z"
+  },
+  "invoices": [
+    {
+      "id": 1,
+      "uuid": "inv-2001",
+      "invoiceNumber": "NPA-2026-001",
+      "type": "SENT",
+      "status": "PAID",
+      "amount": 30000,
+      "currency": "USDC",
+      "from": "NovaPay Asia",
+      "to": "HashKey Group",
+      "toEmail": "partnerships@hashkey.com",
+      "description": "Exchange integration services",
+      "dueDate": "2026-02-15T00:00:00.000Z",
+      "paidAt": "2026-02-01T14:00:00.000Z",
+      "createdAt": "2026-01-15T10:00:00.000Z",
+      "items": [
+        {
+          "description": "Exchange API integration",
+          "quantity": 1,
+          "unitPrice": 20000
+        },
+        {
+          "description": "Testing and QA support",
+          "quantity": 1,
+          "unitPrice": 10000
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "uuid": "inv-2002",
+      "invoiceNumber": "NPA-2026-002",
+      "type": "SENT",
+      "status": "PENDING",
+      "amount": 15000,
+      "currency": "USDC",
+      "from": "NovaPay Asia",
+      "to": "XREX",
+      "toEmail": "ops@xrex.io",
+      "description": "Cross-border payment pilot - Phase 2",
+      "dueDate": "2026-04-30T00:00:00.000Z",
+      "paidAt": null,
+      "createdAt": "2026-03-25T10:00:00.000Z",
+      "items": [
+        {
+          "description": "Cross-border corridor setup (TW-HK)",
+          "quantity": 1,
+          "unitPrice": 10000
+        },
+        {
+          "description": "Compliance and reporting module",
+          "quantity": 1,
+          "unitPrice": 5000
+        }
+      ]
+    }
+  ],
+  "invoiceStats": {
+    "totalSent": 45000,
+    "totalReceived": 0,
+    "pendingSent": 15000,
+    "pendingReceived": 0,
+    "paidSent": 30000,
+    "paidReceived": 0
+  },
+  "bills": [
+    {
+      "id": 1,
+      "uuid": "bill-2001",
+      "vendor": "Cyberport HK",
+      "description": "Coworking space - Quarterly",
+      "amount": 2500,
+      "currency": "USDC",
+      "status": "PENDING",
+      "dueDate": "2026-04-10T00:00:00.000Z",
+      "category": "Vendor",
+      "recurring": true,
+      "frequency": "QUARTERLY",
+      "createdAt": "2026-03-28T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "uuid": "bill-2002",
+      "vendor": "TZ APAC",
+      "description": "Advisory retainer - Monthly",
+      "amount": 700,
+      "currency": "USDC",
+      "status": "PAID",
+      "dueDate": "2026-03-15T00:00:00.000Z",
+      "category": "Vendor",
+      "recurring": true,
+      "frequency": "MONTHLY",
+      "createdAt": "2026-03-01T08:00:00.000Z"
+    }
+  ],
+  "billStats": {
+    "totalPending": 3200,
+    "totalOverdue": 0,
+    "totalPaid": 8500,
+    "billCount": 2
+  },
+  "paymentLinks": [
+    {
+      "id": 1,
+      "uuid": "pl-2001",
+      "code": "novapay-asia-enterprise",
+      "title": "Asia Enterprise Integration",
+      "description": "Payment for NovaPay Asia enterprise integration services",
+      "amount": 25000,
+      "currency": "USDC",
+      "status": "ACTIVE",
+      "recipientAddress": "0xb1c2d3e4f5a60001",
+      "recipientName": "NovaPay Asia",
+      "timesUsed": 1,
+      "maxUses": null,
+      "expiresAt": null,
+      "createdAt": "2026-01-20T10:00:00.000Z",
+      "payments": [
+        {
+          "id": "pay-201",
+          "payerName": "HashKey Group",
+          "payerEmail": "partnerships@hashkey.com",
+          "payer": "0xha5001aabbccddee1234567890abcdef01020304",
+          "amount": 25000,
+          "status": "COMPLETED",
+          "txid": "0xpay201abc123def456789012345678901234abcd",
+          "paymentMethod": "crypto",
+          "paidAt": "2026-02-01T14:00:00.000Z",
+          "createdAt": "2026-02-01T14:00:00.000Z"
+        }
+      ]
+    }
+  ],
+  "cardTransactions": [
+    {
+      "id": "ctx-201",
+      "merchant": "Google Workspace",
+      "amount": 36,
+      "currency": "USD",
+      "category": "Software",
+      "date": "2026-03-01T08:00:00.000Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "ctx-202",
+      "merchant": "Cathay Pacific",
+      "amount": 580,
+      "currency": "USD",
+      "category": "Travel",
+      "date": "2026-03-05T10:00:00.000Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "ctx-203",
+      "merchant": "The Upper House HK",
+      "amount": 320,
+      "currency": "USD",
+      "category": "Meals",
+      "date": "2026-03-12T19:30:00.000Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "ctx-204",
+      "merchant": "Notion",
+      "amount": 30,
+      "currency": "USD",
+      "category": "Software",
+      "date": "2026-03-15T08:00:00.000Z",
+      "status": "COMPLETED"
+    }
+  ],
+  "card": {
+    "id": "card-201",
+    "last4": "8821",
+    "brand": "Visa",
+    "cardholder": "Wei Lin",
+    "expiryMonth": 9,
+    "expiryYear": 2028,
+    "cvv": "734",
+    "spendingLimit": 3000,
+    "currentSpend": 966,
+    "status": "ACTIVE",
+    "frozen": false
+  },
+  "cards": [
+    {
+      "id": "card-201",
+      "last4": "8821",
+      "brand": "Visa",
+      "cardholder": "Wei Lin",
+      "expiryMonth": 9,
+      "expiryYear": 2028,
+      "cvv": "734",
+      "spendingLimit": 3000,
+      "currentSpend": 966,
+      "status": "ACTIVE",
+      "frozen": false,
+      "dailyLimit": 1000,
+      "weeklyLimit": 3000,
+      "monthlyLimit": 3000
+    }
+  ],
+  "cardPoolBalance": 10000,
+  "invoiceSettings": {
+    "logo": null,
+    "accentColor": "#194BFA",
+    "invoicePrefix": "NPA-",
+    "nextInvoiceNumber": 1001,
+    "defaultPaymentTerms": "Net 30",
+    "defaultNote": "",
+    "footerText": "Thank you for your business. Payment is expected within the terms specified above.",
+    "companyTaxId": "",
+    "showTaxId": false,
+    "showWalletQr": true
+  },
+  "rampHistory": [
+    {
+      "id": "ramp-201",
+      "type": "ON_RAMP",
+      "fromCurrency": "HKD",
+      "toCurrency": "USDC",
+      "fromAmount": 78000,
+      "toAmount": 10000,
+      "rate": 7.80,
+      "fee": 30,
+      "status": "COMPLETED",
+      "bankAccount": "HSBC HK ****3412",
+      "completedAt": "2026-01-15T10:00:00.000Z"
+    },
+    {
+      "id": "ramp-202",
+      "type": "OFF_RAMP",
+      "fromCurrency": "USDC",
+      "toCurrency": "HKD",
+      "fromAmount": 3000,
+      "toAmount": 23340,
+      "rate": 7.78,
+      "fee": 15,
+      "status": "COMPLETED",
+      "bankAccount": "HSBC HK ****3412",
+      "completedAt": "2026-03-01T09:00:00.000Z"
+    }
+  ],
+  "monthlyFinancials": [
+    {
+      "month": "2026-01",
+      "income": 0,
+      "expenses": 4300,
+      "payroll": 0,
+      "netFlow": -4300
+    },
+    {
+      "month": "2026-02",
+      "income": 30000,
+      "expenses": 15000,
+      "payroll": 18000,
+      "netFlow": -3000
+    },
+    {
+      "month": "2026-03",
+      "income": 15000,
+      "expenses": 3500,
+      "payroll": 18000,
+      "netFlow": -6500
+    },
+    {
+      "month": "2026-04",
+      "income": 0,
+      "expenses": 0,
+      "payroll": 0,
+      "netFlow": 0
+    },
+    {
+      "month": "2026-05",
+      "income": 0,
+      "expenses": 0,
+      "payroll": 0,
+      "netFlow": 0
+    },
+    {
+      "month": "2026-06",
+      "income": 0,
+      "expenses": 0,
+      "payroll": 0,
+      "netFlow": 0
+    }
+  ]
+}

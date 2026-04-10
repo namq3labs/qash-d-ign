@@ -23,6 +23,7 @@ import { PageHeader } from "../Common/PageHeader";
 import { useAuth } from "@/services/auth/context";
 import { trackEvent } from "@/services/analytics/posthog";
 import { PostHogEvent } from "@/types/posthog";
+import { getAppUrl } from "@/services/utils/getAppUrl";
 import { useDemo } from "@/contexts/DemoProvider";
 
 const tabs = [
@@ -193,7 +194,7 @@ const PaymentLinkContainer = () => {
       ),
       Link: (
         <span className="text-text-primary text-sm leading-none underline">
-          {process.env.NEXT_PUBLIC_APP_URL}/payment/{link.code}
+          {getAppUrl()}/payment/{link.code}
         </span>
       ),
       Title: link.title,
@@ -233,7 +234,7 @@ const PaymentLinkContainer = () => {
           <SecondaryButton
             text="Copy Link"
             onClick={() => {
-              const url = `${process.env.NEXT_PUBLIC_APP_URL}/payment/${link.code}`;
+              const url = `${getAppUrl()}/payment/${link.code}`;
               navigator.clipboard.writeText(url);
               toast.success("Payment link copied to clipboard");
             }}

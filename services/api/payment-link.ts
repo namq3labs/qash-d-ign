@@ -22,7 +22,9 @@ export function useGetPaymentLinkByCodeForOwner(code?: string) {
     records: (link.payments || []).map((p: any) => ({
       id: p.id,
       payer: p.payer || "0x0000000000000000",
+      payerName: p.payerName || null,
       txid: p.txid || null,
+      paymentMethod: p.paymentMethod || "crypto",
       createdAt: p.createdAt || p.paidAt,
     })),
   };

@@ -5,11 +5,13 @@ import AccountSettings from "./AccountSettings";
 import CompanySettings from "./CompanySettings";
 import NotificationSettings from "./NotificationSettings";
 import SlackIntegrationSettings from "./SlackIntegrationSettings";
+import GoogleSheetsIntegrationSettings from "./GoogleSheetsIntegrationSettings";
+import StripeIntegrationSettings from "./StripeIntegrationSettings";
 import TeamSettings from "./TeamSettings";
 import TeamAccountContainer from "./TeamSetting/TeamAccountContainer";
 import InvoiceSettingsTab from "./TeamSetting/InvoiceSettingsTab";
 
-type TabType = "account" | "notifications" | "company" | "team" | "integrations" | "invoice";
+type TabType = "account" | "notifications" | "company" | "team" | "integrations" | "google-sheets" | "stripe" | "invoice";
 
 interface SettingTab {
   id: TabType;
@@ -28,6 +30,8 @@ const teamSettingTabs: SettingTab[] = [{ id: "team", icon: "/misc/team-icon.svg"
 
 const integrationSettingTabs: SettingTab[] = [
   { id: "integrations", icon: "/misc/integration-icon.svg", label: "Slack" },
+  { id: "google-sheets", icon: "/misc/integration-icon.svg", label: "Google Sheets" },
+  { id: "stripe", icon: "/misc/integration-icon.svg", label: "Stripe" },
 ];
 
 export default function SettingContainer() {
@@ -130,6 +134,8 @@ export default function SettingContainer() {
           {activeTab === "company" && <CompanySettings />}
           {activeTab === "team" && (teamAccountParam ? <TeamAccountContainer /> : <TeamSettings />)}
           {activeTab === "integrations" && <SlackIntegrationSettings />}
+          {activeTab === "google-sheets" && <GoogleSheetsIntegrationSettings />}
+          {activeTab === "stripe" && <StripeIntegrationSettings />}
           {activeTab === "invoice" && <InvoiceSettingsTab />}
         </div>
       </div>

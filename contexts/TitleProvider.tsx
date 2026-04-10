@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useMemo, ReactNode } from "react";
 
 interface TitleContextType {
   title: string | ReactNode;
@@ -19,24 +19,27 @@ export const TitleProvider = ({ children }: { children: ReactNode }) => {
   const [showBackArrow, setShowBackArrow] = useState<boolean>(false);
   const [onBackClick, setOnBackClick] = useState<(() => void) | undefined>(undefined);
 
-  const resetTitle = () => {
+  const resetTitle = useCallback(() => {
     setTitle("Welcome to Qash");
     setShowBackArrow(false);
     setOnBackClick(undefined);
-  };
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      title,
+      showBackArrow,
+      setTitle,
+      setShowBackArrow,
+      onBackClick,
+      setOnBackClick,
+      resetTitle,
+    }),
+    [title, showBackArrow, onBackClick, resetTitle],
+  );
 
   return (
-    <TitleContext.Provider
-      value={{
-        title,
-        showBackArrow,
-        setTitle,
-        setShowBackArrow,
-        onBackClick,
-        setOnBackClick,
-        resetTitle,
-      }}
-    >
+    <TitleContext.Provider value={value}>
       {children}
     </TitleContext.Provider>
   );

@@ -19,6 +19,7 @@ import { toast } from "react-hot-toast";
 import { useWalletConnect } from "@/hooks/web3/useWalletConnect";
 import { getDefaultSelectedToken } from "@/services/utils/tokenSelection";
 import { useAccountContext } from "@/contexts/AccountProvider";
+import { getAppUrl } from "@/services/utils/getAppUrl";
 
 interface GroupPaymentFormData {
   amount?: number;
@@ -411,10 +412,10 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({ selectedGroup, g
                       text="Copy link"
                       onClick={() => {
                         if (isQuickShare) {
-                          const quickShareLink = `${process.env.NEXT_PUBLIC_APP_URL}/quick-send?quickShareCode=${payment.linkCode}`;
+                          const quickShareLink = `${getAppUrl()}/quick-send?quickShareCode=${payment.linkCode}`;
                           navigator.clipboard.writeText(quickShareLink);
                         } else {
-                          const groupPaymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/pending-request?isGroupPayment=true&groupPaymentId=${payment.id}`;
+                          const groupPaymentLink = `${getAppUrl()}/dashboard/pending-request?isGroupPayment=true&groupPaymentId=${payment.id}`;
                           navigator.clipboard.writeText(groupPaymentLink);
                         }
 

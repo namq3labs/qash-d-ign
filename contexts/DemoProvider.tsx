@@ -407,46 +407,16 @@ const DemoContext = createContext<DemoContextType | undefined>(undefined);
 
 const STORAGE_KEY = "qash_demo_state";
 const STORAGE_VERSION_KEY = "qash_demo_version";
-const CURRENT_VERSION = "3"; // Bump to invalidate stale localStorage data
+const CURRENT_VERSION = "6"; // Bump to invalidate stale localStorage data
 const LOGIN_KEY = "qash_demo_login";
 const ENTITY_KEY = "qash_demo_entity";
 
-const ADDITIONAL_ENTITIES: Omit<DemoEntitySummary, "id">[] = [
-  {
-    company: {
-      id: 2,
-      uuid: "c0a80101-0000-0000-0000-000000000002",
-      companyName: "NovaPay Asia",
-      registrationNumber: "HK-78432156",
-      country: "Hong Kong",
-      industry: "Fintech / Crypto Payments",
-      companySize: "1-10",
-      website: "https://novapay.io/asia",
-      logo: null,
-      createdAt: "2026-01-10T08:00:00.000Z",
-      updatedAt: "2026-03-28T10:30:00.000Z",
-    },
-    totalBalance: 324100.50,
-    teamStats: { total: 3, active: 3, suspended: 0, pending: 0 },
-  },
-  {
-    company: {
-      id: 3,
-      uuid: "c0a80101-0000-0000-0000-000000000003",
-      companyName: "NovaPay Holdings",
-      registrationNumber: "KY-92187345",
-      country: "Cayman Islands",
-      industry: "Holding / Treasury",
-      companySize: "1-10",
-      website: "https://novapay.io/holdings",
-      logo: null,
-      createdAt: "2025-06-01T08:00:00.000Z",
-      updatedAt: "2026-03-28T10:30:00.000Z",
-    },
-    totalBalance: 1250000.00,
-    teamStats: { total: 2, active: 2, suspended: 0, pending: 0 },
-  },
-];
+// Maps entity IDs to their data JSON files
+const ENTITY_DATA_FILES: Record<string, string> = {
+  primary: "/demo-data.json",
+  "entity-2": "/demo-data-entity-2.json",
+  "entity-3": "/demo-data-entity-3.json",
+};
 
 export function DemoProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<DemoData | null>(null);
@@ -454,7 +424,15 @@ export function DemoProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOnboarded, setIsOnboarded] = useState(false);
   const [activeEntityId, setActiveEntityId] = useState<string>("primary");
-  const primaryEntityRef = useRef<DemoEntitySummary | null>(null);
+  // Cache all entity summaries for the sidebar switcher
+  const entitySummariesRef = useRef<DemoEntitySummary[]>([]);
+
+  // Fetch a specific entity's full data JSON
+  const fetchEntityData = useCallback(async (entityId: string): Promise<DemoData> => {
+    const file = ENTITY_DATA_FILES[entityId] || ENTITY_DATA_FILES.primary;
+    const res = await fetch(file);
+    return res.json();
+  }, []);
 
   // Load data from localStorage or fetch from JSON
   useEffect(() => {
@@ -468,23 +446,25 @@ export function DemoProvider({ children }: { children: ReactNode }) {
 
     // Check active entity
     const storedEntity = localStorage.getItem(ENTITY_KEY);
+    const initialEntityId = storedEntity || "primary";
     if (storedEntity) {
       setActiveEntityId(storedEntity);
     }
 
     const loadData = async () => {
-      // Always fetch original JSON to capture the primary entity data
       try {
-        const res = await fetch("/demo-data.json");
-        const json = await res.json();
-        primaryEntityRef.current = {
-          id: "primary",
-          company: json.company,
-          totalBalance: json.totalBalance,
-          teamStats: json.teamStats,
-        };
+        // Fetch all entity JSONs in parallel to build summaries
+        const entityIds = Object.keys(ENTITY_DATA_FILES);
+        const allJsons = await Promise.all(entityIds.map(id => fetchEntityData(id)));
 
-        // Try localStorage for session persistence (may have entity-switched data)
+        entitySummariesRef.current = entityIds.map((id, i) => ({
+          id,
+          company: allJsons[i].company,
+          totalBalance: allJsons[i].totalBalance,
+          teamStats: allJsons[i].teamStats,
+        }));
+
+        // Try localStorage for session persistence
         const storedVersion = localStorage.getItem(STORAGE_VERSION_KEY);
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored && storedVersion === CURRENT_VERSION) {
@@ -497,8 +477,12 @@ export function DemoProvider({ children }: { children: ReactNode }) {
           }
         }
 
-        setData(json);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(json));
+        // Load the active entity's full data
+        const activeIdx = entityIds.indexOf(initialEntityId);
+        const activeData = activeIdx >= 0 ? allJsons[activeIdx] : allJsons[0];
+
+        setData(activeData);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(activeData));
         localStorage.setItem(STORAGE_VERSION_KEY, CURRENT_VERSION);
         setIsLoaded(true);
       } catch (err) {
@@ -507,7 +491,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     };
 
     loadData();
-  }, []);
+  }, [fetchEntityData]);
 
   // Persist to localStorage on changes
   const persist = useCallback((newData: DemoData) => {
@@ -516,36 +500,30 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_VERSION_KEY, CURRENT_VERSION);
   }, []);
 
-  // Build entities list from original primary + additional entities
+  // Entity summaries for sidebar switcher
   const entities: DemoEntitySummary[] = React.useMemo(() => {
-    if (!isLoaded || !primaryEntityRef.current) return [];
-    const additional: DemoEntitySummary[] = ADDITIONAL_ENTITIES.map((e, i) => ({
-      ...e,
-      id: `entity-${i + 2}`,
-    }));
-    return [primaryEntityRef.current, ...additional];
+    if (!isLoaded) return [];
+    return entitySummariesRef.current;
   }, [isLoaded]);
 
   const switchEntity = useCallback(
-    (entityId: string) => {
+    async (entityId: string) => {
       if (!data || entityId === activeEntityId) return;
-      const allEntities = primaryEntityRef.current
-        ? [primaryEntityRef.current, ...ADDITIONAL_ENTITIES.map((e, i) => ({ ...e, id: `entity-${i + 2}` }))]
-        : [];
-      const entity = allEntities.find(e => e.id === entityId);
+      const entity = entitySummariesRef.current.find(e => e.id === entityId);
       if (!entity) return;
 
-      setActiveEntityId(entityId);
-      localStorage.setItem(ENTITY_KEY, entityId);
+      try {
+        // Fetch the full dataset for the target entity
+        const entityData = await fetchEntityData(entityId);
 
-      persist({
-        ...data,
-        company: entity.company,
-        totalBalance: entity.totalBalance,
-        teamStats: entity.teamStats,
-      });
+        setActiveEntityId(entityId);
+        localStorage.setItem(ENTITY_KEY, entityId);
+        persist(entityData);
+      } catch (err) {
+        console.error("Failed to switch entity:", err);
+      }
     },
-    [data, activeEntityId, persist],
+    [data, activeEntityId, persist, fetchEntityData],
   );
 
   const login = useCallback((_email: string) => {

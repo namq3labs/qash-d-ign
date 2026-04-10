@@ -5,9 +5,10 @@ import { ModalProp } from "@/contexts/ModalManagerProvider";
 import BaseModal from "../BaseModal";
 import { ActionButton } from "../../Common/ActionButton";
 import { toast } from "react-hot-toast";
+import { getAppUrl } from "@/services/utils/getAppUrl";
 
 export function GroupLinkModal({ isOpen, onClose, zIndex, link }: ModalProp<GroupLinkModalProps>) {
-  const groupLink = `${process.env.NEXT_PUBLIC_APP_URL}/quick-send?quickShareCode=${link}`;
+  const groupLink = `${getAppUrl()}/quick-send?quickShareCode=${link}`;
 
   const handleCopyLink = async () => {
     await navigator.clipboard.writeText(groupLink);

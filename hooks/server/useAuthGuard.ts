@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useDemo } from "@/contexts/DemoProvider";
 
-const PUBLIC_ROUTES = ["/login", "/onboarding"];
+const PUBLIC_ROUTES = ["/login", "/onboarding", "/payment/"];
 
 export function useAuthGuard(_redirectTo: string = "/login") {
   const { isLoggedIn, isOnboarded, isLoaded } = useDemo();

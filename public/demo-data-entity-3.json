@@ -1,0 +1,906 @@
+{
+  "company": {
+    "id": 3,
+    "uuid": "c0a80101-0000-0000-0000-000000000003",
+    "companyName": "NovaPay Holdings",
+    "registrationNumber": "KY-92187345",
+    "country": "Cayman Islands",
+    "industry": "Holding / Treasury",
+    "companySize": "1-10",
+    "website": "https://novapay.io/holdings",
+    "logo": null,
+    "createdAt": "2025-06-01T08:00:00.000Z",
+    "updatedAt": "2026-03-30T12:00:00.000Z"
+  },
+  "user": {
+    "id": 1,
+    "uuid": "u0a80101-0000-0000-0000-000000000001",
+    "email": "alex@novapay.io",
+    "role": "ADMIN",
+    "isActive": true,
+    "teamMembership": {
+      "id": 1,
+      "uuid": "tm-3001",
+      "firstName": "Alex",
+      "lastName": "Chen",
+      "position": "Director",
+      "role": "OWNER",
+      "companyId": 3,
+      "profilePicture": null,
+      "company": {
+        "id": 3,
+        "companyName": "NovaPay Holdings"
+      }
+    }
+  },
+  "teamMembers": [
+    {
+      "id": 1,
+      "uuid": "tm-3001",
+      "firstName": "Alex",
+      "lastName": "Chen",
+      "email": "alex@novapay.io",
+      "position": "Director",
+      "role": "OWNER",
+      "status": "ACTIVE",
+      "walletAddress": "0xc1d2e3f400001111abcdef1234567890abcdef01",
+      "salary": 15000,
+      "salaryCurrency": "USDC",
+      "profilePicture": null,
+      "joinedAt": "2025-06-01T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "uuid": "tm-3002",
+      "firstName": "Sarah",
+      "lastName": "Kim",
+      "email": "sarah@novapay.io",
+      "position": "Treasury Manager",
+      "role": "ADMIN",
+      "status": "ACTIVE",
+      "walletAddress": "0xc1d2e3f400002222abcdef1234567890abcdef02",
+      "salary": 13000,
+      "salaryCurrency": "USDC",
+      "profilePicture": null,
+      "joinedAt": "2025-06-15T08:00:00.000Z"
+    }
+  ],
+  "teamStats": {
+    "total": 2,
+    "active": 2,
+    "suspended": 0,
+    "pending": 0
+  },
+  "accounts": [
+    {
+      "id": "acc-301",
+      "uuid": "acc-uuid-301",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "name": "Treasury Reserve",
+      "description": "Primary treasury reserve for NovaPay Holdings",
+      "threshold": 2,
+      "companyId": 3,
+      "logo": null,
+      "publicKeys": [
+        "0xcdf301",
+        "0xcdf302"
+      ],
+      "members": [
+        {
+          "name": "Alex Chen",
+          "commitment": "0xcdf301",
+          "role": "OWNER"
+        },
+        {
+          "name": "Sarah Kim",
+          "commitment": "0xcdf302",
+          "role": "ADMIN"
+        }
+      ],
+      "thresholdControl": {
+        "amountThreshold": 100000,
+        "highSigners": 2,
+        "lowSigners": 1
+      },
+      "createdAt": "2025-06-05T08:00:00.000Z"
+    },
+    {
+      "id": "acc-302",
+      "uuid": "acc-uuid-302",
+      "accountId": "0xc1d2e3f4a5b60002",
+      "name": "Investment Fund",
+      "description": "Strategic investment and yield fund",
+      "threshold": 2,
+      "companyId": 3,
+      "logo": null,
+      "publicKeys": [
+        "0xcdf301",
+        "0xcdf302"
+      ],
+      "members": [
+        {
+          "name": "Alex Chen",
+          "commitment": "0xcdf301",
+          "role": "OWNER"
+        },
+        {
+          "name": "Sarah Kim",
+          "commitment": "0xcdf302",
+          "role": "ADMIN"
+        }
+      ],
+      "thresholdControl": {
+        "amountThreshold": 50000,
+        "highSigners": 2,
+        "lowSigners": 1
+      },
+      "createdAt": "2025-07-01T08:00:00.000Z"
+    }
+  ],
+  "balances": {
+    "0xc1d2e3f4a5b60001": [
+      {
+        "faucetId": "0xusdc0001",
+        "symbol": "USDC",
+        "amount": 800000.0,
+        "decimals": 6
+      },
+      {
+        "faucetId": "0xeth0001",
+        "symbol": "ETH",
+        "amount": 45.45,
+        "decimals": 18,
+        "usdValue": 150000.0
+      }
+    ],
+    "0xc1d2e3f4a5b60002": [
+      {
+        "faucetId": "0xusdc0001",
+        "symbol": "USDC",
+        "amount": 300000.0,
+        "decimals": 6
+      }
+    ]
+  },
+  "totalBalance": 1250000.00,
+  "contacts": [
+    {
+      "id": 1,
+      "uuid": "ct-3001",
+      "name": "Paradigm Capital",
+      "walletAddress": "0xd1e201aabbccddee1234567890abcdef01020304",
+      "email": "investments@paradigm.xyz",
+      "category": "Investors",
+      "notes": "Lead LP for fund allocation"
+    },
+    {
+      "id": 2,
+      "uuid": "ct-3002",
+      "name": "Walkers Global LLP",
+      "walletAddress": "0xd2f302aabbccddee1234567890abcdef01020304",
+      "email": "corporate@walkersglobal.com",
+      "category": "Vendors",
+      "notes": "Cayman Islands legal counsel and registered agent"
+    }
+  ],
+  "contactCategories": [
+    {
+      "id": 1,
+      "name": "Investors",
+      "order": 1
+    },
+    {
+      "id": 2,
+      "name": "Vendors",
+      "order": 2
+    },
+    {
+      "id": 3,
+      "name": "Contractors",
+      "order": 3
+    },
+    {
+      "id": 4,
+      "name": "Partners",
+      "order": 4
+    }
+  ],
+  "employeeGroups": [
+    {
+      "id": 1,
+      "name": "Holdings Team",
+      "shape": "CIRCLE",
+      "color": "#35ADE9",
+      "order": 1,
+      "companyId": 3,
+      "createdAt": "2025-06-01T08:00:00.000Z",
+      "updatedAt": "2025-06-01T08:00:00.000Z"
+    }
+  ],
+  "employees": [
+    {
+      "id": 1,
+      "name": "Alex Chen",
+      "walletAddress": "mtst1gxm3y1rcbxw9s1hukg6ewiv4ljtfu93_uwxwwebuwtm",
+      "email": "alex@novapay.io",
+      "groupId": 1,
+      "companyId": 3,
+      "paymentMethod": "crypto",
+      "token": {
+        "address": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
+        "symbol": "QASH",
+        "decimals": 8,
+        "name": "QASH"
+      },
+      "network": {
+        "name": "Miden Testnet",
+        "chainId": 0
+      },
+      "order": 1,
+      "createdAt": "2025-06-01T08:00:00.000Z",
+      "updatedAt": "2025-06-01T08:00:00.000Z",
+      "employeeType": "employee",
+      "isActive": true
+    },
+    {
+      "id": 2,
+      "name": "Sarah Kim",
+      "walletAddress": "mtst1hyn2z0sdcyw0t2ivlh7fxjw5mkugv04_vxyxxfcvxun",
+      "email": "sarah@novapay.io",
+      "groupId": 1,
+      "companyId": 3,
+      "paymentMethod": "crypto",
+      "token": {
+        "address": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
+        "symbol": "QASH",
+        "decimals": 8,
+        "name": "QASH"
+      },
+      "network": {
+        "name": "Miden Testnet",
+        "chainId": 0
+      },
+      "order": 2,
+      "createdAt": "2025-06-15T08:00:00.000Z",
+      "updatedAt": "2025-06-15T08:00:00.000Z",
+      "employeeType": "employee",
+      "isActive": true
+    }
+  ],
+  "clients": [
+    {
+      "uuid": "cl-3001",
+      "email": "investments@paradigm.xyz",
+      "companyName": "Paradigm Capital",
+      "companyType": "Venture Capital",
+      "country": "United States",
+      "city": "San Francisco",
+      "createdAt": "2025-08-01T08:00:00.000Z",
+      "updatedAt": "2025-08-01T08:00:00.000Z"
+    },
+    {
+      "uuid": "cl-3002",
+      "email": "treasury@anchoragedigital.com",
+      "companyName": "Anchorage Digital",
+      "companyType": "Digital Asset Custodian",
+      "country": "United States",
+      "city": "San Francisco",
+      "createdAt": "2025-09-15T08:00:00.000Z",
+      "updatedAt": "2025-09-15T08:00:00.000Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "tx-301",
+      "type": "RECEIVE",
+      "status": "COMPLETED",
+      "amount": 1000000,
+      "currency": "USDC",
+      "from": "Paradigm Capital",
+      "fromAddress": "0xd1e201aabbccddee1234567890abcdef01020304",
+      "to": "Treasury Reserve",
+      "toAddress": "0xc1d2e3f4a5b60001",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "category": "Grant",
+      "label": "Initial capital contribution",
+      "txHash": "0xfc301abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2025-07-01T10:00:00.000Z",
+      "note": "Founding capital deposit from Paradigm"
+    },
+    {
+      "id": "tx-302",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 500000,
+      "currency": "USDC",
+      "from": "Treasury Reserve",
+      "fromAddress": "0xc1d2e3f4a5b60001",
+      "to": "Investment Fund",
+      "toAddress": "0xc1d2e3f4a5b60002",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "category": "Internal Transfer",
+      "label": "Seed investment fund allocation",
+      "txHash": "0xfc302abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2025-07-15T09:00:00.000Z",
+      "note": "Allocate capital to investment fund for yield strategies"
+    },
+    {
+      "id": "tx-303",
+      "type": "RECEIVE",
+      "status": "COMPLETED",
+      "amount": 18500,
+      "currency": "USDC",
+      "from": "Yield Vault (Aave)",
+      "fromAddress": "0xaave03aabbccddee1234567890abcdef01020304",
+      "to": "Investment Fund",
+      "toAddress": "0xc1d2e3f4a5b60002",
+      "accountId": "0xc1d2e3f4a5b60002",
+      "category": "Other",
+      "label": "Q3 2025 yield earnings",
+      "txHash": "0xfc303abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2025-10-01T12:00:00.000Z",
+      "note": "Yield accrued from DeFi lending strategies"
+    },
+    {
+      "id": "tx-304",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 28000,
+      "currency": "USDC",
+      "from": "Treasury Reserve",
+      "fromAddress": "0xc1d2e3f4a5b60001",
+      "to": "Payroll Batch",
+      "toAddress": "multiple",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "category": "Payroll",
+      "label": "January 2026 Payroll",
+      "txHash": "0xfc304abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-01-31T10:00:00.000Z",
+      "note": "Monthly payroll for Holdings team"
+    },
+    {
+      "id": "tx-305",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 35000,
+      "currency": "USDC",
+      "from": "Treasury Reserve",
+      "fromAddress": "0xc1d2e3f4a5b60001",
+      "to": "Walkers Global LLP",
+      "toAddress": "0xd2f302aabbccddee1234567890abcdef01020304",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "category": "Vendor",
+      "label": "Annual legal retainer and compliance",
+      "txHash": "0xfc305abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-01-15T14:00:00.000Z",
+      "note": "Cayman Islands legal, compliance, and registered agent fees"
+    },
+    {
+      "id": "tx-306",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 200000,
+      "currency": "USDC",
+      "from": "Investment Fund",
+      "fromAddress": "0xc1d2e3f4a5b60002",
+      "to": "NovaPay Labs (Subsidiary)",
+      "toAddress": "0xa1b2c3d4e5f60001",
+      "accountId": "0xc1d2e3f4a5b60002",
+      "category": "Internal Transfer",
+      "label": "Q1 2026 subsidiary funding",
+      "txHash": "0xfc306abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-01-05T09:00:00.000Z",
+      "note": "Quarterly capital disbursement to operating subsidiary"
+    },
+    {
+      "id": "tx-307",
+      "type": "RECEIVE",
+      "status": "COMPLETED",
+      "amount": 22000,
+      "currency": "USDC",
+      "from": "Yield Vault (Aave)",
+      "fromAddress": "0xaave03aabbccddee1234567890abcdef01020304",
+      "to": "Investment Fund",
+      "toAddress": "0xc1d2e3f4a5b60002",
+      "accountId": "0xc1d2e3f4a5b60002",
+      "category": "Other",
+      "label": "Q4 2025 yield earnings",
+      "txHash": "0xfc307abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-01-02T12:00:00.000Z",
+      "note": "Yield accrued from Q4 lending positions"
+    },
+    {
+      "id": "tx-308",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 50000,
+      "currency": "USDC",
+      "from": "Treasury Reserve",
+      "fromAddress": "0xc1d2e3f4a5b60001",
+      "to": "Paradigm Capital",
+      "toAddress": "0xd1e201aabbccddee1234567890abcdef01020304",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "category": "Other",
+      "label": "Q4 2025 dividend distribution",
+      "txHash": "0xfc308abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-01-10T15:00:00.000Z",
+      "note": "Quarterly dividend payout to LP"
+    },
+    {
+      "id": "tx-309",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 10000,
+      "currency": "USDC",
+      "from": "Treasury Reserve",
+      "fromAddress": "0xc1d2e3f4a5b60001",
+      "to": "KPMG Cayman",
+      "toAddress": "0xd3a403aabbccddee1234567890abcdef01020304",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "category": "Vendor",
+      "label": "Annual audit fee",
+      "txHash": "0xfc309abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-02-20T11:00:00.000Z",
+      "note": "Annual financial audit for FY2025"
+    },
+    {
+      "id": "tx-310",
+      "type": "RECEIVE",
+      "status": "COMPLETED",
+      "amount": 25000,
+      "currency": "USDC",
+      "from": "Yield Vault (Aave)",
+      "fromAddress": "0xaave03aabbccddee1234567890abcdef01020304",
+      "to": "Investment Fund",
+      "toAddress": "0xc1d2e3f4a5b60002",
+      "accountId": "0xc1d2e3f4a5b60002",
+      "category": "Other",
+      "label": "Q1 2026 yield earnings",
+      "txHash": "0xfc310abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-04-01T12:00:00.000Z",
+      "note": "Yield accrued from Q1 2026 lending positions"
+    },
+    {
+      "id": "tx-311",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 15,
+      "currency": "ETH",
+      "from": "Treasury Reserve",
+      "fromAddress": "0xc1d2e3f4a5b60001",
+      "to": "Anchorage Digital (Custody)",
+      "toAddress": "0xd4b504aabbccddee1234567890abcdef01020304",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "category": "Internal Transfer",
+      "label": "ETH transfer to custody",
+      "txHash": "0xfc311abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-03-01T10:00:00.000Z",
+      "note": "Move ETH holdings to institutional custody"
+    },
+    {
+      "id": "tx-312",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 28000,
+      "currency": "USDC",
+      "from": "Treasury Reserve",
+      "fromAddress": "0xc1d2e3f4a5b60001",
+      "to": "Payroll Batch",
+      "toAddress": "multiple",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "category": "Payroll",
+      "label": "March 2026 Payroll",
+      "txHash": "0xfc312abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-03-31T10:00:00.000Z",
+      "note": "Monthly payroll for Holdings team"
+    }
+  ],
+  "pendingProposals": [
+    {
+      "id": "prop-301",
+      "uuid": "prop-uuid-301",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "accountName": "Treasury Reserve",
+      "type": "SEND",
+      "proposalCategory": "paying_bill",
+      "status": "PENDING",
+      "amount": 250000,
+      "currency": "USDT",
+      "to": "NovaPay Labs (Subsidiary)",
+      "toAddress": "0xa1b2c3d4e5f60001",
+      "label": "Q2 2026 subsidiary funding",
+      "note": "Quarterly capital disbursement to operating subsidiary",
+      "createdBy": "Sarah Kim",
+      "createdAt": "2026-04-01T09:00:00.000Z",
+      "signatures": [
+        { "signer": "Sarah Kim", "status": "SIGNED", "signedAt": "2026-04-01T09:00:00.000Z" }
+      ],
+      "requiredSignatures": 2
+    },
+    {
+      "id": "prop-302",
+      "uuid": "prop-uuid-302",
+      "accountId": "0xc1d2e3f4a5b60002",
+      "accountName": "Investment Fund",
+      "type": "SEND",
+      "proposalCategory": "deposit_earn",
+      "status": "PENDING",
+      "amount": 150000,
+      "currency": "USDT",
+      "to": "Yield Vault (Aave)",
+      "toAddress": "0xaave03aabbccddee1234567890abcdef01020304",
+      "label": "Deposit to yield vault for Q2",
+      "note": "Redeploy idle capital into 5.1% APY vault strategy",
+      "createdBy": "Alex Chen",
+      "createdAt": "2026-04-02T10:00:00.000Z",
+      "signatures": [
+        { "signer": "Alex Chen", "status": "SIGNED", "signedAt": "2026-04-02T10:00:00.000Z" }
+      ],
+      "requiredSignatures": 2
+    },
+    {
+      "id": "prop-303",
+      "uuid": "prop-uuid-303",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "accountName": "Treasury Reserve",
+      "type": "SEND",
+      "proposalCategory": "paying_bill",
+      "status": "PENDING",
+      "amount": 75000,
+      "currency": "USDT",
+      "to": "Paradigm Capital",
+      "toAddress": "0xd1e201aabbccddee1234567890abcdef01020304",
+      "label": "Q1 2026 dividend distribution",
+      "note": "Quarterly dividend payout to LP based on Q1 performance",
+      "createdBy": "Alex Chen",
+      "createdAt": "2026-04-03T14:00:00.000Z",
+      "signatures": [],
+      "requiredSignatures": 2
+    }
+  ],
+  "payrolls": [
+    {
+      "id": 1,
+      "uuid": "pr-3001",
+      "name": "March 2026 Payroll",
+      "status": "COMPLETED",
+      "totalAmount": 28000,
+      "currency": "USDC",
+      "employeeCount": 2,
+      "executedAt": "2026-03-31T10:00:00.000Z",
+      "createdAt": "2026-03-28T09:00:00.000Z",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "accountName": "Treasury Reserve",
+      "txHash": "0xfc312abc123def456789aabbccdd0011eeff2233",
+      "recipients": [
+        {
+          "name": "Alex Chen",
+          "amount": 15000,
+          "walletAddress": "0xc1d2e3f400001111abcdef1234567890abcdef01",
+          "status": "PAID"
+        },
+        {
+          "name": "Sarah Kim",
+          "amount": 13000,
+          "walletAddress": "0xc1d2e3f400002222abcdef1234567890abcdef02",
+          "status": "PAID"
+        }
+      ]
+    }
+  ],
+  "payrollStats": {
+    "totalPaid": 28000,
+    "totalPayrolls": 1,
+    "averagePerPayroll": 28000,
+    "nextPayrollDate": "2026-04-15T00:00:00.000Z"
+  },
+  "invoices": [
+    {
+      "id": 1,
+      "uuid": "inv-3001",
+      "invoiceNumber": "NPH-2026-2001",
+      "type": "SENT",
+      "status": "PAID",
+      "amount": 50000,
+      "currency": "USDC",
+      "from": "NovaPay Holdings",
+      "to": "Paradigm Capital",
+      "toEmail": "investments@paradigm.xyz",
+      "description": "Q4 2025 dividend distribution",
+      "dueDate": "2026-01-31T00:00:00.000Z",
+      "paidAt": "2026-01-10T15:00:00.000Z",
+      "createdAt": "2025-12-20T10:00:00.000Z",
+      "items": [
+        {
+          "description": "Dividend payout based on Q4 2025 fund performance",
+          "quantity": 1,
+          "unitPrice": 50000
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "uuid": "inv-3002",
+      "invoiceNumber": "NPH-2026-2002",
+      "type": "SENT",
+      "status": "PAID",
+      "amount": 30000,
+      "currency": "USDC",
+      "from": "NovaPay Holdings",
+      "to": "Anchorage Digital",
+      "toEmail": "treasury@anchoragedigital.com",
+      "description": "Custody services management fee",
+      "dueDate": "2026-02-15T00:00:00.000Z",
+      "paidAt": "2026-02-10T11:00:00.000Z",
+      "createdAt": "2026-01-25T10:00:00.000Z",
+      "items": [
+        {
+          "description": "Annual institutional custody fee",
+          "quantity": 1,
+          "unitPrice": 25000
+        },
+        {
+          "description": "Cold storage setup and migration",
+          "quantity": 1,
+          "unitPrice": 5000
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "uuid": "inv-3003",
+      "invoiceNumber": "NPH-2026-2003",
+      "type": "RECEIVED",
+      "status": "PAID",
+      "amount": 50000,
+      "currency": "USDC",
+      "from": "Walkers Global LLP",
+      "to": "NovaPay Holdings",
+      "toEmail": "alex@novapay.io",
+      "description": "Annual legal, compliance, and registered agent services",
+      "dueDate": "2026-01-31T00:00:00.000Z",
+      "paidAt": "2026-01-15T14:00:00.000Z",
+      "createdAt": "2026-01-02T10:00:00.000Z",
+      "items": [
+        {
+          "description": "Annual legal retainer",
+          "quantity": 1,
+          "unitPrice": 25000
+        },
+        {
+          "description": "Registered agent and compliance filings",
+          "quantity": 1,
+          "unitPrice": 10000
+        },
+        {
+          "description": "Corporate governance advisory",
+          "quantity": 1,
+          "unitPrice": 15000
+        }
+      ]
+    }
+  ],
+  "invoiceStats": {
+    "totalSent": 120000,
+    "totalReceived": 50000,
+    "pendingSent": 40000,
+    "pendingReceived": 0,
+    "paidSent": 80000,
+    "paidReceived": 50000,
+    "overdueSent": 0,
+    "overdueReceived": 0
+  },
+  "bills": [
+    {
+      "id": 1,
+      "uuid": "bill-3001",
+      "vendor": "Walkers Global LLP",
+      "description": "Q2 2026 legal retainer and compliance",
+      "amount": 15000,
+      "currency": "USDC",
+      "status": "PENDING",
+      "dueDate": "2026-04-30T00:00:00.000Z",
+      "category": "Vendor",
+      "recurring": true,
+      "frequency": "QUARTERLY",
+      "createdAt": "2026-04-01T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "uuid": "bill-3002",
+      "vendor": "KPMG Cayman",
+      "description": "Mid-year financial review and tax advisory",
+      "amount": 10000,
+      "currency": "USDC",
+      "status": "PENDING",
+      "dueDate": "2026-06-30T00:00:00.000Z",
+      "category": "Vendor",
+      "recurring": false,
+      "frequency": null,
+      "createdAt": "2026-03-28T10:00:00.000Z"
+    }
+  ],
+  "billStats": {
+    "totalPending": 25000,
+    "totalOverdue": 0,
+    "totalPaid": 45000,
+    "billCount": 2
+  },
+  "paymentLinks": [
+    {
+      "id": 1,
+      "uuid": "pl-3001",
+      "code": "novapay-holdings-investment",
+      "title": "LP Capital Contribution",
+      "description": "Capital contribution portal for NovaPay Holdings limited partners",
+      "amount": null,
+      "currency": "USDC",
+      "status": "ACTIVE",
+      "recipientAddress": "0xc1d2e3f4a5b60001",
+      "recipientName": "NovaPay Holdings",
+      "timesUsed": 0,
+      "maxUses": null,
+      "expiresAt": null,
+      "createdAt": "2025-08-01T10:00:00.000Z",
+      "payments": []
+    }
+  ],
+  "cardTransactions": [
+    {
+      "id": "ctx-301",
+      "merchant": "Four Seasons George Town",
+      "amount": 2850,
+      "currency": "USD",
+      "category": "Travel",
+      "date": "2026-03-10T18:00:00.000Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "ctx-302",
+      "merchant": "British Airways",
+      "amount": 4200,
+      "currency": "USD",
+      "category": "Travel",
+      "date": "2026-02-25T09:00:00.000Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "ctx-303",
+      "merchant": "Bloomberg Terminal",
+      "amount": 2400,
+      "currency": "USD",
+      "category": "Software",
+      "date": "2026-03-01T08:00:00.000Z",
+      "status": "COMPLETED"
+    }
+  ],
+  "card": {
+    "id": "card-301",
+    "last4": "5500",
+    "brand": "Visa",
+    "cardholder": "Sarah Kim",
+    "expiryMonth": 9,
+    "expiryYear": 2028,
+    "cvv": "732",
+    "spendingLimit": 25000,
+    "currentSpend": 9450,
+    "status": "ACTIVE",
+    "frozen": false
+  },
+  "cardPoolBalance": 50000,
+  "invoiceSettings": {
+    "logo": null,
+    "accentColor": "#194BFA",
+    "invoicePrefix": "NPH-",
+    "nextInvoiceNumber": 2001,
+    "defaultPaymentTerms": "Net 30",
+    "defaultNote": "",
+    "footerText": "Thank you for your business. Payment is expected within the terms specified above.",
+    "companyTaxId": "",
+    "showTaxId": false,
+    "showWalletQr": true
+  },
+  "cards": [
+    {
+      "id": "card-301",
+      "last4": "5500",
+      "brand": "Visa",
+      "cardholder": "Sarah Kim",
+      "expiryMonth": 9,
+      "expiryYear": 2028,
+      "cvv": "732",
+      "spendingLimit": 25000,
+      "currentSpend": 9450,
+      "status": "ACTIVE",
+      "frozen": false,
+      "dailyLimit": 10000,
+      "weeklyLimit": 30000,
+      "monthlyLimit": 25000
+    }
+  ],
+  "rampHistory": [
+    {
+      "id": "ramp-301",
+      "type": "ON_RAMP",
+      "fromCurrency": "USD",
+      "toCurrency": "USDC",
+      "fromAmount": 500000,
+      "toAmount": 499500,
+      "rate": 1.0,
+      "fee": 500,
+      "status": "COMPLETED",
+      "bankAccount": "Butterfield Bank ****8834",
+      "completedAt": "2025-07-05T14:00:00.000Z"
+    },
+    {
+      "id": "ramp-302",
+      "type": "OFF_RAMP",
+      "fromCurrency": "USDC",
+      "toCurrency": "USD",
+      "fromAmount": 100000,
+      "toAmount": 99850,
+      "rate": 1.0,
+      "fee": 150,
+      "status": "COMPLETED",
+      "bankAccount": "Butterfield Bank ****8834",
+      "completedAt": "2026-01-20T10:00:00.000Z"
+    },
+    {
+      "id": "ramp-303",
+      "type": "ON_RAMP",
+      "fromCurrency": "USD",
+      "toCurrency": "USDC",
+      "fromAmount": 250000,
+      "toAmount": 249750,
+      "rate": 1.0,
+      "fee": 250,
+      "status": "COMPLETED",
+      "bankAccount": "Butterfield Bank ****8834",
+      "completedAt": "2026-03-10T09:00:00.000Z"
+    }
+  ],
+  "monthlyFinancials": [
+    {
+      "month": "2026-01",
+      "income": 22000,
+      "expenses": 323000,
+      "payroll": 28000,
+      "netFlow": -329000
+    },
+    {
+      "month": "2026-02",
+      "income": 0,
+      "expenses": 10000,
+      "payroll": 0,
+      "netFlow": -10000
+    },
+    {
+      "month": "2026-03",
+      "income": 25000,
+      "expenses": 0,
+      "payroll": 28000,
+      "netFlow": -3000
+    },
+    {
+      "month": "2026-04",
+      "income": 0,
+      "expenses": 0,
+      "payroll": 0,
+      "netFlow": 0
+    },
+    {
+      "month": "2026-05",
+      "income": 0,
+      "expenses": 0,
+      "payroll": 0,
+      "netFlow": 0
+    },
+    {
+      "month": "2026-06",
+      "income": 0,
+      "expenses": 0,
+      "payroll": 0,
+      "netFlow": 0
+    }
+  ]
+}

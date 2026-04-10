@@ -453,7 +453,7 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
         icon={step === 1 ? "/misc/blue-user-hexagon-icon.svg" : "/sidebar/payroll.svg"}
         onClose={onClose}
       />
-      <div className="bg-background border-2 border-primary-divider rounded-b-2xl">
+      <div className="bg-background border-2 border-primary-divider rounded-b-2xl max-h-[80vh] overflow-y-auto">
         <form onSubmit={handleSubmit(onSubmit)} className="p-4 flex flex-col gap-4">
           {/* Step indicator */}
           <div className="flex items-center gap-2">

@@ -4,11 +4,12 @@ import toast from "react-hot-toast";
 import { useModal } from "@/contexts/ModalManagerProvider";
 import { useAccountContext } from "@/contexts/AccountProvider";
 import { ActionButton } from "@/components/Common/ActionButton";
+import { getAppUrl } from "@/services/utils/getAppUrl";
 
 export const RequestLinkSection: React.FC = () => {
   const { openModal } = useModal();
   const { accountId } = useAccountContext();
-  const link = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/pending-request?recipient=${accountId}`;
+  const link = `${getAppUrl()}/dashboard/pending-request?recipient=${accountId}`;
 
   return (
     <section className="flex flex-col gap-2.5 items-start self-stretch">

@@ -1,5 +1,6 @@
 import QRCodeStyling, { Options } from "qr-code-styling";
 import { QR_STORAGE_KEY } from "./constant";
+import { getAppUrl } from "./getAppUrl";
 
 export interface CustomQRData {
   id: string;
@@ -79,7 +80,7 @@ export const generateQRName = (tokenSymbol: string, amount?: string): string => 
 };
 
 export const generateQRData = (tokenAddress: string, amount?: string, message?: string, recipient?: string): string => {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const baseUrl = getAppUrl();
   const url = new URL("/send", baseUrl);
 
   // Add payment request parameters

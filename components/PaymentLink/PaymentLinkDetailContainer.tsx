@@ -13,6 +13,7 @@ import { formatAddress } from "@/services/utils/miden/address";
 import { ViewOnExplorerTooltip } from "./ViewOnExplorerTooltip";
 import { Tooltip } from "react-tooltip";
 import { useTitle } from "@/contexts/TitleProvider";
+import { getAppUrl } from "@/services/utils/getAppUrl";
 
 const Card = ({ title, text }: { title: string; text: React.ReactNode }) => {
   return (
@@ -39,6 +40,8 @@ const PaymentLinkDetailContainer = () => {
   const [activeTooltipId, setActiveTooltipId] = useState<string | null>(null);
   const { setTitle, setShowBackArrow, setOnBackClick } = useTitle();
 
+  const goToPaymentLinks = () => { window.location.href = "/payment-link"; };
+
   // Set breadcrumb title when payment link data is loaded
   useEffect(() => {
     if (paymentLink) {
@@ -46,7 +49,7 @@ const PaymentLinkDetailContainer = () => {
         <div className="flex items-center gap-2">
           <span
             className="text-text-secondary hover:text-text-primary cursor-pointer"
-            onClick={() => router.push("/payment-link")}
+            onClick={() => { window.location.href = "/payment-link"; }}
           >
             Payment Links
           </span>
@@ -55,10 +58,10 @@ const PaymentLinkDetailContainer = () => {
         </div>,
       );
       setShowBackArrow(true);
-      // Wrap in another function to prevent React from calling it as a state updater
-      setOnBackClick(() => () => router.push("/payment-link"));
+      setOnBackClick(() => () => { window.location.href = "/payment-link"; });
     }
-  }, [paymentLink, setTitle, setShowBackArrow, setOnBackClick, router]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paymentLink]);
 
   // Close tooltip when clicking outside
   useEffect(() => {
@@ -82,7 +85,7 @@ const PaymentLinkDetailContainer = () => {
   const handleCopyLink = () => {
     if (!paymentLink) return;
 
-    const url = `${process.env.NEXT_PUBLIC_APP_URL}/payment/${paymentLink.code}`;
+    const url = `${getAppUrl()}/payment/${paymentLink.code}`;
     navigator.clipboard.writeText(url);
     toast.success("Payment link copied to clipboard");
   };
@@ -123,7 +126,7 @@ const PaymentLinkDetailContainer = () => {
       ),
       From: (
         <div className="flex items-center gap-2 justify-center">
-          <span className="text-text-primary">{formatAddress(record.payer)}</span>
+          <span className="text-text-primary">{record.payerName || formatAddress(record.payer)}</span>
           <img
             src="/misc/copy-icon.svg"
             alt="copy"
@@ -133,6 +136,19 @@ const PaymentLinkDetailContainer = () => {
               toast.success("Copied to clipboard");
             }}
           />
+        </div>
+      ),
+      Method: (
+        <div className="flex items-center gap-1.5 justify-center">
+          <img
+            src={record.paymentMethod === "card" ? "/misc/credit-card-icon.svg" : "/misc/crypto-icon.svg"}
+            alt={record.paymentMethod}
+            className="w-4 h-4"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
+          <span className="text-text-primary text-sm">
+            {record.paymentMethod === "card" ? "Card" : "Crypto"}
+          </span>
         </div>
       ),
       "Transaction Hash": record.txid ? (
@@ -228,7 +244,7 @@ const PaymentLinkDetailContainer = () => {
           title="Link"
           text={
             <span className="text-text-primary underline truncate w-full">
-              {process.env.NEXT_PUBLIC_APP_URL}/payment/{paymentLink.code}
+              {getAppUrl()}/payment/{paymentLink.code}
             </span>
           }
         />
@@ -286,6 +302,7 @@ const PaymentLinkDetailContainer = () => {
             "Amount",
             "Status",
             "From",
+            "Method",
             "Transaction Hash",
             " ",
           ]}

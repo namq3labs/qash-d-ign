@@ -1827,17 +1827,19 @@
           "amount": 5000,
           "status": "COMPLETED",
           "txid": "0xabc123def456789012345678901234567890abcd",
+          "paymentMethod": "crypto",
           "paidAt": "2026-03-22T11:00:00.000Z",
           "createdAt": "2026-03-22T11:00:00.000Z"
         },
         {
           "id": "pay-002",
-          "payerName": "BlockFi Solutions",
+          "payerName": null,
           "payerEmail": "payments@blockfi.io",
           "payer": "0x4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b",
           "amount": 5000,
           "status": "COMPLETED",
           "txid": "0xdef789abc012345678901234567890abcdef1234",
+          "paymentMethod": "card",
           "paidAt": "2026-03-28T14:30:00.000Z",
           "createdAt": "2026-03-28T14:30:00.000Z"
         }
