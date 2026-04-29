@@ -74,7 +74,7 @@ const getNetworkFromName = (networkName?: string): { icon: string; name: string;
   const normalizedName = networkName.trim();
 
   const networkMap: Record<string, { icon: string; value: string; displayName: string }> = {
-    "miden testnet": { icon: "/chain/miden.svg", value: "miden", displayName: "Miden Testnet" },
+    miden: { icon: "/chain/miden.svg", value: "miden", displayName: "Miden" },
     ethereum: { icon: "/chain/ethereum.svg", value: "eth", displayName: "Ethereum" },
     solana: { icon: "/chain/solana.svg", value: "sol", displayName: "Solana" },
     base: { icon: "/chain/base.svg", value: "base", displayName: "Base" },
@@ -98,7 +98,7 @@ const getNetworkFromName = (networkName?: string): { icon: string; name: string;
     };
   }
 
-  // Try partial match (e.g., "Miden" matches "Miden Testnet")
+  // Try partial match
   for (const [key, network] of Object.entries(networkMap)) {
     if (lowerName.includes(key) || key.includes(lowerName)) {
       return { icon: network.icon, name: network.displayName, value: network.value };
@@ -120,7 +120,7 @@ export function EditEmployeeContactModal({
   const [selectedNetwork, setSelectedNetwork] = useState<{ icon: string; name: string; value: string } | null>(
     getNetworkFromName(contactData?.network?.name) || {
       icon: "/chain/miden.svg",
-      name: "Miden Testnet",
+      name: "Miden",
       value: "miden",
     },
   );

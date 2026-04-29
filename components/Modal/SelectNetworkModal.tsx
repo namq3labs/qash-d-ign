@@ -8,7 +8,7 @@ import { ModalHeader } from "../Common/ModalHeader";
 import ComingSoonBadge from "../Common/ComingSoonBadge";
 
 const NETWORKS: { icon: string; name: string; value: string; isComingSoon: boolean }[] = [
-  { icon: "/chain/miden.svg", name: "Miden Testnet", value: "miden", isComingSoon: false },
+  { icon: "/chain/miden.svg", name: "Miden", value: "miden", isComingSoon: false },
   { icon: "/chain/ethereum.svg", name: "Ethereum", value: "eth", isComingSoon: false },
   { icon: "/chain/solana.svg", name: "Solana", value: "sol", isComingSoon: false },
   { icon: "/chain/base.svg", name: "Base", value: "base", isComingSoon: false },

@@ -427,7 +427,7 @@ function createInvoiceDataFromPayroll(
       //   .filter(Boolean)
       //   .join(", "),
       token: n(payroll?.token?.symbol),
-      network: payroll?.network?.name || "Miden Testnet",
+      network: payroll?.network?.name || "Miden",
       walletAddress: employee.walletAddress,
     },
     billTo: {

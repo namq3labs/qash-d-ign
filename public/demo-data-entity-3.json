@@ -233,7 +233,7 @@
         "name": "QASH"
       },
       "network": {
-        "name": "Miden Testnet",
+        "name": "Miden",
         "chainId": 0
       },
       "order": 1,
@@ -257,7 +257,7 @@
         "name": "QASH"
       },
       "network": {
-        "name": "Miden Testnet",
+        "name": "Miden",
         "chainId": 0
       },
       "order": 2,

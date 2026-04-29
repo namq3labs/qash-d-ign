@@ -69,7 +69,7 @@ export const Receive = () => {
       <div className="bg-[#ff5500] rounded-none px-4 py-2 flex gap-3 items-center w-full">
         <img src="/logo/miden.svg" alt="warning" className="w-6" />
         <span className="text-white text-sm">
-          This is address of Miden testnet, deposit from other blockchain will not work
+          This is a Miden network address, deposit from other blockchain will not work
         </span>
       </div>
 

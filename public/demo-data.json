@@ -2,34 +2,34 @@
   "company": {
     "id": 1,
     "uuid": "c0a80101-0000-0000-0000-000000000001",
-    "companyName": "Ripe",
-    "registrationNumber": "US-RIPE-2025001",
-    "country": "United States",
-    "industry": "Stablecoin Payments",
+    "companyName": "Horus Labs",
+    "registrationNumber": "NG-HORUS-2025001",
+    "country": "Nigeria",
+    "industry": "Web3 Infrastructure",
     "companySize": "1-10",
-    "website": "https://ripemoney.com",
-    "logo": "/ripemoney_logo.jpeg",
+    "website": "https://horuslabs.io",
+    "logo": "/horuslab.jpeg",
     "createdAt": "2025-06-01T08:00:00.000Z",
     "updatedAt": "2026-04-05T10:30:00.000Z"
   },
   "user": {
     "id": 1,
     "uuid": "u0a80101-0000-0000-0000-000000000001",
-    "email": "chuck@ripemoney.com",
+    "email": "darlington@horuslabs.io",
     "role": "ADMIN",
     "isActive": true,
     "teamMembership": {
       "id": 1,
       "uuid": "tm-0001",
-      "firstName": "Chuck",
-      "lastName": "Lam",
-      "position": "CEO",
+      "firstName": "Darlington",
+      "lastName": "Nnam",
+      "position": "Cofounder",
       "role": "OWNER",
       "companyId": 1,
       "profilePicture": null,
       "company": {
         "id": 1,
-        "companyName": "Ripe"
+        "companyName": "Horus Labs"
       }
     }
   },
@@ -37,10 +37,10 @@
     {
       "id": 1,
       "uuid": "tm-0001",
-      "firstName": "Chuck",
-      "lastName": "Lam",
-      "email": "chuck@ripemoney.com",
-      "position": "CEO",
+      "firstName": "Darlington",
+      "lastName": "Nnam",
+      "email": "darlington@horuslabs.io",
+      "position": "Cofounder",
       "role": "OWNER",
       "status": "ACTIVE",
       "walletAddress": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef01",
@@ -52,10 +52,10 @@
     {
       "id": 2,
       "uuid": "tm-0002",
-      "firstName": "Sam",
-      "lastName": "Silver",
-      "email": "sam@ripemoney.com",
-      "position": "Co-Founder",
+      "firstName": "Adegbite Kelvin",
+      "lastName": "Ademola",
+      "email": "kelvin@horuslabs.io",
+      "position": "Software Engineer",
       "role": "ADMIN",
       "status": "ACTIVE",
       "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
@@ -63,41 +63,11 @@
       "salaryCurrency": "USDC",
       "profilePicture": null,
       "joinedAt": "2025-06-01T08:00:00.000Z"
-    },
-    {
-      "id": 3,
-      "uuid": "tm-0003",
-      "firstName": "Lloyd",
-      "lastName": "Li",
-      "email": "lloyd@ripemoney.com",
-      "position": "Head of Engineering",
-      "role": "ADMIN",
-      "status": "ACTIVE",
-      "walletAddress": "0x3c4d5e6f7890abcdef1234567890abcdef010203",
-      "salary": 10000,
-      "salaryCurrency": "USDC",
-      "profilePicture": null,
-      "joinedAt": "2025-08-01T08:00:00.000Z"
-    },
-    {
-      "id": 4,
-      "uuid": "tm-0004",
-      "firstName": "Maria",
-      "lastName": "Santos",
-      "email": "maria@ripemoney.com",
-      "position": "Digital Marketing Manager",
-      "role": "MEMBER",
-      "status": "ACTIVE",
-      "walletAddress": "0x4d5e6f7890abcdef1234567890abcdef01020304",
-      "salary": 4000,
-      "salaryCurrency": "USDC",
-      "profilePicture": null,
-      "joinedAt": "2025-10-01T08:00:00.000Z"
     }
   ],
   "teamStats": {
-    "total": 4,
-    "active": 4,
+    "total": 2,
+    "active": 2,
     "suspended": 0,
     "pending": 0
   },
@@ -107,7 +77,7 @@
       "uuid": "acc-uuid-001",
       "accountId": "0xa1b2c3d4e5f60001",
       "name": "Treasury",
-      "description": "Main treasury wallet for Ripe",
+      "description": "Main treasury wallet for Horus Labs",
       "threshold": 2,
       "companyId": 1,
       "logo": null,
@@ -117,12 +87,12 @@
       ],
       "members": [
         {
-          "name": "Chuck Lam",
+          "name": "Darlington Nnam",
           "commitment": "0xabc001",
           "role": "OWNER"
         },
         {
-          "name": "Sam Silver",
+          "name": "Adegbite Kelvin Ademola",
           "commitment": "0xabc002",
           "role": "ADMIN"
         }
@@ -149,12 +119,12 @@
       ],
       "members": [
         {
-          "name": "Chuck Lam",
+          "name": "Darlington Nnam",
           "commitment": "0xabc001",
           "role": "OWNER"
         },
         {
-          "name": "Lloyd Li",
+          "name": "Adegbite Kelvin Ademola",
           "commitment": "0xabc003",
           "role": "ADMIN"
         }
@@ -313,9 +283,9 @@
   "employees": [
     {
       "id": 1,
-      "name": "Chuck Lam",
+      "name": "Darlington Nnam",
       "walletAddress": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
-      "email": "chuck@ripemoney.com",
+      "email": "darlington@horuslabs.io",
       "groupId": 1,
       "companyId": 1,
       "paymentMethod": "crypto",
@@ -326,7 +296,7 @@
         "name": "USDT"
       },
       "network": {
-        "name": "Miden Testnet",
+        "name": "Miden",
         "chainId": 0
       },
       "order": 1,
@@ -337,70 +307,22 @@
     },
     {
       "id": 2,
-      "name": "Sam Silver",
-      "walletAddress": "mtst1bxk8u6mzrt4n6hqies5lvet9henoz48_rsvrrzyqzqi",
-      "email": "sam@ripemoney.com",
-      "groupId": 1,
-      "companyId": 1,
-      "paymentMethod": "crypto",
-      "token": {
-        "address": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
-        "symbol": "USDT",
-        "decimals": 8,
-        "name": "USDT"
-      },
-      "network": {
-        "name": "Miden Testnet",
-        "chainId": 0
-      },
-      "order": 2,
-      "createdAt": "2025-06-01T08:00:00.000Z",
-      "updatedAt": "2025-06-01T08:00:00.000Z",
-      "employeeType": "employee",
-      "isActive": true
-    },
-    {
-      "id": 3,
-      "name": "Lloyd Li",
-      "walletAddress": "mtst1cyk7v5lyst3o7irjft6mwfu0ifpoa59_qturraxprpk",
-      "email": "lloyd@ripemoney.com",
-      "groupId": 2,
-      "companyId": 1,
-      "paymentMethod": "crypto",
-      "token": {
-        "address": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
-        "symbol": "USDT",
-        "decimals": 8,
-        "name": "USDT"
-      },
-      "network": {
-        "name": "Miden Testnet",
-        "chainId": 0
-      },
-      "order": 3,
-      "createdAt": "2025-08-01T08:00:00.000Z",
-      "updatedAt": "2025-08-01T08:00:00.000Z",
-      "employeeType": "employee",
-      "isActive": true
-    },
-    {
-      "id": 4,
-      "name": "Maria Santos",
+      "name": "Adegbite Kelvin Ademola",
       "walletAddress": "",
-      "email": "maria@ripemoney.com",
-      "groupId": 3,
+      "email": "kelvin@horuslabs.io",
+      "groupId": 2,
       "companyId": 1,
       "paymentMethod": "fiat",
       "fiatDetails": {
-        "country": "Philippines",
-        "bank": "BDO Unibank",
-        "currency": "PHP"
+        "country": "Nigeria",
+        "bank": "Guaranty Trust Bank",
+        "currency": "NGN"
       },
       "token": null,
       "network": null,
-      "order": 4,
-      "createdAt": "2025-10-01T08:00:00.000Z",
-      "updatedAt": "2025-10-01T08:00:00.000Z",
+      "order": 2,
+      "createdAt": "2025-06-01T08:00:00.000Z",
+      "updatedAt": "2025-06-01T08:00:00.000Z",
       "employeeType": "employee",
       "isActive": true
     }
@@ -495,6 +417,16 @@
       "city": "New York",
       "createdAt": "2026-03-01T08:00:00.000Z",
       "updatedAt": "2026-03-01T08:00:00.000Z"
+    },
+    {
+      "uuid": "cl-0010",
+      "email": "partnerships@starknet.io",
+      "companyName": "Starknet",
+      "companyType": "Layer 2",
+      "country": "Switzerland",
+      "city": "Zug",
+      "createdAt": "2026-04-15T08:00:00.000Z",
+      "updatedAt": "2026-04-15T08:00:00.000Z"
     }
   ],
   "transactions": [
@@ -553,7 +485,7 @@
       "id": "tx-004",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 38000,
+      "amount": 22000,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
@@ -587,7 +519,7 @@
       "id": "tx-006",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 38000,
+      "amount": 22000,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
@@ -655,7 +587,7 @@
       "id": "tx-010",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 38000,
+      "amount": 22000,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
@@ -1018,17 +950,17 @@
       "type": "SEND",
       "proposalCategory": "paying_payroll",
       "status": "READY",
-      "amount": 38000,
+      "amount": 22000,
       "currency": "USDT",
       "to": "Payroll Batch",
       "toAddress": "multiple",
       "label": "April 2026 Payroll",
-      "note": "Monthly payroll for 4 team members",
-      "createdBy": "Sam Silver",
+      "note": "Monthly payroll for 2 team members",
+      "createdBy": "Adegbite Kelvin Ademola",
       "createdAt": "2026-03-28T09:00:00.000Z",
       "signatures": [
-        { "signer": "Sam Silver", "status": "SIGNED", "signedAt": "2026-03-28T09:00:00.000Z" },
-        { "signer": "Chuck Lam", "status": "SIGNED", "signedAt": "2026-03-28T10:30:00.000Z" }
+        { "signer": "Adegbite Kelvin Ademola", "status": "SIGNED", "signedAt": "2026-03-28T09:00:00.000Z" },
+        { "signer": "Darlington Nnam", "status": "SIGNED", "signedAt": "2026-03-28T10:30:00.000Z" }
       ],
       "requiredSignatures": 2
     },
@@ -1046,10 +978,10 @@
       "toAddress": "0x4a0044aabbccddee1234567890abcdef01020304",
       "label": "Security audit - Phase 3 (Mainnet)",
       "note": "Final security audit before mainnet launch",
-      "createdBy": "Chuck Lam",
+      "createdBy": "Darlington Nnam",
       "createdAt": "2026-03-30T14:00:00.000Z",
       "signatures": [
-        { "signer": "Chuck Lam", "status": "SIGNED", "signedAt": "2026-03-30T14:00:00.000Z" }
+        { "signer": "Darlington Nnam", "status": "SIGNED", "signedAt": "2026-03-30T14:00:00.000Z" }
       ],
       "requiredSignatures": 2
     },
@@ -1067,10 +999,10 @@
       "toAddress": "0xcard001",
       "label": "Top up card pool",
       "note": "Replenish corporate card spending pool",
-      "createdBy": "Chuck Lam",
+      "createdBy": "Darlington Nnam",
       "createdAt": "2026-04-01T15:00:00.000Z",
       "signatures": [
-        { "signer": "Chuck Lam", "status": "SIGNED", "signedAt": "2026-04-01T15:00:00.000Z" }
+        { "signer": "Darlington Nnam", "status": "SIGNED", "signedAt": "2026-04-01T15:00:00.000Z" }
       ],
       "requiredSignatures": 2
     },
@@ -1088,7 +1020,7 @@
       "toAddress": "0xearn001",
       "label": "Deposit to earn vault",
       "note": "Deposit idle treasury into 4.85% APY vault",
-      "createdBy": "Sam Silver",
+      "createdBy": "Adegbite Kelvin Ademola",
       "createdAt": "2026-04-02T09:00:00.000Z",
       "signatures": [],
       "requiredSignatures": 2
@@ -1107,7 +1039,7 @@
       "toAddress": "0xofframp001",
       "label": "Cashout to BDO",
       "note": "Off-ramp for Philippines operations and compliance costs",
-      "createdBy": "Chuck Lam",
+      "createdBy": "Darlington Nnam",
       "createdAt": "2026-04-02T10:30:00.000Z",
       "signatures": [],
       "requiredSignatures": 2
@@ -1124,12 +1056,12 @@
       "currency": "USDT",
       "to": "",
       "toAddress": "",
-      "label": "Add Lloyd Li as Treasury signer",
-      "note": "Onboarding Head of Engineering as backup signer for Treasury wallet",
-      "createdBy": "Chuck Lam",
+      "label": "Add backup Treasury signer",
+      "note": "Onboarding new wallet signer for Treasury redundancy",
+      "createdBy": "Darlington Nnam",
       "createdAt": "2026-04-02T14:00:00.000Z",
       "signatures": [
-        { "signer": "Chuck Lam", "status": "SIGNED", "signedAt": "2026-04-02T14:00:00.000Z" }
+        { "signer": "Darlington Nnam", "status": "SIGNED", "signedAt": "2026-04-02T14:00:00.000Z" }
       ],
       "requiredSignatures": 2
     },
@@ -1147,7 +1079,7 @@
       "toAddress": "",
       "label": "Increase Treasury threshold to 2-of-3",
       "note": "Strengthen security after adding new signer",
-      "createdBy": "Sam Silver",
+      "createdBy": "Adegbite Kelvin Ademola",
       "createdAt": "2026-04-03T08:00:00.000Z",
       "signatures": [],
       "requiredSignatures": 2
@@ -1166,7 +1098,7 @@
       "toAddress": "0x54e020aabbccddee1234567890abcdef01020304",
       "label": "PH launch campaign - April",
       "note": "Digital marketing for Philippines user acquisition",
-      "createdBy": "Maria Santos",
+      "createdBy": "Adegbite Kelvin Ademola",
       "createdAt": "2026-04-03T11:00:00.000Z",
       "signatures": [],
       "requiredSignatures": 1
@@ -1178,9 +1110,9 @@
       "uuid": "pr-0001",
       "name": "January 2026 Payroll",
       "status": "COMPLETED",
-      "totalAmount": 38000,
+      "totalAmount": 22000,
       "currency": "USDC",
-      "employeeCount": 4,
+      "employeeCount": 2,
       "executedAt": "2026-01-31T10:00:00.000Z",
       "createdAt": "2026-01-28T09:00:00.000Z",
       "accountId": "0xa1b2c3d4e5f60002",
@@ -1188,27 +1120,15 @@
       "txHash": "0xfa004abc123def456789aabbccdd0011eeff2233",
       "recipients": [
         {
-          "name": "Chuck Lam",
+          "name": "Darlington Nnam",
           "amount": 12000,
           "walletAddress": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef01",
           "status": "PAID"
         },
         {
-          "name": "Sam Silver",
-          "amount": 12000,
-          "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
-          "status": "PAID"
-        },
-        {
-          "name": "Lloyd Li",
+          "name": "Adegbite Kelvin Ademola",
           "amount": 10000,
-          "walletAddress": "0x3c4d5e6f7890abcdef1234567890abcdef010203",
-          "status": "PAID"
-        },
-        {
-          "name": "Maria Santos",
-          "amount": 4000,
-          "walletAddress": "0x4d5e6f7890abcdef1234567890abcdef01020304",
+          "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
           "status": "PAID"
         }
       ]
@@ -1218,9 +1138,9 @@
       "uuid": "pr-0002",
       "name": "February 2026 Payroll",
       "status": "COMPLETED",
-      "totalAmount": 38000,
+      "totalAmount": 22000,
       "currency": "USDC",
-      "employeeCount": 4,
+      "employeeCount": 2,
       "executedAt": "2026-02-28T10:00:00.000Z",
       "createdAt": "2026-02-25T09:00:00.000Z",
       "accountId": "0xa1b2c3d4e5f60002",
@@ -1228,27 +1148,15 @@
       "txHash": "0xfa006abc123def456789aabbccdd0011eeff2233",
       "recipients": [
         {
-          "name": "Chuck Lam",
+          "name": "Darlington Nnam",
           "amount": 12000,
           "walletAddress": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef01",
           "status": "PAID"
         },
         {
-          "name": "Sam Silver",
-          "amount": 12000,
-          "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
-          "status": "PAID"
-        },
-        {
-          "name": "Lloyd Li",
+          "name": "Adegbite Kelvin Ademola",
           "amount": 10000,
-          "walletAddress": "0x3c4d5e6f7890abcdef1234567890abcdef010203",
-          "status": "PAID"
-        },
-        {
-          "name": "Maria Santos",
-          "amount": 4000,
-          "walletAddress": "0x4d5e6f7890abcdef1234567890abcdef01020304",
+          "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
           "status": "PAID"
         }
       ]
@@ -1258,9 +1166,9 @@
       "uuid": "pr-0003",
       "name": "March 2026 Payroll",
       "status": "COMPLETED",
-      "totalAmount": 38000,
+      "totalAmount": 22000,
       "currency": "USDC",
-      "employeeCount": 4,
+      "employeeCount": 2,
       "executedAt": "2026-03-31T10:00:00.000Z",
       "createdAt": "2026-03-28T09:00:00.000Z",
       "accountId": "0xa1b2c3d4e5f60002",
@@ -1268,48 +1176,36 @@
       "txHash": "0xfa010abc123def456789aabbccdd0011eeff2233",
       "recipients": [
         {
-          "name": "Chuck Lam",
+          "name": "Darlington Nnam",
           "amount": 12000,
           "walletAddress": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef01",
           "status": "PAID"
         },
         {
-          "name": "Sam Silver",
-          "amount": 12000,
-          "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
-          "status": "PAID"
-        },
-        {
-          "name": "Lloyd Li",
+          "name": "Adegbite Kelvin Ademola",
           "amount": 10000,
-          "walletAddress": "0x3c4d5e6f7890abcdef1234567890abcdef010203",
-          "status": "PAID"
-        },
-        {
-          "name": "Maria Santos",
-          "amount": 4000,
-          "walletAddress": "0x4d5e6f7890abcdef1234567890abcdef01020304",
+          "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
           "status": "PAID"
         }
       ]
     }
   ],
   "payrollStats": {
-    "totalPaid": 114000,
+    "totalPaid": 66000,
     "totalPayrolls": 3,
-    "averagePerPayroll": 38000,
+    "averagePerPayroll": 22000,
     "nextPayrollDate": "2026-04-30T10:00:00.000Z"
   },
   "invoices": [
     {
       "id": 1,
       "uuid": "inv-0001",
-      "invoiceNumber": "RIPE-2026-001",
+      "invoiceNumber": "HORUS-2026-001",
       "type": "SENT",
       "status": "PAID",
       "amount": 10000,
       "currency": "USDC",
-      "from": "Ripe",
+      "from": "Horus Labs",
       "to": "GCash",
       "toEmail": "integrations@gcash.com",
       "description": "Stablecoin settlement API - Pilot integration",
@@ -1332,12 +1228,12 @@
     {
       "id": 2,
       "uuid": "inv-0002",
-      "invoiceNumber": "RIPE-2026-002",
+      "invoiceNumber": "HORUS-2026-002",
       "type": "SENT",
       "status": "PENDING",
       "amount": 15000,
       "currency": "USDC",
-      "from": "Ripe",
+      "from": "Horus Labs",
       "to": "Coins.ph",
       "toEmail": "partnerships@coins.ph",
       "description": "Custom stablecoin off-ramp module for Coins.ph",
@@ -1360,14 +1256,14 @@
     {
       "id": 3,
       "uuid": "inv-0003",
-      "invoiceNumber": "RIPE-2026-003",
+      "invoiceNumber": "HORUS-2026-003",
       "type": "RECEIVED",
       "status": "PAID",
       "amount": 18000,
       "currency": "USDC",
       "from": "Halborn Security",
-      "to": "Ripe",
-      "toEmail": "chuck@ripemoney.com",
+      "to": "Horus Labs",
+      "toEmail": "darlington@horuslabs.io",
       "description": "Smart contract security audit - Payment contracts",
       "dueDate": "2026-01-31T00:00:00.000Z",
       "paidAt": "2026-01-12T15:30:00.000Z",
@@ -1388,14 +1284,14 @@
     {
       "id": 4,
       "uuid": "inv-0004",
-      "invoiceNumber": "RIPE-2026-004",
+      "invoiceNumber": "HORUS-2026-004",
       "type": "RECEIVED",
       "status": "PENDING",
       "amount": 15000,
       "currency": "USDC",
       "from": "Halborn Security",
-      "to": "Ripe",
-      "toEmail": "chuck@ripemoney.com",
+      "to": "Horus Labs",
+      "toEmail": "darlington@horuslabs.io",
       "description": "Security audit - Phase 3 (Mainnet)",
       "dueDate": "2026-04-15T00:00:00.000Z",
       "paidAt": null,
@@ -1416,12 +1312,12 @@
     {
       "id": 5,
       "uuid": "inv-0005",
-      "invoiceNumber": "RIPE-2026-005",
+      "invoiceNumber": "HORUS-2026-005",
       "type": "SENT",
       "status": "PENDING",
       "amount": 20000,
       "currency": "USDC",
-      "from": "Ripe",
+      "from": "Horus Labs",
       "to": "Maya",
       "toEmail": "treasury@maya.ph",
       "description": "Stablecoin payment gateway - Q2 2026",
@@ -1444,14 +1340,14 @@
     {
       "id": 6,
       "uuid": "inv-0006",
-      "invoiceNumber": "RIPE-2026-006",
+      "invoiceNumber": "HORUS-2026-006",
       "type": "RECEIVED",
       "status": "PAID",
       "amount": 8500,
       "currency": "USDC",
       "from": "Toptal",
-      "to": "Ripe",
-      "toEmail": "chuck@ripemoney.com",
+      "to": "Horus Labs",
+      "toEmail": "darlington@horuslabs.io",
       "description": "Contract designer - Mobile app UI",
       "dueDate": "2026-02-28T00:00:00.000Z",
       "paidAt": "2026-02-15T13:00:00.000Z",
@@ -1560,14 +1456,14 @@
     {
       "id": 1,
       "uuid": "pl-0001",
-      "code": "ripe-settlement-api",
+      "code": "horuslabs-settlement-api",
       "title": "Settlement API Integration",
-      "description": "Payment for Ripe stablecoin settlement API integration services",
+      "description": "Payment for Horus Labs stablecoin settlement API integration services",
       "amount": 10000,
       "currency": "USDC",
       "status": "ACTIVE",
       "recipientAddress": "0xa1b2c3d4e5f60001",
-      "recipientName": "Ripe",
+      "recipientName": "Horus Labs",
       "timesUsed": 1,
       "maxUses": null,
       "expiresAt": null,
@@ -1590,14 +1486,14 @@
     {
       "id": 2,
       "uuid": "pl-0002",
-      "code": "ripe-gateway-fee",
+      "code": "horuslabs-gateway-fee",
       "title": "Payment Gateway License",
-      "description": "Quarterly license fee for Ripe stablecoin payment gateway",
+      "description": "Quarterly license fee for Horus Labs stablecoin payment gateway",
       "amount": null,
       "currency": "USDC",
       "status": "ACTIVE",
       "recipientAddress": "0xa1b2c3d4e5f60001",
-      "recipientName": "Ripe",
+      "recipientName": "Horus Labs",
       "timesUsed": 0,
       "maxUses": null,
       "expiresAt": "2026-06-30T00:00:00.000Z",
@@ -1607,14 +1503,14 @@
     {
       "id": 3,
       "uuid": "pl-0003",
-      "code": "ripe-partner-contribution",
+      "code": "horuslabs-partner-contribution",
       "title": "Partner Ecosystem Fund",
-      "description": "Contribute to the Ripe partner ecosystem development fund",
+      "description": "Contribute to the Horus Labs partner ecosystem development fund",
       "amount": 1000,
       "currency": "USDC",
       "status": "ACTIVE",
       "recipientAddress": "0xa1b2c3d4e5f60001",
-      "recipientName": "Ripe",
+      "recipientName": "Horus Labs",
       "timesUsed": 0,
       "maxUses": 10,
       "expiresAt": "2026-12-31T00:00:00.000Z",
@@ -1718,7 +1614,7 @@
     "id": "card-001",
     "last4": "4829",
     "brand": "Visa",
-    "cardholder": "Chuck Lam",
+    "cardholder": "Darlington Nnam",
     "expiryMonth": 12,
     "expiryYear": 2028,
     "cvv": "491",
@@ -1729,9 +1625,9 @@
   },
   "cardPoolBalance": 20000,
   "invoiceSettings": {
-    "logo": "/ripemoney_logo.jpeg",
+    "logo": "/horuslab.jpeg",
     "accentColor": "#F5A623",
-    "invoicePrefix": "RIPE-",
+    "invoicePrefix": "HORUS-",
     "nextInvoiceNumber": 7,
     "defaultPaymentTerms": "Net 30",
     "defaultNote": "",
@@ -1745,7 +1641,7 @@
       "id": "card-001",
       "last4": "4829",
       "brand": "Visa",
-      "cardholder": "Chuck Lam",
+      "cardholder": "Darlington Nnam",
       "expiryMonth": 12,
       "expiryYear": 2028,
       "cvv": "491",
@@ -1761,7 +1657,7 @@
       "id": "card-002",
       "last4": "7213",
       "brand": "Visa",
-      "cardholder": "Sam Silver",
+      "cardholder": "Adegbite Kelvin Ademola",
       "expiryMonth": 6,
       "expiryYear": 2027,
       "cvv": "328",
@@ -1820,21 +1716,21 @@
       "month": "2026-01",
       "income": 0,
       "expenses": 19446,
-      "payroll": 38000,
+      "payroll": 22000,
       "netFlow": -57446
     },
     {
       "month": "2026-02",
       "income": 75000,
       "expenses": 14270,
-      "payroll": 38000,
+      "payroll": 22000,
       "netFlow": 22730
     },
     {
       "month": "2026-03",
       "income": 10000,
       "expenses": 18529,
-      "payroll": 38000,
+      "payroll": 22000,
       "netFlow": -46529
     },
     {
