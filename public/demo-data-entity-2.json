@@ -195,7 +195,7 @@
         "name": "USDT"
       },
       "network": {
-        "name": "Miden Testnet",
+        "name": "Miden",
         "chainId": 0
       },
       "order": 1,
@@ -219,7 +219,7 @@
         "name": "USDT"
       },
       "network": {
-        "name": "Miden Testnet",
+        "name": "Miden",
         "chainId": 0
       },
       "order": 2,

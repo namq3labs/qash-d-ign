@@ -107,7 +107,7 @@ export function OnboardingModal({ isOpen, onClose, zIndex }: ModalProp<Onboardin
             <div className="flex flex-col gap-2 items-center">
               <span className="text-5xl font-bold text-text-primary">100</span>
               <span className="text-xl text-text-primary text-center">
-                Grab your free test tokens to start exploring Qash on testnet.
+                Grab your free tokens to start exploring Qash.
               </span>
               <p className="text-sm text-text-secondary">Click below to claim your free tokens</p>
             </div>

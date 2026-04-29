@@ -74,7 +74,7 @@ export function useGetPayrollDetails(id?: number) {
         groupId: employee?.groupId || 1,
       },
       company: { companyName: data?.company?.companyName || "", companyType: data?.company?.industry || "" },
-      network: employee?.network || { name: "Miden Testnet", chainId: 1 },
+      network: employee?.network || { name: "Miden", chainId: 1 },
       token: employee?.token || { symbol: "USDT", decimals: 6, address: "", name: "USDT" },
       amount: salary,
       paydayDay: 28,

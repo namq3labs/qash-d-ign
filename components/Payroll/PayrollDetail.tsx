@@ -371,7 +371,7 @@ const PayrollDetail = () => {
               <img
                 className="w-5"
                 alt={payrollData.network?.name || ""}
-                src={`/chain/${(payrollData.network?.name || "miden-testnet").toLowerCase().replace(" ", "-")}.svg`}
+                src={`/chain/${(payrollData.network?.name || "miden").toLowerCase().replace(" ", "-")}.svg`}
               />
               <span className="text-base font-medium text-text-primary">{payrollData.network?.name || "-"}</span>
             </div>

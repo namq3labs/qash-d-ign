@@ -407,7 +407,7 @@ const DemoContext = createContext<DemoContextType | undefined>(undefined);
 
 const STORAGE_KEY = "qash_demo_state";
 const STORAGE_VERSION_KEY = "qash_demo_version";
-const CURRENT_VERSION = "7"; // Bump to invalidate stale localStorage data
+const CURRENT_VERSION = "9"; // Bump to invalidate stale localStorage data
 const LOGIN_KEY = "qash_demo_login";
 const ENTITY_KEY = "qash_demo_entity";
 
@@ -429,7 +429,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
   // Fetch a specific entity's full data JSON
   const fetchEntityData = useCallback(async (entityId: string): Promise<DemoData> => {
     const file = ENTITY_DATA_FILES[entityId] || ENTITY_DATA_FILES.primary;
-    const res = await fetch(file);
+    const res = await fetch(`${file}?v=${CURRENT_VERSION}`, { cache: "no-store" });
     return res.json();
   }, []);
 
@@ -468,7 +468,9 @@ export function DemoProvider({ children }: { children: ReactNode }) {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored && storedVersion === CURRENT_VERSION) {
           try {
-            setData(JSON.parse(stored));
+            const scrubbed = stored.replace(/Miden Testnet/g, "Miden");
+            setData(JSON.parse(scrubbed));
+            if (scrubbed !== stored) localStorage.setItem(STORAGE_KEY, scrubbed);
             setIsLoaded(true);
             return;
           } catch {

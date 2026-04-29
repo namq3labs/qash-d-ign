@@ -59,12 +59,97 @@ export const reviewInvoice = async (_uuid: string) => ({});
 export const confirmInvoice = async (_uuid: string) => ({});
 export const cancelInvoice = async (_uuid: string) => ({});
 
+// Transform a seed invoice from demo-data.json into the B2B invoice shape the UI expects.
+const transformSeedInvoice = (inv: any, demoState: any) => {
+  const company = demoState?.company || {};
+  const account = demoState?.accounts?.[0] || {};
+  const isSent = inv.type === "SENT";
+  const counterpartyName = isSent ? inv.to : inv.from;
+  const counterpartyEmail = inv.toEmail || "";
+  const items = (inv.items || []).map((it: any) => ({
+    description: it.description,
+    quantity: it.quantity,
+    unitPrice: it.unitPrice,
+    total: (it.quantity || 1) * (it.unitPrice || 0),
+  }));
+  const subtotal = items.reduce((s: number, i: any) => s + (i.total || 0), 0) || inv.amount || 0;
+
+  return {
+    id: inv.id,
+    uuid: inv.uuid,
+    invoiceNumber: inv.invoiceNumber,
+    type: inv.type,
+    status: inv.status,
+    total: inv.amount,
+    subtotal,
+    totalUsd: inv.amount,
+    currency: inv.currency || "USDC",
+    issueDate: inv.createdAt,
+    createdAt: inv.createdAt,
+    dueDate: inv.dueDate,
+    paidAt: inv.paidAt || null,
+    fromDetails: {
+      companyName: isSent ? company.companyName : counterpartyName,
+      contactName: isSent ? company.companyName : counterpartyName,
+      email: isSent ? demoState?.user?.email || "" : counterpartyEmail,
+      address1: "",
+      address2: "",
+      city: "",
+      country: isSent ? company.country || "" : "",
+    },
+    fromCompany: isSent
+      ? { companyName: company.companyName, companyType: company.industry, logo: company.logo }
+      : { companyName: counterpartyName, companyType: "", logo: null },
+    toDetails: {
+      companyName: isSent ? counterpartyName : company.companyName,
+      contactName: isSent ? counterpartyName : company.companyName,
+      email: isSent ? counterpartyEmail : demoState?.user?.email || "",
+      address: "",
+      city: "",
+      country: "",
+    },
+    toCompany: {
+      companyName: isSent ? counterpartyName : company.companyName,
+      companyType: isSent ? "" : company.industry,
+    },
+    toCompanyName: isSent ? counterpartyName : company.companyName,
+    toCompanyEmail: isSent ? counterpartyEmail : demoState?.user?.email || "",
+    emailTo: isSent ? counterpartyEmail : demoState?.user?.email || "",
+    description: inv.description,
+    paymentToken: { name: "USDT", symbol: "USDT", decimals: 6, address: "" },
+    paymentNetwork: { name: "Miden", chainId: 1 },
+    paymentWalletAddress: account.accountId || "",
+    walletAddress: account.accountId || "",
+    items,
+    employee: null,
+  };
+};
+
+const readSeedInvoices = (): any[] => {
+  try {
+    if (typeof window === "undefined") return [];
+    const demoState = JSON.parse(window.localStorage.getItem("qash_demo_state") || "{}");
+    return (demoState.invoices || []).map((inv: any) => transformSeedInvoice(inv, demoState));
+  } catch {
+    return [];
+  }
+};
+
+const readStoredInvoicesMap = (): Record<string, any> => {
+  try {
+    if (typeof window === "undefined") return {};
+    return JSON.parse(window.localStorage.getItem("qash_demo_invoices") || "{}");
+  } catch {
+    return {};
+  }
+};
+
 // B2B Invoice stubs
 export const getB2BInvoices = async (_query?: any) => {
   try {
     if (typeof window === "undefined") return { invoices: [], pagination: {} };
-    const stored = JSON.parse(window.localStorage.getItem("qash_demo_invoices") || "{}");
-    const invoices = Object.values(stored).map((inv: any) => ({
+    const stored = readStoredInvoicesMap();
+    const userCreated = Object.values(stored).map((inv: any) => ({
       ...inv,
       invoiceNumber: inv.invoiceNumber || "INV-0000",
       status: inv.status || "SENT",
@@ -75,6 +160,10 @@ export const getB2BInvoices = async (_query?: any) => {
       toCompanyEmail: inv.toDetails?.email || inv.toCompanyEmail || "",
       paymentToken: inv.paymentToken || { name: "USDT" },
     }));
+    const seeds = readSeedInvoices();
+    // Merge: seeds first, then any user-created (deduped by uuid)
+    const seenUuids = new Set(userCreated.map((i: any) => i.uuid));
+    const invoices = [...userCreated, ...seeds.filter(s => !seenUuids.has(s.uuid))];
     return { invoices, pagination: { total: invoices.length, page: 1, limit: 100, totalPages: 1 } };
   } catch {
     return { invoices: [], pagination: {} };
@@ -83,9 +172,11 @@ export const getB2BInvoices = async (_query?: any) => {
 export const getB2BInvoiceStats = async () => {
   try {
     if (typeof window === "undefined") return { total: 0, sent: 0, paid: 0, totalAmount: 0 };
-    const stored = JSON.parse(window.localStorage.getItem("qash_demo_invoices") || "{}");
-    const invoices = Object.values(stored) as any[];
-    const sent = invoices.filter(i => i.status === "SENT").length;
+    const stored = readStoredInvoicesMap();
+    const seeds = readSeedInvoices();
+    const seenUuids = new Set(Object.keys(stored));
+    const invoices = [...Object.values(stored), ...seeds.filter(s => !seenUuids.has(s.uuid))] as any[];
+    const sent = invoices.filter(i => i.status === "SENT" || i.status === "PENDING").length;
     const paid = invoices.filter(i => i.status === "PAID").length;
     const totalAmount = invoices.reduce((sum, i) => sum + (i.total || 0), 0);
     return { total: invoices.length, sent, paid, totalAmount };
@@ -96,8 +187,9 @@ export const getB2BInvoiceStats = async () => {
 export const getB2BInvoiceByUUID = async (_uuid: string) => {
   try {
     if (typeof window === "undefined") return null;
-    const stored = JSON.parse(window.localStorage.getItem("qash_demo_invoices") || "{}");
-    return stored[_uuid] || null;
+    const stored = readStoredInvoicesMap();
+    if (stored[_uuid]) return stored[_uuid];
+    return readSeedInvoices().find(i => i.uuid === _uuid) || null;
   } catch {
     return null;
   }
@@ -105,8 +197,9 @@ export const getB2BInvoiceByUUID = async (_uuid: string) => {
 export const getB2BInvoiceByUUIDPublic = async (_uuid: string) => {
   try {
     if (typeof window === "undefined") return null;
-    const stored = JSON.parse(window.localStorage.getItem("qash_demo_invoices") || "{}");
-    return stored[_uuid] || null;
+    const stored = readStoredInvoicesMap();
+    if (stored[_uuid]) return stored[_uuid];
+    return readSeedInvoices().find(i => i.uuid === _uuid) || null;
   } catch {
     return null;
   }

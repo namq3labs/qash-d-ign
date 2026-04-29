@@ -120,7 +120,7 @@ const CreateClientInvoice = () => {
       currency: Currency.USD,
       clientId: "", billToCompanyName: "", billToContactName: "", billToEmail: "", billToAddress: "", billToCcEmails: [], billToTaxId: "",
       token: { address: "", symbol: "USDT", decimals: 6, name: "USDT" },
-      network: { name: "Miden Testnet", chainId: 1 },
+      network: { name: "Miden", chainId: 1 },
       walletAddress: "",
       items: [
         { description: "Smart contract development", price: "8000", qty: "1", amount: "8000" },

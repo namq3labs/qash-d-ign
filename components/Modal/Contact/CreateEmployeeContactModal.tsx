@@ -99,7 +99,7 @@ const DEFAULT_TOKEN: AssetWithMetadata = {
 
 const DEFAULT_NETWORK: { icon: string; name: string; value: string } = {
   icon: "/chain/miden.svg",
-  name: "Miden Testnet",
+  name: "Miden",
   value: "miden",
 };
 
@@ -398,7 +398,7 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
   const buildInvoiceData = () => {
     const formValues = watch();
     const tokenSymbol = selectedToken ? n(selectedToken.metadata.symbol) : "USDT";
-    const networkName = selectedNetwork?.name || "Miden Testnet";
+    const networkName = selectedNetwork?.name || "Miden";
 
     const payStart = new Date();
     payStart.setDate(selectedPayDay);

@@ -436,7 +436,7 @@ export const PaymentLinkPreview = ({
               <img src="/chain/miden.svg" alt="Miden" className="w-8 h-8" />
               <div className="flex flex-col flex-1">
                 <span className="text-text-secondary text-xs leading-none">Network</span>
-                <span className="text-text-primary text-sm font-medium leading-none mt-0.5">Miden Testnet</span>
+                <span className="text-text-primary text-sm font-medium leading-none mt-0.5">Miden</span>
               </div>
               <img src="/misc/lock-icon.svg" alt="locked" className="w-4 h-4 opacity-40" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
             </div>

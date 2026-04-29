@@ -82,7 +82,7 @@ export function MigratingModal({ isOpen, onClose, zIndex, ...props }: ModalProp<
             <div className="flex flex-col gap-4 items-center">
               <img src="/notification/notification.gif" alt="bell" className="w-15 h-15" />
               <div className="flex flex-col gap-2 items-center">
-                <span className="text-2xl text-white text-center">We’ve migrated to Miden Testnet 0.11.0.</span>
+                <span className="text-2xl text-white text-center">We’ve migrated to Miden 0.11.0.</span>
                 <p className="text-neutral-500 text-center">
                   All accounts and data have been reset as part of this upgrade.
                 </p>
