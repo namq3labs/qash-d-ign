@@ -2,20 +2,20 @@
   "company": {
     "id": 2,
     "uuid": "c0a80101-0000-0000-0000-000000000002",
-    "companyName": "ZoroSwap",
-    "registrationNumber": "SI-ZORO-2026001",
+    "companyName": "Chainrails",
+    "registrationNumber": "SI-CHAINRAILS-2026001",
     "country": "Slovenia",
     "industry": "DeFi / DEX",
     "companySize": "1-10",
-    "website": "https://zoroswap.io",
-    "logo": "/zoro-logo.jpg",
+    "website": "https://chainrails.io",
+    "logo": "/chainrails.jpg",
     "createdAt": "2025-10-15T08:00:00.000Z",
     "updatedAt": "2026-03-25T10:00:00.000Z"
   },
   "user": {
     "id": 1,
     "uuid": "u0a80101-0000-0000-0000-000000000001",
-    "email": "mieszko@zoroswap.io",
+    "email": "mieszko@chainrails.io",
     "role": "ADMIN",
     "isActive": true,
     "teamMembership": {
@@ -29,7 +29,7 @@
       "profilePicture": null,
       "company": {
         "id": 2,
-        "companyName": "ZoroSwap"
+        "companyName": "Chainrails"
       }
     }
   },
@@ -39,7 +39,7 @@
       "uuid": "tm-2001",
       "firstName": "Mieszko",
       "lastName": "Manijak",
-      "email": "mieszko@zoroswap.io",
+      "email": "mieszko@chainrails.io",
       "position": "Co-founder",
       "role": "OWNER",
       "status": "ACTIVE",
@@ -54,7 +54,7 @@
       "uuid": "tm-2002",
       "firstName": "Mitja",
       "lastName": "Belak",
-      "email": "mitja@zoroswap.io",
+      "email": "mitja@chainrails.io",
       "position": "Co-founder",
       "role": "ADMIN",
       "status": "ACTIVE",
@@ -77,17 +77,17 @@
       "uuid": "acc-uuid-201",
       "accountId": "0xz1c2d3e4f5a60001",
       "name": "Main Wallet",
-      "description": "Primary treasury wallet for ZoroSwap operations",
+      "description": "Primary treasury wallet for Chainrails operations",
       "threshold": 1,
       "companyId": 2,
       "logo": null,
       "publicKeys": [
-        "0xzoro001"
+        "0xchainrails001"
       ],
       "members": [
         {
           "name": "Mieszko Manijak",
-          "commitment": "0xzoro001",
+          "commitment": "0xchainrails001",
           "role": "OWNER"
         }
       ],
@@ -184,7 +184,7 @@
       "id": 1,
       "name": "Mieszko Manijak",
       "walletAddress": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
-      "email": "mieszko@zoroswap.io",
+      "email": "mieszko@chainrails.io",
       "groupId": 1,
       "companyId": 2,
       "paymentMethod": "crypto",
@@ -208,7 +208,7 @@
       "id": 2,
       "name": "Mitja Belak",
       "walletAddress": "mtst1mjb8s9oxqt5l7hriest6mvfu1jgopy60_rtvrrzxqzri",
-      "email": "mitja@zoroswap.io",
+      "email": "mitja@chainrails.io",
       "groupId": 1,
       "companyId": 2,
       "paymentMethod": "crypto",
@@ -287,7 +287,7 @@
       "label": "Miden ecosystem grant - Tranche 1",
       "txHash": "0xzr201abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2025-11-01T10:00:00.000Z",
-      "note": "Initial grant funding for ZoroSwap DEX development"
+      "note": "Initial grant funding for Chainrails DEX development"
     },
     {
       "id": "tx-202",
@@ -369,7 +369,7 @@
       "toAddress": "0xed2006aabbccddee1234567890abcdef01020304",
       "accountId": "0xz1c2d3e4f5a60001",
       "category": "Other",
-      "label": "Hackathon prize pool - ZoroSwap track",
+      "label": "Hackathon prize pool - Chainrails track",
       "txHash": "0xzr206abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-02-20T10:00:00.000Z",
       "note": "Sponsored hackathon track prize at ETH Denver"
@@ -523,12 +523,12 @@
     {
       "id": 1,
       "uuid": "inv-2001",
-      "invoiceNumber": "ZORO-2026-001",
+      "invoiceNumber": "CHAINRAILS-2026-001",
       "type": "SENT",
       "status": "PAID",
       "amount": 15000,
       "currency": "USDC",
-      "from": "ZoroSwap",
+      "from": "Chainrails",
       "to": "WingRiders",
       "toEmail": "partnerships@wingriders.com",
       "description": "Cross-DEX liquidity aggregation integration",
@@ -551,15 +551,15 @@
     {
       "id": 2,
       "uuid": "inv-2002",
-      "invoiceNumber": "ZORO-2026-002",
+      "invoiceNumber": "CHAINRAILS-2026-002",
       "type": "SENT",
       "status": "PENDING",
       "amount": 8000,
       "currency": "USDC",
-      "from": "ZoroSwap",
+      "from": "Chainrails",
       "to": "Liqwid Finance",
       "toEmail": "treasury@liqwid.fi",
-      "description": "Lending pool integration for ZoroSwap LP tokens",
+      "description": "Lending pool integration for Chainrails LP tokens",
       "dueDate": "2026-04-30T00:00:00.000Z",
       "paidAt": null,
       "createdAt": "2026-03-20T10:00:00.000Z",
@@ -625,14 +625,14 @@
     {
       "id": 1,
       "uuid": "pl-2001",
-      "code": "zoroswap-integration",
-      "title": "ZoroSwap DEX Integration Fee",
-      "description": "Payment for integrating with ZoroSwap liquidity pools and aggregation API",
+      "code": "chainrails-integration",
+      "title": "Chainrails DEX Integration Fee",
+      "description": "Payment for integrating with Chainrails liquidity pools and aggregation API",
       "amount": 5000,
       "currency": "USDC",
       "status": "ACTIVE",
       "recipientAddress": "0xz1c2d3e4f5a60001",
-      "recipientName": "ZoroSwap",
+      "recipientName": "Chainrails",
       "timesUsed": 0,
       "maxUses": null,
       "expiresAt": null,
@@ -713,7 +713,7 @@
   "invoiceSettings": {
     "logo": null,
     "accentColor": "#194BFA",
-    "invoicePrefix": "ZORO-",
+    "invoicePrefix": "CHAINRAILS-",
     "nextInvoiceNumber": 1001,
     "defaultPaymentTerms": "Net 30",
     "defaultNote": "",
