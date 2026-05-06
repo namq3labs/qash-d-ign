@@ -119,6 +119,23 @@ export const FIAT_COUNTRIES: FiatCountry[] = [
       { code: "BAY", name: "Bank of Ayudhya (Krungsri)" },
     ],
   },
+  {
+    code: "CN",
+    name: "China",
+    currency: "Chinese Yuan",
+    currencyCode: "CNY",
+    rail: "local",
+    icon: "/flag/cn.svg",
+    banks: [
+      { code: "ICBC", name: "ICBC" },
+      { code: "CCB", name: "China Construction Bank" },
+      { code: "ABC", name: "Agricultural Bank of China" },
+      { code: "BOC", name: "Bank of China" },
+      { code: "CMB", name: "China Merchants Bank" },
+      { code: "BCM", name: "Bank of Communications" },
+      { code: "PSBC", name: "Postal Savings Bank of China" },
+    ],
+  },
 
   // Europe - SEPA
   {

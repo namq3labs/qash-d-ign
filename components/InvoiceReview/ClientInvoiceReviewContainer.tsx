@@ -12,6 +12,7 @@ import { ConfirmAndReviewInvoiceModalProps, MODAL_IDS } from "@/types/modal";
 import { useMidenProvider } from "@/contexts/MidenProvider";
 import { blo } from "blo";
 import { turnBechToHex } from "@/services/utils/turnBechToHex";
+import { getTokenIcon } from "@/services/utils/tokenIcon";
 import { AssetWithMetadata } from "@/types/faucet";
 import {
   QASH_TOKEN_ADDRESS,
@@ -585,11 +586,7 @@ export const ClientInvoiceReviewContainer = () => {
                       >
                         {selectedToken && (
                           <img
-                            src={
-                              selectedToken.metadata.symbol === "USDT"
-                                ? "/token/usdt.svg"
-                                : blo(turnBechToHex(selectedToken.faucetId))
-                            }
+                            src={getTokenIcon(selectedToken.metadata.symbol, selectedToken.faucetId)}
                             alt="token"
                             className="w-8 h-8 rounded-full"
                           />
@@ -772,7 +769,10 @@ export const ClientInvoiceReviewContainer = () => {
 
             {/* Invoice Preview */}
             <div className="flex-3/5">
-              <InvoicePreview {...invoiceData} />
+              <InvoicePreview
+                {...invoiceData}
+                logo={invoiceSettings?.logo || invoiceData.logo || demoData?.company?.logo || null}
+              />
             </div>
           </div>
         </div>

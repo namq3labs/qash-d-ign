@@ -19,6 +19,7 @@ const COUNTRY = [
   { value: "ID", label: "Indonesia", icon: "/flag/id.svg" },
   { value: "PH", label: "Philippines", icon: "/flag/ph.svg" },
   { value: "TH", label: "Thailand", icon: "/flag/th.svg" },
+  { value: "CN", label: "China", icon: "/flag/cn.svg" },
 
   // Latin America (LATAM)
   { value: "MX", label: "Mexico", icon: "/flag/mx.svg" },
