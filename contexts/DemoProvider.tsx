@@ -407,7 +407,7 @@ const DemoContext = createContext<DemoContextType | undefined>(undefined);
 
 const STORAGE_KEY = "qash_demo_state";
 const STORAGE_VERSION_KEY = "qash_demo_version";
-const CURRENT_VERSION = "9"; // Bump to invalidate stale localStorage data
+const CURRENT_VERSION = "10"; // Bump to invalidate stale localStorage data
 const LOGIN_KEY = "qash_demo_login";
 const ENTITY_KEY = "qash_demo_entity";
 

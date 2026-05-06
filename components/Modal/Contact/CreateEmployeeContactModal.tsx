@@ -340,7 +340,7 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
         },
       };
 
-      const result = await createEmployee.mutateAsync(employeePayload);
+      await createEmployee.mutateAsync(employeePayload);
 
       toast.success("Employee created successfully");
 
@@ -352,11 +352,6 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
       setSelectedPayDay(28);
       onClose();
       closeModal("CHOOSE_CONTACT_TYPE");
-
-      // Navigate to employee detail to set up payroll
-      if (result?.id) {
-        router.push(`/contact-book/employee/${result.id}`);
-      }
     } catch (error) {
       console.error("Failed to create contact:", error);
       toast.error("Failed to create contact");

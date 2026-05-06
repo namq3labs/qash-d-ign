@@ -396,20 +396,30 @@ export const EmployeeContact = () => {
         ),
         Currency: (() => {
           if (isCrypto) {
+            const tokenSymbol = contact.token?.address === QASH_TOKEN_ADDRESS ? "USDT" : contact.token?.symbol;
+            const knownTokenIcons: Record<string, string> = {
+              USDC: "/token/usdc.svg",
+              USDT: "/token/usdt.svg",
+              ETH: "/token/eth.svg",
+              BTC: "/token/btc.svg",
+              STRK: "/token/strk.svg",
+              QASH: "/token/qash.svg",
+            };
+            const tokenIcon = tokenSymbol && knownTokenIcons[tokenSymbol]
+              ? knownTokenIcons[tokenSymbol]
+              : contact.token?.address
+                ? blo(turnBechToHex(contact.token.address))
+                : "/token/any-token.svg";
             return (
               <div className="flex items-center justify-center gap-1.5">
                 {contact.token && (
                   <>
                     <img
-                      src={
-                        contact.token?.address === QASH_TOKEN_ADDRESS
-                          ? "/token/usdt.svg"
-                          : blo(turnBechToHex(contact.token?.address || ""))
-                      }
-                      alt="token"
-                      className="w-4 h-4"
+                      src={tokenIcon}
+                      alt={tokenSymbol || "token"}
+                      className="w-5 h-5 object-contain"
                     />
-                    <span className="text-text-primary text-xs font-medium">{contact.token?.address === QASH_TOKEN_ADDRESS ? "USDT" : contact.token?.symbol}</span>
+                    <span className="text-text-primary text-xs font-medium">{tokenSymbol}</span>
                   </>
                 )}
               </div>
@@ -418,7 +428,7 @@ export const EmployeeContact = () => {
           const fiatCountry = FIAT_COUNTRIES.find(c => c.name === contact.fiatDetails?.country);
           return (
             <div className="flex items-center justify-center gap-1.5">
-              {fiatCountry && <img src={fiatCountry.icon} alt={fiatCountry.name} className="w-4 h-3 rounded-sm" />}
+              {fiatCountry && <img src={fiatCountry.icon} alt={fiatCountry.name} className="w-6 h-5 rounded-sm object-contain" />}
               <span className="text-text-primary text-xs font-medium">{contact.fiatDetails?.currency || "USD"}</span>
             </div>
           );
