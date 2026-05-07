@@ -139,6 +139,22 @@ export const FIAT_COUNTRIES: FiatCountry[] = [
 
   // Europe - SEPA
   {
+    code: "CH",
+    name: "Switzerland",
+    currency: "Swiss Franc",
+    currencyCode: "CHF",
+    rail: "sepa",
+    icon: "/flag/ch.svg",
+    banks: [
+      { code: "UBS", name: "UBS" },
+      { code: "ZKB", name: "Zurich Cantonal Bank" },
+      { code: "RAIFFEISEN", name: "Raiffeisen Switzerland" },
+      { code: "POSTFIN", name: "PostFinance" },
+      { code: "JBAER", name: "Julius Baer" },
+      { code: "SYGNUM", name: "Sygnum Bank" },
+    ],
+  },
+  {
     code: "DE",
     name: "Germany",
     currency: "Euro",

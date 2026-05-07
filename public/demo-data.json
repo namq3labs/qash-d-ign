@@ -2,34 +2,34 @@
   "company": {
     "id": 1,
     "uuid": "c0a80101-0000-0000-0000-000000000001",
-    "companyName": "OpenBuild",
-    "registrationNumber": "CN-OB-2025001",
-    "country": "China",
-    "industry": "Web3 Developer Community",
-    "companySize": "11-50",
-    "website": "https://openbuild.xyz",
-    "logo": "/openbuild.png",
+    "companyName": "Radcipher",
+    "registrationNumber": "CHE-123.456.789",
+    "country": "Switzerland",
+    "industry": "Privacy Infrastructure",
+    "companySize": "1-10",
+    "website": "https://radcipher.com",
+    "logo": "/Radcipher.png",
     "createdAt": "2025-06-01T08:00:00.000Z",
     "updatedAt": "2026-04-05T10:30:00.000Z"
   },
   "user": {
     "id": 1,
     "uuid": "u0a80101-0000-0000-0000-000000000001",
-    "email": "ian@openbuild.xyz",
+    "email": "stoyan@radcipher.com",
     "role": "ADMIN",
     "isActive": true,
     "teamMembership": {
       "id": 1,
       "uuid": "tm-0001",
-      "firstName": "Ian",
-      "lastName": "Xu",
-      "position": "Cofounder",
+      "firstName": "Stoyan",
+      "lastName": "Radev",
+      "position": "Founder & CEO",
       "role": "OWNER",
       "companyId": 1,
       "profilePicture": null,
       "company": {
         "id": 1,
-        "companyName": "OpenBuild"
+        "companyName": "Radcipher"
       }
     }
   },
@@ -37,10 +37,10 @@
     {
       "id": 1,
       "uuid": "tm-0001",
-      "firstName": "Ian",
-      "lastName": "Xu",
-      "email": "ian@openbuild.xyz",
-      "position": "Cofounder",
+      "firstName": "Stoyan",
+      "lastName": "Radev",
+      "email": "stoyan@radcipher.com",
+      "position": "Founder & CEO",
       "role": "OWNER",
       "status": "ACTIVE",
       "walletAddress": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef01",
@@ -52,14 +52,14 @@
     {
       "id": 2,
       "uuid": "tm-0002",
-      "firstName": "Tian",
-      "lastName": "Tian",
-      "email": "tian@openbuild.xyz",
-      "position": "Head of Design",
+      "firstName": "Daniel",
+      "lastName": "Keller",
+      "email": "daniel@radcipher.com",
+      "position": "CTO & Co-founder",
       "role": "ADMIN",
       "status": "ACTIVE",
       "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
-      "salary": 9000,
+      "salary": 11000,
       "salaryCurrency": "USDC",
       "profilePicture": null,
       "joinedAt": "2025-06-15T08:00:00.000Z"
@@ -67,14 +67,14 @@
     {
       "id": 3,
       "uuid": "tm-0003",
-      "firstName": "Yao",
-      "lastName": "Lin",
-      "email": "yao.lin@openbuild.xyz",
-      "position": "Engineering Lead",
+      "firstName": "Anja",
+      "lastName": "Bühler",
+      "email": "anja@radcipher.com",
+      "position": "Head of Product",
       "role": "ADMIN",
       "status": "ACTIVE",
       "walletAddress": "0x7f3a2b8c4d5e9f1a6b2c8d4e5f9a1b6c2d8e4f5a",
-      "salary": 8500,
+      "salary": 9500,
       "salaryCurrency": "USDC",
       "profilePicture": null,
       "joinedAt": "2025-07-01T08:00:00.000Z"
@@ -82,22 +82,37 @@
     {
       "id": 4,
       "uuid": "tm-0004",
-      "firstName": "Wei",
-      "lastName": "Chen",
-      "email": "wei.chen@openbuild.xyz",
-      "position": "Head of Community",
+      "firstName": "Niklas",
+      "lastName": "Frei",
+      "email": "niklas@radcipher.com",
+      "position": "Senior Engineer",
       "role": "ADMIN",
       "status": "ACTIVE",
       "walletAddress": "0x3c4d5e6f7890abcdef1234567890abcdef010304",
-      "salary": 7500,
+      "salary": 8500,
       "salaryCurrency": "USDC",
       "profilePicture": null,
       "joinedAt": "2025-08-01T08:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "uuid": "tm-0005",
+      "firstName": "Lara",
+      "lastName": "Steiner",
+      "email": "lara@radcipher.com",
+      "position": "Marketing & BD",
+      "role": "ADMIN",
+      "status": "ACTIVE",
+      "walletAddress": "0x9a3f5b7e1d2c4a8e6f9b1d3c5a7e9f1b3d5c7a9e",
+      "salary": 7500,
+      "salaryCurrency": "USDC",
+      "profilePicture": null,
+      "joinedAt": "2025-09-01T08:00:00.000Z"
     }
   ],
   "teamStats": {
-    "total": 4,
-    "active": 4,
+    "total": 5,
+    "active": 5,
     "suspended": 0,
     "pending": 0
   },
@@ -107,19 +122,19 @@
       "uuid": "acc-uuid-001",
       "accountId": "0xa1b2c3d4e5f60001",
       "name": "Treasury",
-      "description": "Main treasury wallet for OpenBuild",
+      "description": "Main treasury wallet for Radcipher",
       "threshold": 2,
       "companyId": 1,
       "logo": null,
       "publicKeys": ["0xabc001", "0xabc002"],
       "members": [
         {
-          "name": "Ian Xu",
+          "name": "Stoyan Radev",
           "commitment": "0xabc001",
           "role": "OWNER"
         },
         {
-          "name": "Tian Tian",
+          "name": "Daniel Keller",
           "commitment": "0xabc002",
           "role": "ADMIN"
         }
@@ -143,12 +158,12 @@
       "publicKeys": ["0xabc001", "0xabc003"],
       "members": [
         {
-          "name": "Ian Xu",
+          "name": "Stoyan Radev",
           "commitment": "0xabc001",
           "role": "OWNER"
         },
         {
-          "name": "Tian Tian",
+          "name": "Daniel Keller",
           "commitment": "0xabc003",
           "role": "ADMIN"
         }
@@ -207,20 +222,20 @@
     {
       "id": 2,
       "uuid": "ct-0002",
-      "name": "Coins.ph",
+      "name": "Bity",
       "walletAddress": "0xa1c002aabbccddee1234567890abcdef01020304",
-      "email": "partnerships@coins.ph",
+      "email": "partnerships@bity.com",
       "category": "Partners",
-      "notes": "Philippine crypto exchange, on/off-ramp partner"
+      "notes": "Swiss crypto exchange, on/off-ramp partner"
     },
     {
       "id": 3,
       "uuid": "ct-0003",
-      "name": "GCash",
+      "name": "Yapeal",
       "walletAddress": "0xc4a003aabbccddee1234567890abcdef01020304",
-      "email": "integrations@gcash.com",
+      "email": "integrations@yapeal.ch",
       "category": "Partners",
-      "notes": "Philippine e-wallet, payment distribution channel"
+      "notes": "Swiss neobank, payment distribution channel"
     },
     {
       "id": 4,
@@ -234,11 +249,11 @@
     {
       "id": 5,
       "uuid": "ct-0005",
-      "name": "Hashed Ventures",
+      "name": "Greenfield Capital",
       "walletAddress": "0xbe4005aabbccddee1234567890abcdef01020304",
-      "email": "portfolio@hashed.com",
+      "email": "team@greenfield.xyz",
       "category": "Investors",
-      "notes": "Pre-seed investor, Asia-focused crypto fund"
+      "notes": "Pre-seed investor, European crypto fund"
     },
     {
       "id": 6,
@@ -307,10 +322,10 @@
   "employees": [
     {
       "id": 1,
-      "name": "Wang Hao",
-      "walletAddress": "0x05a7c2f8e1d3b9a4c6e8f2d7b9a4c6e8f2d7b9a4c6e8f2d7b9a4c6e8f201ab12",
-      "email": "wang.hao@openbuild.xyz",
-      "groupId": 2,
+      "name": "Stoyan Radev",
+      "walletAddress": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef01",
+      "email": "stoyan@radcipher.com",
+      "groupId": 1,
       "companyId": 1,
       "paymentMethod": "crypto",
       "token": {
@@ -331,30 +346,9 @@
     },
     {
       "id": 2,
-      "name": "Tian Tian",
-      "walletAddress": "",
-      "email": "tian@openbuild.xyz",
-      "groupId": 3,
-      "companyId": 1,
-      "paymentMethod": "fiat",
-      "fiatDetails": {
-        "country": "China",
-        "bank": "Bank of China",
-        "currency": "CNY"
-      },
-      "token": null,
-      "network": null,
-      "order": 2,
-      "createdAt": "2025-06-01T08:00:00.000Z",
-      "updatedAt": "2025-06-01T08:00:00.000Z",
-      "employeeType": "employee",
-      "isActive": true
-    },
-    {
-      "id": 3,
-      "name": "Yao Lin",
-      "walletAddress": "0x7f3a2b8c4d5e9f1a6b2c8d4e5f9a1b6c2d8e4f5a",
-      "email": "yao.lin@openbuild.xyz",
+      "name": "Daniel Keller",
+      "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
+      "email": "daniel@radcipher.com",
       "groupId": 2,
       "companyId": 1,
       "paymentMethod": "crypto",
@@ -368,6 +362,27 @@
         "name": "Base",
         "chainId": 8453
       },
+      "order": 2,
+      "createdAt": "2025-06-01T08:00:00.000Z",
+      "updatedAt": "2025-06-01T08:00:00.000Z",
+      "employeeType": "employee",
+      "isActive": true
+    },
+    {
+      "id": 3,
+      "name": "Anja Bühler",
+      "walletAddress": "",
+      "email": "anja@radcipher.com",
+      "groupId": 1,
+      "companyId": 1,
+      "paymentMethod": "fiat",
+      "fiatDetails": {
+        "country": "Switzerland",
+        "bank": "UBS",
+        "currency": "CHF"
+      },
+      "token": null,
+      "network": null,
       "order": 3,
       "createdAt": "2025-06-01T08:00:00.000Z",
       "updatedAt": "2025-06-01T08:00:00.000Z",
@@ -376,9 +391,9 @@
     },
     {
       "id": 4,
-      "name": "Li Ming",
-      "walletAddress": "0x04b8e1a2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0",
-      "email": "li.ming@openbuild.xyz",
+      "name": "Niklas Frei",
+      "walletAddress": "0x3c4d5e6f7890abcdef1234567890abcdef010304",
+      "email": "niklas@radcipher.com",
       "groupId": 2,
       "companyId": 1,
       "paymentMethod": "crypto",
@@ -400,65 +415,20 @@
     },
     {
       "id": 5,
-      "name": "Wei Chen",
+      "name": "Lara Steiner",
       "walletAddress": "",
-      "email": "wei.chen@openbuild.xyz",
-      "groupId": 1,
-      "companyId": 1,
-      "paymentMethod": "fiat",
-      "fiatDetails": {
-        "country": "China",
-        "bank": "ICBC",
-        "currency": "CNY"
-      },
-      "token": null,
-      "network": null,
-      "order": 5,
-      "createdAt": "2025-06-01T08:00:00.000Z",
-      "updatedAt": "2025-06-01T08:00:00.000Z",
-      "employeeType": "employee",
-      "isActive": true
-    },
-    {
-      "id": 6,
-      "name": "Zhang Yu",
-      "walletAddress": "0x9a3f5b7e1d2c4a8e6f9b1d3c5a7e9f1b3d5c7a9e",
-      "email": "zhang.yu@openbuild.xyz",
-      "groupId": 2,
-      "companyId": 1,
-      "paymentMethod": "crypto",
-      "token": {
-        "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-        "symbol": "USDC",
-        "decimals": 6,
-        "name": "USD Coin"
-      },
-      "network": {
-        "name": "Base",
-        "chainId": 8453
-      },
-      "order": 6,
-      "createdAt": "2025-06-01T08:00:00.000Z",
-      "updatedAt": "2025-06-01T08:00:00.000Z",
-      "employeeType": "employee",
-      "isActive": true
-    },
-    {
-      "id": 7,
-      "name": "Liu Yang",
-      "walletAddress": "",
-      "email": "liu.yang@openbuild.xyz",
+      "email": "lara@radcipher.com",
       "groupId": 3,
       "companyId": 1,
       "paymentMethod": "fiat",
       "fiatDetails": {
-        "country": "China",
-        "bank": "China Merchants Bank",
-        "currency": "CNY"
+        "country": "Switzerland",
+        "bank": "Zurich Cantonal Bank",
+        "currency": "CHF"
       },
       "token": null,
       "network": null,
-      "order": 7,
+      "order": 5,
       "createdAt": "2025-06-01T08:00:00.000Z",
       "updatedAt": "2025-06-01T08:00:00.000Z",
       "employeeType": "employee",
@@ -478,41 +448,41 @@
     },
     {
       "uuid": "cl-0002",
-      "email": "partnerships@coins.ph",
-      "companyName": "Coins.ph",
+      "email": "partnerships@bity.com",
+      "companyName": "Bity",
       "companyType": "Crypto Exchange",
-      "country": "Philippines",
-      "city": "Manila",
+      "country": "Switzerland",
+      "city": "Neuchâtel",
       "createdAt": "2025-10-01T08:00:00.000Z",
       "updatedAt": "2025-10-01T08:00:00.000Z"
     },
     {
       "uuid": "cl-0003",
-      "email": "integrations@gcash.com",
-      "companyName": "GCash",
-      "companyType": "E-Wallet",
-      "country": "Philippines",
-      "city": "Taguig",
+      "email": "integrations@yapeal.ch",
+      "companyName": "Yapeal",
+      "companyType": "Neobank",
+      "country": "Switzerland",
+      "city": "Zurich",
       "createdAt": "2025-10-15T08:00:00.000Z",
       "updatedAt": "2025-10-15T08:00:00.000Z"
     },
     {
       "uuid": "cl-0004",
-      "email": "treasury@maya.ph",
-      "companyName": "Maya",
-      "companyType": "Digital Bank",
-      "country": "Philippines",
-      "city": "Makati",
+      "email": "treasury@sygnum.com",
+      "companyName": "Sygnum",
+      "companyType": "Digital Asset Bank",
+      "country": "Switzerland",
+      "city": "Zurich",
       "createdAt": "2025-11-01T08:00:00.000Z",
       "updatedAt": "2025-11-01T08:00:00.000Z"
     },
     {
       "uuid": "cl-0005",
-      "email": "biz@grab.com",
-      "companyName": "Grab Financial",
+      "email": "biz@klarna.com",
+      "companyName": "Klarna",
       "companyType": "Fintech",
-      "country": "Singapore",
-      "city": "Singapore",
+      "country": "Sweden",
+      "city": "Stockholm",
       "createdAt": "2025-12-01T08:00:00.000Z",
       "updatedAt": "2025-12-01T08:00:00.000Z"
     },
@@ -548,7 +518,7 @@
     },
     {
       "uuid": "cl-0009",
-      "email": "grants@polygon.technology",
+      "email": "grants@miden.xyz",
       "companyName": "Miden",
       "companyType": "Blockchain",
       "country": "United States",
@@ -574,7 +544,7 @@
       "status": "COMPLETED",
       "amount": 300000,
       "currency": "USDC",
-      "from": "Hashed Ventures",
+      "from": "Greenfield Capital",
       "fromAddress": "0xbe4005aabbccddee1234567890abcdef01020304",
       "to": "Treasury",
       "toAddress": "0xa1b2c3d4e5f60001",
@@ -583,7 +553,7 @@
       "label": "Pre-seed round",
       "txHash": "0xfa001abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2025-08-01T14:30:00.000Z",
-      "note": "Pre-seed funding from Hashed Ventures"
+      "note": "Pre-seed funding from Greenfield Capital"
     },
     {
       "id": "tx-002",
@@ -600,7 +570,7 @@
       "label": "Ecosystem grant",
       "txHash": "0xfa002abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2025-11-15T10:00:00.000Z",
-      "note": "Stellar grant for stablecoin last-mile infrastructure"
+      "note": "Stellar grant for privacy-preserving settlement infrastructure"
     },
     {
       "id": "tx-003",
@@ -623,7 +593,7 @@
       "id": "tx-004",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 22000,
+      "amount": 23000,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
@@ -648,16 +618,16 @@
       "toAddress": "0x4a0044aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60001",
       "category": "Contractor",
-      "label": "Security audit - Payment contracts",
+      "label": "Security audit - Privacy contracts",
       "txHash": "0xfa005abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-01-12T15:30:00.000Z",
-      "note": "Security audit for stablecoin payment smart contracts"
+      "note": "Security audit for privacy-preserving payment smart contracts"
     },
     {
       "id": "tx-006",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 22000,
+      "amount": 23000,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
@@ -678,14 +648,14 @@
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
-      "to": "Coins.ph",
+      "to": "Bity",
       "toAddress": "0xa1c002aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Vendor",
       "label": "API integration fee",
       "txHash": "0xfa007abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-02-01T09:00:00.000Z",
-      "note": "Coins.ph API integration and compliance setup"
+      "note": "Bity API integration and compliance setup"
     },
     {
       "id": "tx-008",
@@ -693,7 +663,7 @@
       "status": "COMPLETED",
       "amount": 75000,
       "currency": "USDC",
-      "from": "Hashed Ventures",
+      "from": "Greenfield Capital",
       "fromAddress": "0xbe4005aabbccddee1234567890abcdef01020304",
       "to": "Treasury",
       "toAddress": "0xa1b2c3d4e5f60001",
@@ -716,16 +686,16 @@
       "toAddress": "0x54e006aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Vendor",
-      "label": "Contract designer - Mobile app UI",
+      "label": "Contract designer - Web app UI",
       "txHash": "0xfa009abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-02-15T13:00:00.000Z",
-      "note": "Freelance designer for mobile payment app flows"
+      "note": "Freelance designer for privacy app flows"
     },
     {
       "id": "tx-010",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 22000,
+      "amount": 23000,
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
@@ -899,14 +869,14 @@
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
-      "to": "Facebook Ads",
+      "to": "Google Ads",
       "toAddress": "0x54e020aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Vendor",
-      "label": "PH launch campaign - March",
+      "label": "EU launch campaign - March",
       "txHash": "0xfa020abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-03-10T14:00:00.000Z",
-      "note": "Digital marketing for Philippines market launch"
+      "note": "Digital marketing for European market launch"
     },
     {
       "id": "tx-021",
@@ -950,11 +920,11 @@
       "currency": "USDC",
       "from": "Treasury",
       "fromAddress": "0xa1b2c3d4e5f60001",
-      "to": "Consensus 2026",
+      "to": "EthCC 2026",
       "toAddress": "0xe14023aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60001",
       "category": "Other",
-      "label": "Consensus 2026 tickets + booth",
+      "label": "EthCC 2026 tickets + booth",
       "txHash": "0xfa023abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-02-20T10:00:00.000Z",
       "note": "Conference presence for BD and partnerships"
@@ -984,14 +954,14 @@
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
-      "to": "DigitalOcean",
+      "to": "Hetzner",
       "toAddress": "0xa1c025aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Vendor",
-      "label": "Payment node infra - March",
+      "label": "Node infra - March",
       "txHash": "0xfa025abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-03-01T09:00:00.000Z",
-      "note": "Node infrastructure and payment relay hosting"
+      "note": "Node infrastructure and prover hosting"
     },
     {
       "id": "tx-026",
@@ -1001,14 +971,14 @@
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
-      "to": "Grab",
+      "to": "Uber",
       "toAddress": "0x0be026aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Other",
-      "label": "Team dinner transport - Manila",
+      "label": "Team dinner transport - Zurich",
       "txHash": "0xfa026abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-03-15T20:00:00.000Z",
-      "note": "Quarterly team meetup in Manila"
+      "note": "Quarterly team meetup in Zurich"
     },
     {
       "id": "tx-027",
@@ -1018,14 +988,14 @@
       "currency": "USDC",
       "from": "Operations",
       "fromAddress": "0xa1b2c3d4e5f60002",
-      "to": "WeWork Manila",
+      "to": "Impact Hub Zurich",
       "toAddress": "0xbeb027aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60002",
       "category": "Vendor",
       "label": "Coworking space - March",
       "txHash": "0xfa027abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-03-01T08:00:00.000Z",
-      "note": "Hot desk passes Manila BGC"
+      "note": "Hot desk passes Zurich Viadukt"
     },
     {
       "id": "tx-028",
@@ -1033,7 +1003,7 @@
       "status": "COMPLETED",
       "amount": 10000,
       "currency": "USDC",
-      "from": "GCash",
+      "from": "Yapeal",
       "fromAddress": "0xacb028aabbccddee1234567890abcdef01020304",
       "to": "Treasury",
       "toAddress": "0xa1b2c3d4e5f60001",
@@ -1042,7 +1012,7 @@
       "label": "API integration pilot payment",
       "txHash": "0xfa028abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-03-22T11:00:00.000Z",
-      "note": "Pilot payment for stablecoin settlement API"
+      "note": "Pilot payment for private settlement API"
     },
     {
       "id": "tx-029",
@@ -1052,11 +1022,11 @@
       "currency": "USDC",
       "from": "Treasury",
       "fromAddress": "0xa1b2c3d4e5f60001",
-      "to": "Philippine Fintech Festival",
+      "to": "Crypto Finance Conference",
       "toAddress": "0xecc029aabbccddee1234567890abcdef01020304",
       "accountId": "0xa1b2c3d4e5f60001",
       "category": "Other",
-      "label": "PH Fintech Fest tickets + travel",
+      "label": "CFC St. Moritz tickets + travel",
       "txHash": "0xfa029abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-03-18T10:00:00.000Z",
       "note": "Conference tickets for team (3 people)"
@@ -1088,17 +1058,17 @@
       "type": "SEND",
       "proposalCategory": "paying_payroll",
       "status": "READY",
-      "amount": 22000,
+      "amount": 23000,
       "currency": "USDT",
       "to": "Payroll Batch",
       "toAddress": "multiple",
       "label": "April 2026 Payroll",
       "note": "Monthly payroll for 2 team members",
-      "createdBy": "Tian Tian",
+      "createdBy": "Daniel Keller",
       "createdAt": "2026-03-28T09:00:00.000Z",
       "signatures": [
-        { "signer": "Tian Tian", "status": "SIGNED", "signedAt": "2026-03-28T09:00:00.000Z" },
-        { "signer": "Ian Xu", "status": "SIGNED", "signedAt": "2026-03-28T10:30:00.000Z" }
+        { "signer": "Daniel Keller", "status": "SIGNED", "signedAt": "2026-03-28T09:00:00.000Z" },
+        { "signer": "Stoyan Radev", "status": "SIGNED", "signedAt": "2026-03-28T10:30:00.000Z" }
       ],
       "requiredSignatures": 2
     },
@@ -1116,9 +1086,9 @@
       "toAddress": "0x4a0044aabbccddee1234567890abcdef01020304",
       "label": "Security audit - Phase 3 (Mainnet)",
       "note": "Final security audit before mainnet launch",
-      "createdBy": "Ian Xu",
+      "createdBy": "Stoyan Radev",
       "createdAt": "2026-03-30T14:00:00.000Z",
-      "signatures": [{ "signer": "Ian Xu", "status": "SIGNED", "signedAt": "2026-03-30T14:00:00.000Z" }],
+      "signatures": [{ "signer": "Stoyan Radev", "status": "SIGNED", "signedAt": "2026-03-30T14:00:00.000Z" }],
       "requiredSignatures": 2
     },
     {
@@ -1135,9 +1105,9 @@
       "toAddress": "0xcard001",
       "label": "Top up card pool",
       "note": "Replenish corporate card spending pool",
-      "createdBy": "Ian Xu",
+      "createdBy": "Stoyan Radev",
       "createdAt": "2026-04-01T15:00:00.000Z",
-      "signatures": [{ "signer": "Ian Xu", "status": "SIGNED", "signedAt": "2026-04-01T15:00:00.000Z" }],
+      "signatures": [{ "signer": "Stoyan Radev", "status": "SIGNED", "signedAt": "2026-04-01T15:00:00.000Z" }],
       "requiredSignatures": 2
     },
     {
@@ -1154,7 +1124,7 @@
       "toAddress": "0xearn001",
       "label": "Deposit to earn vault",
       "note": "Deposit idle treasury into 4.85% APY vault",
-      "createdBy": "Tian Tian",
+      "createdBy": "Daniel Keller",
       "createdAt": "2026-04-02T09:00:00.000Z",
       "signatures": [],
       "requiredSignatures": 2
@@ -1169,11 +1139,11 @@
       "status": "PENDING",
       "amount": 25000,
       "currency": "USDT",
-      "to": "Bank (BDO USD Account)",
+      "to": "Bank (UBS CHF Account)",
       "toAddress": "0xofframp001",
-      "label": "Cashout to BDO",
-      "note": "Off-ramp for Philippines operations and compliance costs",
-      "createdBy": "Ian Xu",
+      "label": "Cashout to UBS",
+      "note": "Off-ramp for European operations and compliance costs",
+      "createdBy": "Stoyan Radev",
       "createdAt": "2026-04-02T10:30:00.000Z",
       "signatures": [],
       "requiredSignatures": 2
@@ -1192,9 +1162,9 @@
       "toAddress": "",
       "label": "Add backup Treasury signer",
       "note": "Onboarding new wallet signer for Treasury redundancy",
-      "createdBy": "Ian Xu",
+      "createdBy": "Stoyan Radev",
       "createdAt": "2026-04-02T14:00:00.000Z",
-      "signatures": [{ "signer": "Ian Xu", "status": "SIGNED", "signedAt": "2026-04-02T14:00:00.000Z" }],
+      "signatures": [{ "signer": "Stoyan Radev", "status": "SIGNED", "signedAt": "2026-04-02T14:00:00.000Z" }],
       "requiredSignatures": 2
     },
     {
@@ -1211,7 +1181,7 @@
       "toAddress": "",
       "label": "Increase Treasury threshold to 2-of-3",
       "note": "Strengthen security after adding new signer",
-      "createdBy": "Tian Tian",
+      "createdBy": "Daniel Keller",
       "createdAt": "2026-04-03T08:00:00.000Z",
       "signatures": [],
       "requiredSignatures": 2
@@ -1226,11 +1196,11 @@
       "status": "PENDING",
       "amount": 5000,
       "currency": "USDT",
-      "to": "Facebook Ads",
+      "to": "Google Ads",
       "toAddress": "0x54e020aabbccddee1234567890abcdef01020304",
-      "label": "PH launch campaign - April",
-      "note": "Digital marketing for Philippines user acquisition",
-      "createdBy": "Tian Tian",
+      "label": "EU launch campaign - April",
+      "note": "Digital marketing for European user acquisition",
+      "createdBy": "Daniel Keller",
       "createdAt": "2026-04-03T11:00:00.000Z",
       "signatures": [],
       "requiredSignatures": 1
@@ -1242,7 +1212,7 @@
       "uuid": "pr-0001",
       "name": "January 2026 Payroll",
       "status": "COMPLETED",
-      "totalAmount": 22000,
+      "totalAmount": 23000,
       "currency": "USDC",
       "employeeCount": 2,
       "executedAt": "2026-01-31T10:00:00.000Z",
@@ -1252,14 +1222,14 @@
       "txHash": "0xfa004abc123def456789aabbccdd0011eeff2233",
       "recipients": [
         {
-          "name": "Ian Xu",
+          "name": "Stoyan Radev",
           "amount": 12000,
           "walletAddress": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef01",
           "status": "PAID"
         },
         {
-          "name": "Tian Tian",
-          "amount": 10000,
+          "name": "Daniel Keller",
+          "amount": 11000,
           "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
           "status": "PAID"
         }
@@ -1270,7 +1240,7 @@
       "uuid": "pr-0002",
       "name": "February 2026 Payroll",
       "status": "COMPLETED",
-      "totalAmount": 22000,
+      "totalAmount": 23000,
       "currency": "USDC",
       "employeeCount": 2,
       "executedAt": "2026-02-28T10:00:00.000Z",
@@ -1280,14 +1250,14 @@
       "txHash": "0xfa006abc123def456789aabbccdd0011eeff2233",
       "recipients": [
         {
-          "name": "Ian Xu",
+          "name": "Stoyan Radev",
           "amount": 12000,
           "walletAddress": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef01",
           "status": "PAID"
         },
         {
-          "name": "Tian Tian",
-          "amount": 10000,
+          "name": "Daniel Keller",
+          "amount": 11000,
           "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
           "status": "PAID"
         }
@@ -1298,7 +1268,7 @@
       "uuid": "pr-0003",
       "name": "March 2026 Payroll",
       "status": "COMPLETED",
-      "totalAmount": 22000,
+      "totalAmount": 23000,
       "currency": "USDC",
       "employeeCount": 2,
       "executedAt": "2026-03-31T10:00:00.000Z",
@@ -1308,14 +1278,14 @@
       "txHash": "0xfa010abc123def456789aabbccdd0011eeff2233",
       "recipients": [
         {
-          "name": "Ian Xu",
+          "name": "Stoyan Radev",
           "amount": 12000,
           "walletAddress": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef01",
           "status": "PAID"
         },
         {
-          "name": "Tian Tian",
-          "amount": 10000,
+          "name": "Daniel Keller",
+          "amount": 11000,
           "walletAddress": "0x2b3c4d5e6f7890abcdef1234567890abcdef0102",
           "status": "PAID"
         }
@@ -1323,24 +1293,24 @@
     }
   ],
   "payrollStats": {
-    "totalPaid": 66000,
+    "totalPaid": 69000,
     "totalPayrolls": 3,
-    "averagePerPayroll": 22000,
+    "averagePerPayroll": 23000,
     "nextPayrollDate": "2026-04-30T10:00:00.000Z"
   },
   "invoices": [
     {
       "id": 1,
       "uuid": "inv-0001",
-      "invoiceNumber": "OB-2026-001",
+      "invoiceNumber": "RC-2026-001",
       "type": "SENT",
       "status": "PAID",
       "amount": 10000,
       "currency": "USDC",
-      "from": "OpenBuild",
-      "to": "GCash",
-      "toEmail": "integrations@gcash.com",
-      "description": "Stablecoin settlement API - Pilot integration",
+      "from": "Radcipher",
+      "to": "Yapeal",
+      "toEmail": "integrations@yapeal.ch",
+      "description": "Private settlement API - Pilot integration",
       "dueDate": "2026-03-15T00:00:00.000Z",
       "paidAt": "2026-03-22T11:00:00.000Z",
       "createdAt": "2026-03-01T10:00:00.000Z",
@@ -1360,15 +1330,15 @@
     {
       "id": 2,
       "uuid": "inv-0002",
-      "invoiceNumber": "OB-2026-002",
+      "invoiceNumber": "RC-2026-002",
       "type": "SENT",
       "status": "PENDING",
       "amount": 15000,
       "currency": "USDC",
-      "from": "OpenBuild",
-      "to": "Coins.ph",
-      "toEmail": "partnerships@coins.ph",
-      "description": "Custom stablecoin off-ramp module for Coins.ph",
+      "from": "Radcipher",
+      "to": "Bity",
+      "toEmail": "partnerships@bity.com",
+      "description": "Custom privacy off-ramp module for Bity",
       "dueDate": "2026-04-15T00:00:00.000Z",
       "paidAt": null,
       "createdAt": "2026-03-20T10:00:00.000Z",
@@ -1379,7 +1349,7 @@
           "unitPrice": 10000
         },
         {
-          "description": "PHP settlement integration",
+          "description": "CHF settlement integration",
           "quantity": 1,
           "unitPrice": 5000
         }
@@ -1388,21 +1358,21 @@
     {
       "id": 3,
       "uuid": "inv-0003",
-      "invoiceNumber": "OB-2026-003",
+      "invoiceNumber": "RC-2026-003",
       "type": "RECEIVED",
       "status": "PAID",
       "amount": 18000,
       "currency": "USDC",
       "from": "Halborn Security",
-      "to": "OpenBuild",
-      "toEmail": "ian@openbuild.xyz",
-      "description": "Smart contract security audit - Payment contracts",
+      "to": "Radcipher",
+      "toEmail": "stoyan@radcipher.com",
+      "description": "Smart contract security audit - Privacy contracts",
       "dueDate": "2026-01-31T00:00:00.000Z",
       "paidAt": "2026-01-12T15:30:00.000Z",
       "createdAt": "2026-01-02T10:00:00.000Z",
       "items": [
         {
-          "description": "Full security audit of payment contracts",
+          "description": "Full security audit of privacy contracts",
           "quantity": 1,
           "unitPrice": 15000
         },
@@ -1416,14 +1386,14 @@
     {
       "id": 4,
       "uuid": "inv-0004",
-      "invoiceNumber": "OB-2026-004",
+      "invoiceNumber": "RC-2026-004",
       "type": "RECEIVED",
       "status": "PENDING",
       "amount": 15000,
       "currency": "USDC",
       "from": "Halborn Security",
-      "to": "OpenBuild",
-      "toEmail": "ian@openbuild.xyz",
+      "to": "Radcipher",
+      "toEmail": "stoyan@radcipher.com",
       "description": "Security audit - Phase 3 (Mainnet)",
       "dueDate": "2026-04-15T00:00:00.000Z",
       "paidAt": null,
@@ -1444,15 +1414,15 @@
     {
       "id": 5,
       "uuid": "inv-0005",
-      "invoiceNumber": "OB-2026-005",
+      "invoiceNumber": "RC-2026-005",
       "type": "SENT",
       "status": "PENDING",
       "amount": 20000,
       "currency": "USDC",
-      "from": "OpenBuild",
-      "to": "Maya",
-      "toEmail": "treasury@maya.ph",
-      "description": "Stablecoin payment gateway - Q2 2026",
+      "from": "Radcipher",
+      "to": "Sygnum",
+      "toEmail": "treasury@sygnum.com",
+      "description": "Privacy payment gateway - Q2 2026",
       "dueDate": "2026-04-30T00:00:00.000Z",
       "paidAt": null,
       "createdAt": "2026-03-25T10:00:00.000Z",
@@ -1472,21 +1442,21 @@
     {
       "id": 6,
       "uuid": "inv-0006",
-      "invoiceNumber": "OB-2026-006",
+      "invoiceNumber": "RC-2026-006",
       "type": "RECEIVED",
       "status": "PAID",
       "amount": 8500,
       "currency": "USDC",
       "from": "Toptal",
-      "to": "OpenBuild",
-      "toEmail": "ian@openbuild.xyz",
-      "description": "Contract designer - Mobile app UI",
+      "to": "Radcipher",
+      "toEmail": "stoyan@radcipher.com",
+      "description": "Contract designer - Web app UI",
       "dueDate": "2026-02-28T00:00:00.000Z",
       "paidAt": "2026-02-15T13:00:00.000Z",
       "createdAt": "2026-02-01T10:00:00.000Z",
       "items": [
         {
-          "description": "Mobile payment app UX/UI design",
+          "description": "Web app UX/UI design",
           "quantity": 1,
           "unitPrice": 6000
         },
@@ -1524,7 +1494,7 @@
     {
       "id": 2,
       "uuid": "bill-0002",
-      "vendor": "WeWork Manila",
+      "vendor": "Impact Hub Zurich",
       "description": "Hot desk passes - Monthly",
       "amount": 500,
       "currency": "USDC",
@@ -1538,7 +1508,7 @@
     {
       "id": 3,
       "uuid": "bill-0003",
-      "vendor": "Coins.ph",
+      "vendor": "Bity",
       "description": "API access and compliance fee - Monthly",
       "amount": 2000,
       "currency": "USDC",
@@ -1552,8 +1522,8 @@
     {
       "id": 4,
       "uuid": "bill-0004",
-      "vendor": "Facebook Ads",
-      "description": "PH launch campaign - April",
+      "vendor": "Google Ads",
+      "description": "EU launch campaign - April",
       "amount": 5000,
       "currency": "USDC",
       "status": "PENDING",
@@ -1566,8 +1536,8 @@
     {
       "id": 5,
       "uuid": "bill-0005",
-      "vendor": "DigitalOcean",
-      "description": "Payment node infrastructure - Monthly",
+      "vendor": "Hetzner",
+      "description": "Node infrastructure - Monthly",
       "amount": 600,
       "currency": "USDC",
       "status": "PENDING",
@@ -1588,14 +1558,14 @@
     {
       "id": 1,
       "uuid": "pl-0001",
-      "code": "openbuild-settlement-api",
+      "code": "radcipher-settlement-api",
       "title": "Settlement API Integration",
-      "description": "Payment for OpenBuild stablecoin settlement API integration services",
+      "description": "Payment for Radcipher private settlement API integration services",
       "amount": 10000,
       "currency": "USDC",
       "status": "ACTIVE",
       "recipientAddress": "0xa1b2c3d4e5f60001",
-      "recipientName": "OpenBuild",
+      "recipientName": "Radcipher",
       "timesUsed": 1,
       "maxUses": null,
       "expiresAt": null,
@@ -1603,8 +1573,8 @@
       "payments": [
         {
           "id": "pay-001",
-          "payerName": "GCash",
-          "payerEmail": "integrations@gcash.com",
+          "payerName": "Yapeal",
+          "payerEmail": "integrations@yapeal.ch",
           "payer": "0x7d3e8f1a2b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e",
           "amount": 10000,
           "status": "COMPLETED",
@@ -1618,14 +1588,14 @@
     {
       "id": 2,
       "uuid": "pl-0002",
-      "code": "openbuild-gateway-fee",
+      "code": "radcipher-gateway-fee",
       "title": "Payment Gateway License",
-      "description": "Quarterly license fee for OpenBuild stablecoin payment gateway",
+      "description": "Quarterly license fee for Radcipher private payment gateway",
       "amount": null,
       "currency": "USDC",
       "status": "ACTIVE",
       "recipientAddress": "0xa1b2c3d4e5f60001",
-      "recipientName": "OpenBuild",
+      "recipientName": "Radcipher",
       "timesUsed": 0,
       "maxUses": null,
       "expiresAt": "2026-06-30T00:00:00.000Z",
@@ -1635,14 +1605,14 @@
     {
       "id": 3,
       "uuid": "pl-0003",
-      "code": "openbuild-partner-contribution",
+      "code": "radcipher-partner-contribution",
       "title": "Partner Ecosystem Fund",
-      "description": "Contribute to the OpenBuild partner ecosystem development fund",
+      "description": "Contribute to the Radcipher partner ecosystem development fund",
       "amount": 1000,
       "currency": "USDC",
       "status": "ACTIVE",
       "recipientAddress": "0xa1b2c3d4e5f60001",
-      "recipientName": "OpenBuild",
+      "recipientName": "Radcipher",
       "timesUsed": 0,
       "maxUses": 10,
       "expiresAt": "2026-12-31T00:00:00.000Z",
@@ -1698,7 +1668,7 @@
     },
     {
       "id": "ctx-006",
-      "merchant": "Grab",
+      "merchant": "Uber",
       "amount": 120,
       "currency": "USD",
       "category": "Travel",
@@ -1707,7 +1677,7 @@
     },
     {
       "id": "ctx-007",
-      "merchant": "WeWork Manila",
+      "merchant": "Impact Hub Zurich",
       "amount": 500,
       "currency": "USD",
       "category": "Office",
@@ -1716,7 +1686,7 @@
     },
     {
       "id": "ctx-008",
-      "merchant": "Philippine Airlines",
+      "merchant": "Swiss International Air Lines",
       "amount": 280,
       "currency": "USD",
       "category": "Travel",
@@ -1725,7 +1695,7 @@
     },
     {
       "id": "ctx-009",
-      "merchant": "Jollibee Catering",
+      "merchant": "Hiltl",
       "amount": 95,
       "currency": "USD",
       "category": "Meals",
@@ -1734,7 +1704,7 @@
     },
     {
       "id": "ctx-010",
-      "merchant": "DigitalOcean",
+      "merchant": "Hetzner",
       "amount": 600,
       "currency": "USD",
       "category": "Cloud",
@@ -1746,7 +1716,7 @@
     "id": "card-001",
     "last4": "4829",
     "brand": "Visa",
-    "cardholder": "Ian Xu",
+    "cardholder": "Stoyan Radev",
     "expiryMonth": 12,
     "expiryYear": 2028,
     "cvv": "491",
@@ -1757,9 +1727,9 @@
   },
   "cardPoolBalance": 20000,
   "invoiceSettings": {
-    "logo": "/openbuild.png",
-    "accentColor": "#F5A623",
-    "invoicePrefix": "OB-",
+    "logo": "/Radcipher.png",
+    "accentColor": "#0B1120",
+    "invoicePrefix": "RC-",
     "nextInvoiceNumber": 7,
     "defaultPaymentTerms": "Net 30",
     "defaultNote": "",
@@ -1773,7 +1743,7 @@
       "id": "card-001",
       "last4": "4829",
       "brand": "Visa",
-      "cardholder": "Ian Xu",
+      "cardholder": "Stoyan Radev",
       "expiryMonth": 12,
       "expiryYear": 2028,
       "cvv": "491",
@@ -1789,7 +1759,7 @@
       "id": "card-002",
       "last4": "7213",
       "brand": "Visa",
-      "cardholder": "Tian Tian",
+      "cardholder": "Daniel Keller",
       "expiryMonth": 6,
       "expiryYear": 2027,
       "cvv": "328",
@@ -1806,40 +1776,40 @@
     {
       "id": "ramp-001",
       "type": "ON_RAMP",
-      "fromCurrency": "USD",
+      "fromCurrency": "CHF",
       "toCurrency": "USDC",
-      "fromAmount": 20000,
+      "fromAmount": 18000,
       "toAmount": 20000,
-      "rate": 1.0,
+      "rate": 1.111,
       "fee": 30,
       "status": "COMPLETED",
-      "bankAccount": "Mercury ****8841",
+      "bankAccount": "UBS ****8841",
       "completedAt": "2026-01-15T14:00:00.000Z"
     },
     {
       "id": "ramp-002",
       "type": "OFF_RAMP",
       "fromCurrency": "USDC",
-      "toCurrency": "PHP",
+      "toCurrency": "CHF",
       "fromAmount": 10000,
-      "toAmount": 565000,
-      "rate": 56.5,
+      "toAmount": 9100,
+      "rate": 0.91,
       "fee": 25,
       "status": "COMPLETED",
-      "bankAccount": "BDO ****2207",
+      "bankAccount": "ZKB ****2207",
       "completedAt": "2026-03-05T10:00:00.000Z"
     },
     {
       "id": "ramp-003",
       "type": "ON_RAMP",
-      "fromCurrency": "USD",
+      "fromCurrency": "CHF",
       "toCurrency": "USDC",
-      "fromAmount": 15000,
+      "fromAmount": 13500,
       "toAmount": 15000,
-      "rate": 1.0,
+      "rate": 1.111,
       "fee": 22,
       "status": "COMPLETED",
-      "bankAccount": "Mercury ****8841",
+      "bankAccount": "UBS ****8841",
       "completedAt": "2026-03-20T09:00:00.000Z"
     }
   ],
@@ -1848,21 +1818,21 @@
       "month": "2026-01",
       "income": 0,
       "expenses": 19446,
-      "payroll": 22000,
+      "payroll": 23000,
       "netFlow": -57446
     },
     {
       "month": "2026-02",
       "income": 75000,
       "expenses": 14270,
-      "payroll": 22000,
+      "payroll": 23000,
       "netFlow": 22730
     },
     {
       "month": "2026-03",
       "income": 10000,
       "expenses": 18529,
-      "payroll": 22000,
+      "payroll": 23000,
       "netFlow": -46529
     },
     {
