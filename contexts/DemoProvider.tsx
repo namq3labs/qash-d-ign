@@ -415,6 +415,7 @@ const ENTITY_KEY = "qash_demo_entity";
 const ENTITY_DATA_FILES: Record<string, string> = {
   primary: "/demo-data.json",
   "entity-2": "/demo-data-entity-2.json",
+  "entity-3": "/demo-data-entity-3.json",
 };
 
 export function DemoProvider({ children }: { children: ReactNode }) {
@@ -422,7 +423,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOnboarded, setIsOnboarded] = useState(false);
-  const [activeEntityId, setActiveEntityId] = useState<string>("primary");
+  const [activeEntityId, setActiveEntityId] = useState<string>("entity-3");
   // Cache all entity summaries for the sidebar switcher
   const entitySummariesRef = useRef<DemoEntitySummary[]>([]);
 
@@ -445,7 +446,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
 
     // Check active entity
     const storedEntity = localStorage.getItem(ENTITY_KEY);
-    const initialEntityId = storedEntity || "primary";
+    const initialEntityId = storedEntity || "entity-3";
     if (storedEntity) {
       setActiveEntityId(storedEntity);
     }

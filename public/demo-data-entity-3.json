@@ -2,34 +2,34 @@
   "company": {
     "id": 3,
     "uuid": "c0a80101-0000-0000-0000-000000000003",
-    "companyName": "NovaPay Holdings",
-    "registrationNumber": "KY-92187345",
-    "country": "Cayman Islands",
-    "industry": "Holding / Treasury",
+    "companyName": "Pods Finance",
+    "registrationNumber": "BR-45921873",
+    "country": "Brazil",
+    "industry": "DeFi / Options Protocol",
     "companySize": "1-10",
-    "website": "https://novapay.io/holdings",
-    "logo": null,
-    "createdAt": "2025-06-01T08:00:00.000Z",
+    "website": "https://pods.finance",
+    "logo": "/pods.jpg",
+    "createdAt": "2025-04-01T08:00:00.000Z",
     "updatedAt": "2026-03-30T12:00:00.000Z"
   },
   "user": {
     "id": 1,
-    "uuid": "u0a80101-0000-0000-0000-000000000001",
-    "email": "alex@novapay.io",
+    "uuid": "u0a80101-0000-0000-0000-000000000003",
+    "email": "guilherme@pods.finance",
     "role": "ADMIN",
     "isActive": true,
     "teamMembership": {
       "id": 1,
       "uuid": "tm-3001",
-      "firstName": "Alex",
-      "lastName": "Chen",
-      "position": "Director",
+      "firstName": "Guilherme",
+      "lastName": "Guimarães",
+      "position": "Co-Founder",
       "role": "OWNER",
       "companyId": 3,
       "profilePicture": null,
       "company": {
         "id": 3,
-        "companyName": "NovaPay Holdings"
+        "companyName": "Pods Finance"
       }
     }
   },
@@ -37,37 +37,52 @@
     {
       "id": 1,
       "uuid": "tm-3001",
-      "firstName": "Alex",
-      "lastName": "Chen",
-      "email": "alex@novapay.io",
-      "position": "Director",
+      "firstName": "Guilherme",
+      "lastName": "Guimarães",
+      "email": "guilherme@pods.finance",
+      "position": "Co-Founder",
       "role": "OWNER",
       "status": "ACTIVE",
       "walletAddress": "0xc1d2e3f400001111abcdef1234567890abcdef01",
-      "salary": 15000,
+      "salary": 12000,
       "salaryCurrency": "USDC",
       "profilePicture": null,
-      "joinedAt": "2025-06-01T08:00:00.000Z"
+      "joinedAt": "2025-04-01T08:00:00.000Z"
     },
     {
       "id": 2,
       "uuid": "tm-3002",
-      "firstName": "Sarah",
-      "lastName": "Kim",
-      "email": "sarah@novapay.io",
-      "position": "Treasury Manager",
+      "firstName": "Emanuel",
+      "lastName": "Oliveira",
+      "email": "emanuel@pods.finance",
+      "position": "Blockchain Fullstack Engineer",
       "role": "ADMIN",
       "status": "ACTIVE",
       "walletAddress": "0xc1d2e3f400002222abcdef1234567890abcdef02",
-      "salary": 13000,
+      "salary": 10000,
       "salaryCurrency": "USDC",
       "profilePicture": null,
-      "joinedAt": "2025-06-15T08:00:00.000Z"
+      "joinedAt": "2025-04-15T08:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "uuid": "tm-3003",
+      "firstName": "Bruno",
+      "lastName": "E.",
+      "email": "bruno@pods.finance",
+      "position": "Web3 Frontend Developer",
+      "role": "MEMBER",
+      "status": "ACTIVE",
+      "walletAddress": "",
+      "salary": 51480,
+      "salaryCurrency": "BRL",
+      "profilePicture": null,
+      "joinedAt": "2025-05-01T08:00:00.000Z"
     }
   ],
   "teamStats": {
-    "total": 2,
-    "active": 2,
+    "total": 3,
+    "active": 3,
     "suspended": 0,
     "pending": 0
   },
@@ -76,8 +91,8 @@
       "id": "acc-301",
       "uuid": "acc-uuid-301",
       "accountId": "0xc1d2e3f4a5b60001",
-      "name": "Treasury Reserve",
-      "description": "Primary treasury reserve for NovaPay Holdings",
+      "name": "Protocol Treasury",
+      "description": "Primary treasury for Pods Finance protocol operations",
       "threshold": 2,
       "companyId": 3,
       "logo": null,
@@ -87,44 +102,12 @@
       ],
       "members": [
         {
-          "name": "Alex Chen",
+          "name": "Guilherme Guimarães",
           "commitment": "0xcdf301",
           "role": "OWNER"
         },
         {
-          "name": "Sarah Kim",
-          "commitment": "0xcdf302",
-          "role": "ADMIN"
-        }
-      ],
-      "thresholdControl": {
-        "amountThreshold": 100000,
-        "highSigners": 2,
-        "lowSigners": 1
-      },
-      "createdAt": "2025-06-05T08:00:00.000Z"
-    },
-    {
-      "id": "acc-302",
-      "uuid": "acc-uuid-302",
-      "accountId": "0xc1d2e3f4a5b60002",
-      "name": "Investment Fund",
-      "description": "Strategic investment and yield fund",
-      "threshold": 2,
-      "companyId": 3,
-      "logo": null,
-      "publicKeys": [
-        "0xcdf301",
-        "0xcdf302"
-      ],
-      "members": [
-        {
-          "name": "Alex Chen",
-          "commitment": "0xcdf301",
-          "role": "OWNER"
-        },
-        {
-          "name": "Sarah Kim",
+          "name": "Emanuel Oliveira",
           "commitment": "0xcdf302",
           "role": "ADMIN"
         }
@@ -134,7 +117,39 @@
         "highSigners": 2,
         "lowSigners": 1
       },
-      "createdAt": "2025-07-01T08:00:00.000Z"
+      "createdAt": "2025-04-05T08:00:00.000Z"
+    },
+    {
+      "id": "acc-302",
+      "uuid": "acc-uuid-302",
+      "accountId": "0xc1d2e3f4a5b60002",
+      "name": "Grants and Runway",
+      "description": "Ecosystem grants and team runway fund",
+      "threshold": 2,
+      "companyId": 3,
+      "logo": null,
+      "publicKeys": [
+        "0xcdf301",
+        "0xcdf302"
+      ],
+      "members": [
+        {
+          "name": "Guilherme Guimarães",
+          "commitment": "0xcdf301",
+          "role": "OWNER"
+        },
+        {
+          "name": "Emanuel Oliveira",
+          "commitment": "0xcdf302",
+          "role": "ADMIN"
+        }
+      ],
+      "thresholdControl": {
+        "amountThreshold": 25000,
+        "highSigners": 2,
+        "lowSigners": 1
+      },
+      "createdAt": "2025-05-01T08:00:00.000Z"
     }
   ],
   "balances": {
@@ -142,45 +157,54 @@
       {
         "faucetId": "0xusdc0001",
         "symbol": "USDC",
-        "amount": 800000.0,
+        "amount": 420000.0,
         "decimals": 6
       },
       {
         "faucetId": "0xeth0001",
         "symbol": "ETH",
-        "amount": 45.45,
+        "amount": 18.5,
         "decimals": 18,
-        "usdValue": 150000.0
+        "usdValue": 61050.0
       }
     ],
     "0xc1d2e3f4a5b60002": [
       {
         "faucetId": "0xusdc0001",
         "symbol": "USDC",
-        "amount": 300000.0,
+        "amount": 180000.0,
         "decimals": 6
       }
     ]
   },
-  "totalBalance": 1250000.00,
+  "totalBalance": 661050.00,
   "contacts": [
     {
       "id": 1,
       "uuid": "ct-3001",
-      "name": "Paradigm Capital",
+      "name": "Polygon Foundation",
       "walletAddress": "0xd1e201aabbccddee1234567890abcdef01020304",
-      "email": "investments@paradigm.xyz",
-      "category": "Investors",
-      "notes": "Lead LP for fund allocation"
+      "email": "grants@polygon.technology",
+      "category": "Partners",
+      "notes": "Ecosystem grant partner"
     },
     {
       "id": 2,
       "uuid": "ct-3002",
-      "name": "Walkers Global LLP",
+      "name": "Framework Ventures",
       "walletAddress": "0xd2f302aabbccddee1234567890abcdef01020304",
-      "email": "corporate@walkersglobal.com",
+      "email": "deals@framework.ventures",
+      "category": "Investors",
+      "notes": "Lead investor in Pods Finance seed round"
+    },
+    {
+      "id": 3,
+      "uuid": "ct-3003",
+      "name": "ChainSafe Systems",
+      "walletAddress": "0xd3a403aabbccddee1234567890abcdef01020304",
+      "email": "partners@chainsafe.io",
       "category": "Vendors",
-      "notes": "Cayman Islands legal counsel and registered agent"
+      "notes": "Smart contract audit and tooling partner"
     }
   ],
   "contactCategories": [
@@ -208,61 +232,82 @@
   "employeeGroups": [
     {
       "id": 1,
-      "name": "Holdings Team",
+      "name": "Core Team",
       "shape": "CIRCLE",
-      "color": "#35ADE9",
+      "color": "#4CAF50",
       "order": 1,
       "companyId": 3,
-      "createdAt": "2025-06-01T08:00:00.000Z",
-      "updatedAt": "2025-06-01T08:00:00.000Z"
+      "createdAt": "2025-04-01T08:00:00.000Z",
+      "updatedAt": "2025-04-01T08:00:00.000Z"
     }
   ],
   "employees": [
     {
       "id": 1,
-      "name": "Alex Chen",
+      "name": "Guilherme Guimarães",
       "walletAddress": "mtst1gxm3y1rcbxw9s1hukg6ewiv4ljtfu93_uwxwwebuwtm",
-      "email": "alex@novapay.io",
+      "email": "guilherme@pods.finance",
       "groupId": 1,
       "companyId": 3,
       "paymentMethod": "crypto",
       "token": {
         "address": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
-        "symbol": "QASH",
-        "decimals": 8,
-        "name": "QASH"
+        "symbol": "USDC",
+        "decimals": 6,
+        "name": "USD Coin"
       },
       "network": {
         "name": "Miden",
         "chainId": 0
       },
       "order": 1,
-      "createdAt": "2025-06-01T08:00:00.000Z",
-      "updatedAt": "2025-06-01T08:00:00.000Z",
+      "createdAt": "2025-04-01T08:00:00.000Z",
+      "updatedAt": "2025-04-01T08:00:00.000Z",
       "employeeType": "employee",
       "isActive": true
     },
     {
       "id": 2,
-      "name": "Sarah Kim",
+      "name": "Emanuel Oliveira",
       "walletAddress": "mtst1hyn2z0sdcyw0t2ivlh7fxjw5mkugv04_vxyxxfcvxun",
-      "email": "sarah@novapay.io",
+      "email": "emanuel@pods.finance",
       "groupId": 1,
       "companyId": 3,
       "paymentMethod": "crypto",
       "token": {
         "address": "mtst1azk9t7lzrs3m5gpqhds4kuet8gdmnz37_qruqqypuyph",
-        "symbol": "QASH",
-        "decimals": 8,
-        "name": "QASH"
+        "symbol": "USDC",
+        "decimals": 6,
+        "name": "USD Coin"
       },
       "network": {
         "name": "Miden",
         "chainId": 0
       },
       "order": 2,
-      "createdAt": "2025-06-15T08:00:00.000Z",
-      "updatedAt": "2025-06-15T08:00:00.000Z",
+      "createdAt": "2025-04-15T08:00:00.000Z",
+      "updatedAt": "2025-04-15T08:00:00.000Z",
+      "employeeType": "employee",
+      "isActive": true
+    },
+    {
+      "id": 3,
+      "name": "Bruno E.",
+      "walletAddress": "",
+      "email": "bruno@pods.finance",
+      "groupId": 1,
+      "companyId": 3,
+      "paymentMethod": "fiat",
+      "fiatDetails": {
+        "country": "Brazil",
+        "bank": "Nubank",
+        "currency": "BRL"
+      },
+      "token": null,
+      "network": null,
+      "order": 3,
+      "createdAt": "2025-05-01T08:00:00.000Z",
+      "updatedAt": "2025-05-01T08:00:00.000Z",
       "employeeType": "employee",
       "isActive": true
     }
@@ -270,23 +315,23 @@
   "clients": [
     {
       "uuid": "cl-3001",
-      "email": "investments@paradigm.xyz",
-      "companyName": "Paradigm Capital",
-      "companyType": "Venture Capital",
+      "email": "grants@polygon.technology",
+      "companyName": "Polygon Foundation",
+      "companyType": "Blockchain Foundation",
       "country": "United States",
       "city": "San Francisco",
-      "createdAt": "2025-08-01T08:00:00.000Z",
-      "updatedAt": "2025-08-01T08:00:00.000Z"
+      "createdAt": "2025-06-01T08:00:00.000Z",
+      "updatedAt": "2025-06-01T08:00:00.000Z"
     },
     {
       "uuid": "cl-3002",
-      "email": "treasury@anchoragedigital.com",
-      "companyName": "Anchorage Digital",
-      "companyType": "Digital Asset Custodian",
+      "email": "deals@framework.ventures",
+      "companyName": "Framework Ventures",
+      "companyType": "Venture Capital",
       "country": "United States",
-      "city": "San Francisco",
-      "createdAt": "2025-09-15T08:00:00.000Z",
-      "updatedAt": "2025-09-15T08:00:00.000Z"
+      "city": "New York",
+      "createdAt": "2025-07-15T08:00:00.000Z",
+      "updatedAt": "2025-07-15T08:00:00.000Z"
     }
   ],
   "transactions": [
@@ -294,205 +339,171 @@
       "id": "tx-301",
       "type": "RECEIVE",
       "status": "COMPLETED",
-      "amount": 1000000,
+      "amount": 500000,
       "currency": "USDC",
-      "from": "Paradigm Capital",
-      "fromAddress": "0xd1e201aabbccddee1234567890abcdef01020304",
-      "to": "Treasury Reserve",
+      "from": "Framework Ventures",
+      "fromAddress": "0xd2f302aabbccddee1234567890abcdef01020304",
+      "to": "Protocol Treasury",
       "toAddress": "0xc1d2e3f4a5b60001",
       "accountId": "0xc1d2e3f4a5b60001",
       "category": "Grant",
-      "label": "Initial capital contribution",
+      "label": "Seed round funding",
       "txHash": "0xfc301abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2025-07-01T10:00:00.000Z",
-      "note": "Founding capital deposit from Paradigm"
+      "timestamp": "2025-05-01T10:00:00.000Z",
+      "note": "Initial seed funding from Framework Ventures"
     },
     {
       "id": "tx-302",
-      "type": "SEND",
+      "type": "RECEIVE",
       "status": "COMPLETED",
-      "amount": 500000,
+      "amount": 150000,
       "currency": "USDC",
-      "from": "Treasury Reserve",
-      "fromAddress": "0xc1d2e3f4a5b60001",
-      "to": "Investment Fund",
+      "from": "Polygon Foundation",
+      "fromAddress": "0xd1e201aabbccddee1234567890abcdef01020304",
+      "to": "Grants and Runway",
       "toAddress": "0xc1d2e3f4a5b60002",
-      "accountId": "0xc1d2e3f4a5b60001",
-      "category": "Internal Transfer",
-      "label": "Seed investment fund allocation",
+      "accountId": "0xc1d2e3f4a5b60002",
+      "category": "Grant",
+      "label": "Polygon ecosystem grant",
       "txHash": "0xfc302abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2025-07-15T09:00:00.000Z",
-      "note": "Allocate capital to investment fund for yield strategies"
+      "timestamp": "2025-07-01T09:00:00.000Z",
+      "note": "Ecosystem grant for DeFi options infrastructure on Polygon"
     },
     {
       "id": "tx-303",
-      "type": "RECEIVE",
-      "status": "COMPLETED",
-      "amount": 18500,
-      "currency": "USDC",
-      "from": "Yield Vault (Aave)",
-      "fromAddress": "0xaave03aabbccddee1234567890abcdef01020304",
-      "to": "Investment Fund",
-      "toAddress": "0xc1d2e3f4a5b60002",
-      "accountId": "0xc1d2e3f4a5b60002",
-      "category": "Other",
-      "label": "Q3 2025 yield earnings",
-      "txHash": "0xfc303abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2025-10-01T12:00:00.000Z",
-      "note": "Yield accrued from DeFi lending strategies"
-    },
-    {
-      "id": "tx-304",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 28000,
+      "amount": 31000,
       "currency": "USDC",
-      "from": "Treasury Reserve",
+      "from": "Protocol Treasury",
       "fromAddress": "0xc1d2e3f4a5b60001",
       "to": "Payroll Batch",
       "toAddress": "multiple",
       "accountId": "0xc1d2e3f4a5b60001",
       "category": "Payroll",
-      "label": "January 2026 Payroll",
+      "label": "October 2025 Payroll",
+      "txHash": "0xfc303abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2025-10-31T10:00:00.000Z",
+      "note": "Monthly payroll for core team"
+    },
+    {
+      "id": "tx-304",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 18500,
+      "currency": "USDC",
+      "from": "Protocol Treasury",
+      "fromAddress": "0xc1d2e3f4a5b60001",
+      "to": "ChainSafe Systems",
+      "toAddress": "0xd3a403aabbccddee1234567890abcdef01020304",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "category": "Vendor",
+      "label": "Smart contract security audit",
       "txHash": "0xfc304abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2026-01-31T10:00:00.000Z",
-      "note": "Monthly payroll for Holdings team"
+      "timestamp": "2025-09-15T14:00:00.000Z",
+      "note": "Full audit of options vault contracts before mainnet launch"
     },
     {
       "id": "tx-305",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 35000,
+      "amount": 31000,
       "currency": "USDC",
-      "from": "Treasury Reserve",
+      "from": "Protocol Treasury",
       "fromAddress": "0xc1d2e3f4a5b60001",
-      "to": "Walkers Global LLP",
-      "toAddress": "0xd2f302aabbccddee1234567890abcdef01020304",
+      "to": "Payroll Batch",
+      "toAddress": "multiple",
       "accountId": "0xc1d2e3f4a5b60001",
-      "category": "Vendor",
-      "label": "Annual legal retainer and compliance",
+      "category": "Payroll",
+      "label": "December 2025 Payroll",
       "txHash": "0xfc305abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2026-01-15T14:00:00.000Z",
-      "note": "Cayman Islands legal, compliance, and registered agent fees"
+      "timestamp": "2025-12-31T10:00:00.000Z",
+      "note": "Monthly payroll for core team"
     },
     {
       "id": "tx-306",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 200000,
+      "amount": 8000,
       "currency": "USDC",
-      "from": "Investment Fund",
-      "fromAddress": "0xc1d2e3f4a5b60002",
-      "to": "NovaPay Labs (Subsidiary)",
-      "toAddress": "0xa1b2c3d4e5f60001",
-      "accountId": "0xc1d2e3f4a5b60002",
-      "category": "Internal Transfer",
-      "label": "Q1 2026 subsidiary funding",
+      "from": "Protocol Treasury",
+      "fromAddress": "0xc1d2e3f4a5b60001",
+      "to": "AWS / Infra",
+      "toAddress": "0xa0b1c2d3e4f50001",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "category": "Vendor",
+      "label": "Q4 2025 infrastructure costs",
       "txHash": "0xfc306abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-01-05T09:00:00.000Z",
-      "note": "Quarterly capital disbursement to operating subsidiary"
+      "note": "Cloud infra, RPC nodes, and monitoring tools"
     },
     {
       "id": "tx-307",
-      "type": "RECEIVE",
+      "type": "SEND",
       "status": "COMPLETED",
-      "amount": 22000,
+      "amount": 31000,
       "currency": "USDC",
-      "from": "Yield Vault (Aave)",
-      "fromAddress": "0xaave03aabbccddee1234567890abcdef01020304",
-      "to": "Investment Fund",
-      "toAddress": "0xc1d2e3f4a5b60002",
-      "accountId": "0xc1d2e3f4a5b60002",
-      "category": "Other",
-      "label": "Q4 2025 yield earnings",
+      "from": "Protocol Treasury",
+      "fromAddress": "0xc1d2e3f4a5b60001",
+      "to": "Payroll Batch",
+      "toAddress": "multiple",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "category": "Payroll",
+      "label": "February 2026 Payroll",
       "txHash": "0xfc307abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2026-01-02T12:00:00.000Z",
-      "note": "Yield accrued from Q4 lending positions"
+      "timestamp": "2026-02-28T10:00:00.000Z",
+      "note": "Monthly payroll for core team"
     },
     {
       "id": "tx-308",
       "type": "SEND",
       "status": "COMPLETED",
-      "amount": 50000,
+      "amount": 31000,
       "currency": "USDC",
-      "from": "Treasury Reserve",
-      "fromAddress": "0xc1d2e3f4a5b60001",
-      "to": "Paradigm Capital",
-      "toAddress": "0xd1e201aabbccddee1234567890abcdef01020304",
-      "accountId": "0xc1d2e3f4a5b60001",
-      "category": "Other",
-      "label": "Q4 2025 dividend distribution",
-      "txHash": "0xfc308abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2026-01-10T15:00:00.000Z",
-      "note": "Quarterly dividend payout to LP"
-    },
-    {
-      "id": "tx-309",
-      "type": "SEND",
-      "status": "COMPLETED",
-      "amount": 10000,
-      "currency": "USDC",
-      "from": "Treasury Reserve",
-      "fromAddress": "0xc1d2e3f4a5b60001",
-      "to": "KPMG Cayman",
-      "toAddress": "0xd3a403aabbccddee1234567890abcdef01020304",
-      "accountId": "0xc1d2e3f4a5b60001",
-      "category": "Vendor",
-      "label": "Annual audit fee",
-      "txHash": "0xfc309abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2026-02-20T11:00:00.000Z",
-      "note": "Annual financial audit for FY2025"
-    },
-    {
-      "id": "tx-310",
-      "type": "RECEIVE",
-      "status": "COMPLETED",
-      "amount": 25000,
-      "currency": "USDC",
-      "from": "Yield Vault (Aave)",
-      "fromAddress": "0xaave03aabbccddee1234567890abcdef01020304",
-      "to": "Investment Fund",
-      "toAddress": "0xc1d2e3f4a5b60002",
-      "accountId": "0xc1d2e3f4a5b60002",
-      "category": "Other",
-      "label": "Q1 2026 yield earnings",
-      "txHash": "0xfc310abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2026-04-01T12:00:00.000Z",
-      "note": "Yield accrued from Q1 2026 lending positions"
-    },
-    {
-      "id": "tx-311",
-      "type": "SEND",
-      "status": "COMPLETED",
-      "amount": 15,
-      "currency": "ETH",
-      "from": "Treasury Reserve",
-      "fromAddress": "0xc1d2e3f4a5b60001",
-      "to": "Anchorage Digital (Custody)",
-      "toAddress": "0xd4b504aabbccddee1234567890abcdef01020304",
-      "accountId": "0xc1d2e3f4a5b60001",
-      "category": "Internal Transfer",
-      "label": "ETH transfer to custody",
-      "txHash": "0xfc311abc123def456789aabbccdd0011eeff2233",
-      "timestamp": "2026-03-01T10:00:00.000Z",
-      "note": "Move ETH holdings to institutional custody"
-    },
-    {
-      "id": "tx-312",
-      "type": "SEND",
-      "status": "COMPLETED",
-      "amount": 28000,
-      "currency": "USDC",
-      "from": "Treasury Reserve",
+      "from": "Protocol Treasury",
       "fromAddress": "0xc1d2e3f4a5b60001",
       "to": "Payroll Batch",
       "toAddress": "multiple",
       "accountId": "0xc1d2e3f4a5b60001",
       "category": "Payroll",
       "label": "March 2026 Payroll",
-      "txHash": "0xfc312abc123def456789aabbccdd0011eeff2233",
+      "txHash": "0xfc308abc123def456789aabbccdd0011eeff2233",
       "timestamp": "2026-03-31T10:00:00.000Z",
-      "note": "Monthly payroll for Holdings team"
+      "note": "Monthly payroll for core team"
+    },
+    {
+      "id": "tx-309",
+      "type": "RECEIVE",
+      "status": "COMPLETED",
+      "amount": 5200,
+      "currency": "USDC",
+      "from": "Protocol Fees",
+      "fromAddress": "0xfee501aabbccddee1234567890abcdef01020304",
+      "to": "Protocol Treasury",
+      "toAddress": "0xc1d2e3f4a5b60001",
+      "accountId": "0xc1d2e3f4a5b60001",
+      "category": "Other",
+      "label": "Q1 2026 protocol fees",
+      "txHash": "0xfc309abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-04-01T12:00:00.000Z",
+      "note": "Accumulated option trading fees from Q1 2026"
+    },
+    {
+      "id": "tx-310",
+      "type": "SEND",
+      "status": "COMPLETED",
+      "amount": 12000,
+      "currency": "USDC",
+      "from": "Grants and Runway",
+      "fromAddress": "0xc1d2e3f4a5b60002",
+      "to": "Hackathon Prize Pool",
+      "toAddress": "0xhack01aabbccddee1234567890abcdef01020304",
+      "accountId": "0xc1d2e3f4a5b60002",
+      "category": "Other",
+      "label": "ETHSamba 2026 hackathon prizes",
+      "txHash": "0xfc310abc123def456789aabbccdd0011eeff2233",
+      "timestamp": "2026-03-10T15:00:00.000Z",
+      "note": "Hackathon sponsor bounties for ETHSamba Rio de Janeiro"
     }
   ],
   "pendingProposals": [
@@ -500,20 +511,20 @@
       "id": "prop-301",
       "uuid": "prop-uuid-301",
       "accountId": "0xc1d2e3f4a5b60001",
-      "accountName": "Treasury Reserve",
+      "accountName": "Protocol Treasury",
       "type": "SEND",
       "proposalCategory": "paying_bill",
       "status": "PENDING",
-      "amount": 250000,
-      "currency": "USDT",
-      "to": "NovaPay Labs (Subsidiary)",
-      "toAddress": "0xa1b2c3d4e5f60001",
-      "label": "Q2 2026 subsidiary funding",
-      "note": "Quarterly capital disbursement to operating subsidiary",
-      "createdBy": "Sarah Kim",
-      "createdAt": "2026-04-01T09:00:00.000Z",
+      "amount": 22000,
+      "currency": "USDC",
+      "to": "Certora",
+      "toAddress": "0xd4b504aabbccddee1234567890abcdef01020304",
+      "label": "Formal verification for v2 contracts",
+      "note": "Formal verification of updated option vault logic before v2 launch",
+      "createdBy": "Emanuel Oliveira",
+      "createdAt": "2026-04-10T09:00:00.000Z",
       "signatures": [
-        { "signer": "Sarah Kim", "status": "SIGNED", "signedAt": "2026-04-01T09:00:00.000Z" }
+        { "signer": "Emanuel Oliveira", "status": "SIGNED", "signedAt": "2026-04-10T09:00:00.000Z" }
       ],
       "requiredSignatures": 2
     },
@@ -521,40 +532,21 @@
       "id": "prop-302",
       "uuid": "prop-uuid-302",
       "accountId": "0xc1d2e3f4a5b60002",
-      "accountName": "Investment Fund",
-      "type": "SEND",
-      "proposalCategory": "deposit_earn",
-      "status": "PENDING",
-      "amount": 150000,
-      "currency": "USDT",
-      "to": "Yield Vault (Aave)",
-      "toAddress": "0xaave03aabbccddee1234567890abcdef01020304",
-      "label": "Deposit to yield vault for Q2",
-      "note": "Redeploy idle capital into 5.1% APY vault strategy",
-      "createdBy": "Alex Chen",
-      "createdAt": "2026-04-02T10:00:00.000Z",
-      "signatures": [
-        { "signer": "Alex Chen", "status": "SIGNED", "signedAt": "2026-04-02T10:00:00.000Z" }
-      ],
-      "requiredSignatures": 2
-    },
-    {
-      "id": "prop-303",
-      "uuid": "prop-uuid-303",
-      "accountId": "0xc1d2e3f4a5b60001",
-      "accountName": "Treasury Reserve",
+      "accountName": "Grants and Runway",
       "type": "SEND",
       "proposalCategory": "paying_bill",
       "status": "PENDING",
-      "amount": 75000,
-      "currency": "USDT",
-      "to": "Paradigm Capital",
-      "toAddress": "0xd1e201aabbccddee1234567890abcdef01020304",
-      "label": "Q1 2026 dividend distribution",
-      "note": "Quarterly dividend payout to LP based on Q1 performance",
-      "createdBy": "Alex Chen",
-      "createdAt": "2026-04-03T14:00:00.000Z",
-      "signatures": [],
+      "amount": 15000,
+      "currency": "USDC",
+      "to": "Developer Grant - Felix M.",
+      "toAddress": "0xa2b3c4d5e6f70001",
+      "label": "Open source contributor grant",
+      "note": "Reward open-source contributor for Pods SDK integrations",
+      "createdBy": "Guilherme Guimarães",
+      "createdAt": "2026-04-12T10:00:00.000Z",
+      "signatures": [
+        { "signer": "Guilherme Guimarães", "status": "SIGNED", "signedAt": "2026-04-12T10:00:00.000Z" }
+      ],
       "requiredSignatures": 2
     }
   ],
@@ -564,129 +556,102 @@
       "uuid": "pr-3001",
       "name": "March 2026 Payroll",
       "status": "COMPLETED",
-      "totalAmount": 28000,
+      "totalAmount": 31000,
       "currency": "USDC",
-      "employeeCount": 2,
+      "employeeCount": 3,
       "executedAt": "2026-03-31T10:00:00.000Z",
       "createdAt": "2026-03-28T09:00:00.000Z",
       "accountId": "0xc1d2e3f4a5b60001",
-      "accountName": "Treasury Reserve",
-      "txHash": "0xfc312abc123def456789aabbccdd0011eeff2233",
+      "accountName": "Protocol Treasury",
+      "txHash": "0xfc308abc123def456789aabbccdd0011eeff2233",
       "recipients": [
         {
-          "name": "Alex Chen",
-          "amount": 15000,
+          "name": "Guilherme Guimarães",
+          "amount": 12000,
           "walletAddress": "0xc1d2e3f400001111abcdef1234567890abcdef01",
           "status": "PAID"
         },
         {
-          "name": "Sarah Kim",
-          "amount": 13000,
+          "name": "Emanuel Oliveira",
+          "amount": 10000,
           "walletAddress": "0xc1d2e3f400002222abcdef1234567890abcdef02",
+          "status": "PAID"
+        },
+        {
+          "name": "Bruno E.",
+          "amount": 9000,
+          "walletAddress": "0xc1d2e3f400003333abcdef1234567890abcdef03",
           "status": "PAID"
         }
       ]
     }
   ],
   "payrollStats": {
-    "totalPaid": 28000,
+    "totalPaid": 31000,
     "totalPayrolls": 1,
-    "averagePerPayroll": 28000,
-    "nextPayrollDate": "2026-04-15T00:00:00.000Z"
+    "averagePerPayroll": 31000,
+    "nextPayrollDate": "2026-04-30T00:00:00.000Z"
   },
   "invoices": [
     {
       "id": 1,
       "uuid": "inv-3001",
-      "invoiceNumber": "NPH-2026-2001",
-      "type": "SENT",
+      "invoiceNumber": "PODS-2026-001",
+      "type": "RECEIVED",
       "status": "PAID",
-      "amount": 50000,
+      "amount": 18500,
       "currency": "USDC",
-      "from": "NovaPay Holdings",
-      "to": "Paradigm Capital",
-      "toEmail": "investments@paradigm.xyz",
-      "description": "Q4 2025 dividend distribution",
-      "dueDate": "2026-01-31T00:00:00.000Z",
-      "paidAt": "2026-01-10T15:00:00.000Z",
-      "createdAt": "2025-12-20T10:00:00.000Z",
+      "from": "ChainSafe Systems",
+      "to": "Pods Finance",
+      "toEmail": "guilherme@pods.finance",
+      "description": "Smart contract security audit - options vaults",
+      "dueDate": "2025-10-15T00:00:00.000Z",
+      "paidAt": "2025-09-15T14:00:00.000Z",
+      "createdAt": "2025-09-01T10:00:00.000Z",
       "items": [
         {
-          "description": "Dividend payout based on Q4 2025 fund performance",
+          "description": "Full audit of option vault smart contracts",
           "quantity": 1,
-          "unitPrice": 50000
+          "unitPrice": 15000
+        },
+        {
+          "description": "Re-audit after fixes",
+          "quantity": 1,
+          "unitPrice": 3500
         }
       ]
     },
     {
       "id": 2,
       "uuid": "inv-3002",
-      "invoiceNumber": "NPH-2026-2002",
+      "invoiceNumber": "PODS-2026-002",
       "type": "SENT",
-      "status": "PAID",
-      "amount": 30000,
-      "currency": "USDC",
-      "from": "NovaPay Holdings",
-      "to": "Anchorage Digital",
-      "toEmail": "treasury@anchoragedigital.com",
-      "description": "Custody services management fee",
-      "dueDate": "2026-02-15T00:00:00.000Z",
-      "paidAt": "2026-02-10T11:00:00.000Z",
-      "createdAt": "2026-01-25T10:00:00.000Z",
-      "items": [
-        {
-          "description": "Annual institutional custody fee",
-          "quantity": 1,
-          "unitPrice": 25000
-        },
-        {
-          "description": "Cold storage setup and migration",
-          "quantity": 1,
-          "unitPrice": 5000
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "uuid": "inv-3003",
-      "invoiceNumber": "NPH-2026-2003",
-      "type": "RECEIVED",
       "status": "PAID",
       "amount": 50000,
       "currency": "USDC",
-      "from": "Walkers Global LLP",
-      "to": "NovaPay Holdings",
-      "toEmail": "alex@novapay.io",
-      "description": "Annual legal, compliance, and registered agent services",
-      "dueDate": "2026-01-31T00:00:00.000Z",
-      "paidAt": "2026-01-15T14:00:00.000Z",
-      "createdAt": "2026-01-02T10:00:00.000Z",
+      "from": "Pods Finance",
+      "to": "Framework Ventures",
+      "toEmail": "deals@framework.ventures",
+      "description": "SAFT - Pods Finance token allocation",
+      "dueDate": "2025-06-01T00:00:00.000Z",
+      "paidAt": "2025-05-20T11:00:00.000Z",
+      "createdAt": "2025-05-10T10:00:00.000Z",
       "items": [
         {
-          "description": "Annual legal retainer",
+          "description": "Token allocation under SAFT agreement",
           "quantity": 1,
-          "unitPrice": 25000
-        },
-        {
-          "description": "Registered agent and compliance filings",
-          "quantity": 1,
-          "unitPrice": 10000
-        },
-        {
-          "description": "Corporate governance advisory",
-          "quantity": 1,
-          "unitPrice": 15000
+          "unitPrice": 50000
         }
       ]
     }
   ],
   "invoiceStats": {
-    "totalSent": 120000,
-    "totalReceived": 50000,
-    "pendingSent": 40000,
+    "totalSent": 50000,
+    "totalReceived": 18500,
+    "pendingSent": 0,
     "pendingReceived": 0,
-    "paidSent": 80000,
-    "paidReceived": 50000,
+    "paidSent": 50000,
+    "paidReceived": 18500,
     "overdueSent": 0,
     "overdueReceived": 0
   },
@@ -694,12 +659,12 @@
     {
       "id": 1,
       "uuid": "bill-3001",
-      "vendor": "Walkers Global LLP",
-      "description": "Q2 2026 legal retainer and compliance",
-      "amount": 15000,
+      "vendor": "ChainSafe Systems",
+      "description": "Ongoing security retainer Q2 2026",
+      "amount": 8000,
       "currency": "USDC",
       "status": "PENDING",
-      "dueDate": "2026-04-30T00:00:00.000Z",
+      "dueDate": "2026-05-31T00:00:00.000Z",
       "category": "Vendor",
       "recurring": true,
       "frequency": "QUARTERLY",
@@ -708,94 +673,94 @@
     {
       "id": 2,
       "uuid": "bill-3002",
-      "vendor": "KPMG Cayman",
-      "description": "Mid-year financial review and tax advisory",
-      "amount": 10000,
+      "vendor": "AWS / Infra",
+      "description": "Q1 2026 cloud infrastructure and RPC nodes",
+      "amount": 8000,
       "currency": "USDC",
       "status": "PENDING",
-      "dueDate": "2026-06-30T00:00:00.000Z",
+      "dueDate": "2026-04-30T00:00:00.000Z",
       "category": "Vendor",
-      "recurring": false,
-      "frequency": null,
-      "createdAt": "2026-03-28T10:00:00.000Z"
+      "recurring": true,
+      "frequency": "QUARTERLY",
+      "createdAt": "2026-04-01T08:00:00.000Z"
     }
   ],
   "billStats": {
-    "totalPending": 25000,
+    "totalPending": 16000,
     "totalOverdue": 0,
-    "totalPaid": 45000,
+    "totalPaid": 26500,
     "billCount": 2
   },
   "paymentLinks": [
     {
       "id": 1,
       "uuid": "pl-3001",
-      "code": "novapay-holdings-investment",
-      "title": "LP Capital Contribution",
-      "description": "Capital contribution portal for NovaPay Holdings limited partners",
+      "code": "pods-finance-grant",
+      "title": "Pods Developer Grant",
+      "description": "Submit your open source contribution to receive a Pods ecosystem grant",
       "amount": null,
       "currency": "USDC",
       "status": "ACTIVE",
-      "recipientAddress": "0xc1d2e3f4a5b60001",
-      "recipientName": "NovaPay Holdings",
-      "timesUsed": 0,
+      "recipientAddress": "0xc1d2e3f4a5b60002",
+      "recipientName": "Pods Finance",
+      "timesUsed": 3,
       "maxUses": null,
       "expiresAt": null,
-      "createdAt": "2025-08-01T10:00:00.000Z",
+      "createdAt": "2025-09-01T10:00:00.000Z",
       "payments": []
     }
   ],
   "cardTransactions": [
     {
       "id": "ctx-301",
-      "merchant": "Four Seasons George Town",
-      "amount": 2850,
+      "merchant": "Figma",
+      "amount": 75,
       "currency": "USD",
-      "category": "Travel",
-      "date": "2026-03-10T18:00:00.000Z",
+      "category": "Software",
+      "date": "2026-03-01T08:00:00.000Z",
       "status": "COMPLETED"
     },
     {
       "id": "ctx-302",
-      "merchant": "British Airways",
-      "amount": 4200,
+      "merchant": "ETHDenver Conference",
+      "amount": 1200,
       "currency": "USD",
       "category": "Travel",
-      "date": "2026-02-25T09:00:00.000Z",
+      "date": "2026-02-28T09:00:00.000Z",
       "status": "COMPLETED"
     },
     {
       "id": "ctx-303",
-      "merchant": "Bloomberg Terminal",
-      "amount": 2400,
+      "merchant": "Linear",
+      "amount": 120,
       "currency": "USD",
       "category": "Software",
-      "date": "2026-03-01T08:00:00.000Z",
+      "date": "2026-03-15T08:00:00.000Z",
       "status": "COMPLETED"
     }
   ],
   "card": {
     "id": "card-301",
-    "last4": "5500",
+    "last4": "4892",
     "brand": "Visa",
-    "cardholder": "Sarah Kim",
-    "expiryMonth": 9,
+    "cardholder": "Guilherme Guimarães",
+    "expiryMonth": 11,
     "expiryYear": 2028,
-    "cvv": "732",
-    "spendingLimit": 25000,
-    "currentSpend": 9450,
+    "cvv": "541",
+    "spendingLimit": 10000,
+    "currentSpend": 1395,
     "status": "ACTIVE",
     "frozen": false
   },
-  "cardPoolBalance": 50000,
+  "cardPoolBalance": 30000,
   "invoiceSettings": {
-    "logo": null,
-    "accentColor": "#194BFA",
-    "invoicePrefix": "NPH-",
-    "nextInvoiceNumber": 2001,
-    "defaultPaymentTerms": "Net 30",
+    "logo": "/pods.jpg",
+    "accentColor": "#4CAF50",
+    "invoicePrefix": "PODS-",
+    "nextInvoiceNumber": 3,
+    "defaultPaymentTerms": "Net 14",
     "defaultNote": "",
-    "footerText": "Thank you for your business. Payment is expected within the terms specified above.",
+    "footerText": "Thank you for building with Pods Finance. Questions? Contact us at guilherme@pods.finance.",
     "companyTaxId": "",
     "showTaxId": false,
     "showWalletQr": true
@@ -803,104 +768,91 @@
   "cards": [
     {
       "id": "card-301",
-      "last4": "5500",
+      "last4": "4892",
       "brand": "Visa",
-      "cardholder": "Sarah Kim",
-      "expiryMonth": 9,
+      "cardholder": "Guilherme Guimarães",
+      "expiryMonth": 11,
       "expiryYear": 2028,
-      "cvv": "732",
-      "spendingLimit": 25000,
-      "currentSpend": 9450,
+      "cvv": "541",
+      "spendingLimit": 10000,
+      "currentSpend": 1395,
       "status": "ACTIVE",
       "frozen": false,
-      "dailyLimit": 10000,
-      "weeklyLimit": 30000,
-      "monthlyLimit": 25000
+      "dailyLimit": 5000,
+      "weeklyLimit": 10000,
+      "monthlyLimit": 10000
     }
   ],
   "rampHistory": [
     {
       "id": "ramp-301",
       "type": "ON_RAMP",
-      "fromCurrency": "USD",
+      "fromCurrency": "BRL",
       "toCurrency": "USDC",
-      "fromAmount": 500000,
-      "toAmount": 499500,
-      "rate": 1.0,
-      "fee": 500,
+      "fromAmount": 250000,
+      "toAmount": 49500,
+      "rate": 0.198,
+      "fee": 250,
       "status": "COMPLETED",
-      "bankAccount": "Butterfield Bank ****8834",
-      "completedAt": "2025-07-05T14:00:00.000Z"
+      "bankAccount": "Nubank ****2201",
+      "completedAt": "2025-08-10T14:00:00.000Z"
     },
     {
       "id": "ramp-302",
       "type": "OFF_RAMP",
       "fromCurrency": "USDC",
-      "toCurrency": "USD",
-      "fromAmount": 100000,
-      "toAmount": 99850,
-      "rate": 1.0,
-      "fee": 150,
+      "toCurrency": "BRL",
+      "fromAmount": 20000,
+      "toAmount": 100800,
+      "rate": 5.04,
+      "fee": 200,
       "status": "COMPLETED",
-      "bankAccount": "Butterfield Bank ****8834",
-      "completedAt": "2026-01-20T10:00:00.000Z"
-    },
-    {
-      "id": "ramp-303",
-      "type": "ON_RAMP",
-      "fromCurrency": "USD",
-      "toCurrency": "USDC",
-      "fromAmount": 250000,
-      "toAmount": 249750,
-      "rate": 1.0,
-      "fee": 250,
-      "status": "COMPLETED",
-      "bankAccount": "Butterfield Bank ****8834",
-      "completedAt": "2026-03-10T09:00:00.000Z"
+      "bankAccount": "Nubank ****2201",
+      "completedAt": "2026-02-15T10:00:00.000Z"
     }
   ],
   "monthlyFinancials": [
     {
+      "month": "2025-10",
+      "income": 0,
+      "expenses": 18500,
+      "payroll": 31000,
+      "netFlow": -49500
+    },
+    {
+      "month": "2025-11",
+      "income": 0,
+      "expenses": 0,
+      "payroll": 31000,
+      "netFlow": -31000
+    },
+    {
+      "month": "2025-12",
+      "income": 0,
+      "expenses": 0,
+      "payroll": 31000,
+      "netFlow": -31000
+    },
+    {
       "month": "2026-01",
-      "income": 22000,
-      "expenses": 323000,
-      "payroll": 28000,
-      "netFlow": -329000
+      "income": 0,
+      "expenses": 8000,
+      "payroll": 31000,
+      "netFlow": -39000
     },
     {
       "month": "2026-02",
       "income": 0,
-      "expenses": 10000,
-      "payroll": 0,
-      "netFlow": -10000
+      "expenses": 0,
+      "payroll": 31000,
+      "netFlow": -31000
     },
     {
       "month": "2026-03",
-      "income": 25000,
-      "expenses": 0,
-      "payroll": 28000,
-      "netFlow": -3000
-    },
-    {
-      "month": "2026-04",
       "income": 0,
-      "expenses": 0,
-      "payroll": 0,
-      "netFlow": 0
-    },
-    {
-      "month": "2026-05",
-      "income": 0,
-      "expenses": 0,
-      "payroll": 0,
-      "netFlow": 0
-    },
-    {
-      "month": "2026-06",
-      "income": 0,
-      "expenses": 0,
-      "payroll": 0,
-      "netFlow": 0
+      "expenses": 12000,
+      "payroll": 31000,
+      "netFlow": -43000
     }
   ]
 }
