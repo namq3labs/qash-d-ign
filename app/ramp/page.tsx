@@ -12,9 +12,10 @@ const FIAT_OPTIONS = [
   { code: "SGD", label: "Singapore Dollar", symbol: "S$", flag: "/flag/sg.svg" },
   { code: "USD", label: "US Dollar", symbol: "$", flag: "/flag/us.svg" },
   { code: "EUR", label: "Euro", symbol: "\u20AC", flag: "/flag/eu.svg" },
+  { code: "BRL", label: "Brazilian Real", symbol: "R$", flag: "/flag/br.svg" },
 ];
 
-const RATES: Record<string, number> = { SGD: 1.35, USD: 1.0, EUR: 0.92 };
+const RATES: Record<string, number> = { SGD: 1.35, USD: 1.0, EUR: 0.92, BRL: 5.72 };
 const FEE_RATE = 0.0025;
 
 function fmt(n: number, d = 2) {
