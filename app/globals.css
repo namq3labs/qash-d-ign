@@ -174,6 +174,25 @@
   font-family: "DFVN", sans-serif;
 }
 
+/* Numeric display: Inter Medium with tabular figures (financial values) */
+.num {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-weight: 500;
+  font-feature-settings: "tnum" 1, "cv01" 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+/* Kill the default focus outline recharts puts on its focusable SVG wrapper/layers */
+.recharts-wrapper:focus,
+.recharts-wrapper:focus-visible,
+.recharts-surface:focus,
+.recharts-surface:focus-visible,
+.recharts-wrapper *:focus,
+.recharts-wrapper *:focus-visible {
+  outline: none !important;
+}
+
 html,
 body {
   background-color: var(--app-background);

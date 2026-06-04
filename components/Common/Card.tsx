@@ -8,7 +8,7 @@ const Card = ({ title, amount, info }: { title: string; amount: string; info?: s
         <span className="text-text-secondary text-sm">{title}</span>
         {info && <img src="/misc/gray-info-icon.svg" alt="info" className="w-3" data-tooltip-id="info-tooltip" />}
       </div>
-      <span className="text-text-primary font-semibold text-2xl">{amount}</span>
+      <span className="num text-text-primary text-2xl">{amount}</span>
 
       <img
         src="/card/background.svg"

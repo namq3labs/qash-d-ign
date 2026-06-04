@@ -297,7 +297,7 @@ export const Sidebar: React.FC<NavProps> = ({ onActionItemClick }) => {
             <div className="mx-2 mb-3 mt-1 rounded-xl bg-background shadow-sm border border-primary-divider cursor-pointer">
               <div className="flex items-center justify-between px-3 py-2.5 border-b border-primary-divider">
                 <span className="text-xs text-text-secondary">Total Balance</span>
-                <span className="text-sm font-medium">
+                <span className="text-sm num">
                   ${totalBalance.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>

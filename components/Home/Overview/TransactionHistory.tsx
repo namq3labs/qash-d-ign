@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState, useEffect, useCallback } from "react";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import { useListAccountsByCompany, useLocalAccountBalances, useListProposalsByCompany } from "@/services/api/multisig";
 import { useGetMyCompany } from "@/services/api/company";
 import { formatUnits } from "viem";
@@ -10,6 +10,8 @@ import { QASH_TOKEN_ADDRESS } from "@/services/utils/constant";
 import { formatNumberWithCommas } from "@/services/utils/formatNumber";
 import { supportedTokens } from "@/services/utils/supportedToken";
 import { blo } from "blo";
+import { StatusPill } from "@/components/Common/StatusPill";
+import { TrendUp } from "@phosphor-icons/react";
 import { turnBechToHex } from "@/services/utils/turnBechToHex";
 import { usePSMProvider, type EnrichedBalance } from "@/contexts/PSMProvider";
 import { useMidenProvider } from "@/contexts/MidenProvider";
@@ -256,54 +258,56 @@ const TransactionHistory = ({ onCreateAccount }: { onCreateAccount?: () => void 
   }, [multisigAccounts, localBalances]);
 
   return (
-    <div className="w-full border border-primary-divider rounded-3xl flex flex-row gap-px overflow-hidden">
+    <div className="w-full flex flex-col lg:flex-row gap-4 items-stretch">
       {/* Left side - Quick Stats */}
-      <div id="tour-money-in-out" className="flex-1 rounded-l-3xl border-r border-primary-divider p-4 flex gap-3 flex-col">
+      <div id="tour-money-in-out" className="flex-1 rounded-2xl border border-primary-divider bg-background p-5 flex gap-3 flex-col">
         <h3 className="text-base font-medium text-text-primary">Quick Stats</h3>
 
-        <div className="flex flex-col gap-2 flex-1">
+        <div className="flex flex-col gap-2">
           {/* Earn */}
-          <div className="bg-background rounded-2xl border-t border-primary-divider p-4 flex flex-col gap-1">
-            <span className="text-sm text-text-secondary">Earn</span>
-            <span className="text-2xl font-semibold text-text-primary">$150,000.00</span>
-            <div className="flex items-center gap-3 mt-1">
-              <div className="px-2.5 py-1 rounded-full bg-badge-success-background border border-badge-success-border">
-                <span className="text-xs font-bold text-badge-success-text">4.85% APY</span>
-              </div>
-              <span className="text-xs text-badge-success-text font-medium">+$3,812.50 earned</span>
+          <div className="bg-app-background rounded-2xl p-4 flex flex-col gap-1">
+            <div className="flex items-start justify-between gap-2">
+              <span className="text-sm text-text-secondary">Earn</span>
+              <StatusPill variant="success" icon={TrendUp}>
+                4.85% APY
+              </StatusPill>
             </div>
+            <span className="text-2xl num text-text-primary">$150,000.00</span>
+            <span className="text-xs text-badge-success-text num mt-1">+$3,812.50 earned</span>
           </div>
 
-          {/* Card Pool Balance */}
-          <div className="bg-background rounded-2xl border-t border-primary-divider p-4 flex flex-col gap-1">
+          {/* Card Pool Balance + Pending Actions — side by side */}
+          <div className="flex flex-row gap-2 items-stretch">
+          <div className="flex-1 bg-app-background rounded-2xl p-4 flex flex-col gap-1">
             <span className="text-sm text-text-secondary">Card Pool Balance</span>
-            <span className="text-2xl font-semibold text-text-primary">
+            <span className="text-2xl num text-text-primary">
               ${(cardPoolBalance).toLocaleString("en-US", { minimumFractionDigits: 2 })}
             </span>
             <div className="flex items-center gap-1.5 mt-1">
               <img src="/token/usdt.svg" alt="USDT" className="w-4 h-4" />
-              <span className="text-xs text-text-secondary">{cardPoolBalance.toLocaleString()} USDT</span>
+              <span className="text-xs text-text-secondary num">{cardPoolBalance.toLocaleString()} USDT</span>
             </div>
           </div>
 
           {/* Pending Action Transactions */}
-          <div className="bg-background rounded-2xl border-t border-primary-divider p-4 flex flex-col gap-1 flex-1">
+          <div className="flex-1 bg-app-background rounded-2xl p-4 flex flex-col gap-1">
             <span className="text-sm text-text-secondary">Pending Actions</span>
-            <span className="text-2xl font-semibold text-text-primary">{pendingCount}</span>
+            <span className="text-2xl num text-text-primary">{pendingCount}</span>
             <span className="text-xs text-text-secondary mt-0.5">
               {pendingCount === 0
                 ? "All caught up"
                 : `${pendingCount} transaction${pendingCount !== 1 ? "s" : ""} awaiting approval`}
             </span>
           </div>
+          </div>
         </div>
       </div>
 
       {/* Right side - All Accounts */}
-      <div id="tour-multisig" className="flex-1 gap-2 flex flex-col p-4">
+      <div id="tour-multisig" className="flex-1 gap-3 flex flex-col rounded-2xl border border-primary-divider bg-background p-5">
         <h3 className="text-base font-medium">All Accounts</h3>
 
-        <div className="w-full flex flex-row bg-background border-t border-primary-divider rounded-2xl h-full justify-center items-center gap-6">
+        <div className="w-full flex flex-row rounded-2xl h-full items-center gap-4">
           {accounts.length === 0 ? (
             <div className="flex flex-col gap-3 items-center justify-center w-full h-full py-12">
               <img src="/misc/hexagon-contact-icon.svg" alt="No Multisig Account" className="w-20 h-20" />
@@ -320,30 +324,28 @@ const TransactionHistory = ({ onCreateAccount }: { onCreateAccount?: () => void 
           ) : (
             <>
               {/* Donut Chart Section */}
-              <div className="flex items-center justify-center h-64 flex-1/3">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={accounts.map(acc => ({ name: acc.name, value: acc.percentage }))}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={50}
-                      outerRadius={80}
-                      paddingAngle={2}
-                      dataKey="value"
-                      isAnimationActive={true}
-                    >
-                      {accounts.map(account => (
-                        <Cell key={`cell-${account.id}`} fill={account.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip content={() => null} />
-                  </PieChart>
-                </ResponsiveContainer>
+              <div className="flex h-56 w-[190px] shrink-0 items-center justify-center">
+                <PieChart width={190} height={224}>
+                  <Pie
+                    data={accounts.map(acc => ({ name: acc.name, value: acc.percentage }))}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={80}
+                    paddingAngle={2}
+                    dataKey="value"
+                    isAnimationActive={false}
+                  >
+                    {accounts.map(account => (
+                      <Cell key={`cell-${account.id}`} fill={account.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip content={() => null} />
+                </PieChart>
               </div>
 
               {/* Account Items */}
-              <div className="space-y-px flex-2/3">
+              <div className="flex-1 space-y-px">
                 <div className="flex items-center px-4 py-2 gap-4 border-b border-primary-divider text-text-secondary">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">Weight</span>
@@ -362,13 +364,13 @@ const TransactionHistory = ({ onCreateAccount }: { onCreateAccount?: () => void 
                   >
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full" style={{ backgroundColor: account.color }}></div>
-                      <span className="text-sm font-medium">{account.percentage}%</span>
+                      <span className="text-sm num">{account.percentage}%</span>
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">{account.name}</p>
                     </div>
                     <div className="flex-1 text-right">
-                      <p className="text-sm font-medium">{account.balance}</p>
+                      <p className="text-sm num">{account.balance}</p>
                     </div>
                   </div>
                 ))}

@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CardContainer } from "./CardContainer";
 import { Overview } from "./Overview";
 import { ReportsSection } from "./ReportsSection";
-import { PageHeader } from "../Common/PageHeader";
+import { useTitle } from "@/contexts/TitleProvider";
+import { CaretRight } from "@phosphor-icons/react";
 import { TabContainer } from "../Common/TabContainer";
 import { useModal } from "@/contexts/ModalManagerProvider";
 import TransactionHistory from "../Dashboard/WalletAnalytics/TransactionHistory";
@@ -27,6 +28,22 @@ export const HomeContainer = () => {
   const [selectedTransaction, setSelectedTransaction] = useState<DemoTransaction | null>(null);
   const [showDetail, setShowDetail] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const { setTitle } = useTitle();
+
+  // Breadcrumb in the top title bar: Dashboard › <active tab>
+  const activeLabel = tabs.find(t => t.id === activeTab)?.label ?? "Overview";
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      setTitle(
+        <div className="flex items-center gap-1.5 text-[14px]">
+          <span className="text-text-secondary">Dashboard</span>
+          <CaretRight size={12} weight="bold" className="text-text-secondary/50" />
+          <span className="font-medium text-text-primary">{activeLabel}</span>
+        </div>,
+      );
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, [activeLabel, setTitle]);
 
   const handleTransactionClick = (transaction: DemoTransaction) => {
     setSelectedTransaction(transaction);
@@ -46,8 +63,13 @@ export const HomeContainer = () => {
   return (
     <div className="w-full h-full flex flex-col">
       {/* Header + Tabs */}
-      <div className="w-full flex flex-col gap-3 px-5 pt-5 pb-2">
-        <PageHeader icon="/sidebar/home.svg" label="Dashboard" button={null} />
+      <div className="w-full flex flex-col gap-4 border-b border-primary-divider px-6 pt-6 pb-4">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Dashboard</h1>
+          <p className="text-[14px] text-text-secondary">
+            A quick overview of your treasury, payroll, and recent activity.
+          </p>
+        </div>
 
         {/* Tab Navigation */}
         <TabContainer
@@ -80,7 +102,7 @@ export const HomeContainer = () => {
         )}
 
         {activeTab === "transactions" && (
-          <div className="relative w-full h-full overflow-hidden px-5 pb-5">
+          <div className="relative w-full h-full overflow-hidden p-5">
             {/* Transaction List */}
             <div
               className={`transition-transform duration-[${ANIMATION_DURATION}ms] ease-in-out h-full ${
@@ -94,7 +116,7 @@ export const HomeContainer = () => {
 
             {/* Transaction Detail */}
             <div
-              className={`absolute inset-0 transition-transform duration-[${ANIMATION_DURATION}ms] ease-in-out h-full px-5 pb-5 ${
+              className={`absolute inset-0 transition-transform duration-[${ANIMATION_DURATION}ms] ease-in-out h-full p-5 ${
                 showDetail ? "translate-x-0" : "translate-x-full"
               }`}
             >

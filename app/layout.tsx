@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Barlow, Nanum_Pen_Script } from "next/font/google";
+import { Geist, Geist_Mono, Barlow, Nanum_Pen_Script, Inter } from "next/font/google";
 import "./globals.css";
 import { ClientLayoutWrapper } from "../components/ClientLayoutWrapper";
 import localFont from "next/font/local";
@@ -38,6 +38,11 @@ const barlow = Barlow({
 const nanumPenScript = Nanum_Pen_Script({
   weight: "400",
   variable: "--font-nanum-pen-script",
+  subsets: ["latin"],
+});
+const inter = Inter({
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -82,7 +87,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${barlow.className} ${repetitionScrolling.variable} ${nanumPenScript.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${barlow.className} ${repetitionScrolling.variable} ${nanumPenScript.variable} ${inter.variable} antialiased`}
         suppressHydrationWarning
       >
         <ThemeProvider defaultTheme="light" storageKey="ui-theme">
