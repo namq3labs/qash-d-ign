@@ -218,6 +218,35 @@ input:-moz-autofill {
   color: var(--text-primary) !important;
 }
 
+/* ActionButton blade spinner */
+@keyframes ab-spinner-fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.15;
+  }
+}
+.ab-spinner-bar {
+  animation: ab-spinner-fade 0.8s linear infinite;
+}
+
+/* Toast status dots (ring of blinking dots) */
+@keyframes toast-dot-blink {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .toast-dot {
+    animation: toast-dot-blink 1.2s ease-in-out infinite;
+  }
+}
+
 input:-webkit-autofill-background-color {
   background-color: transparent !important;
   color: var(--text-primary) !important;

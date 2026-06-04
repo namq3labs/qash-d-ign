@@ -32,7 +32,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 const barlow = Barlow({
-  weight: "500",
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
 });
 const nanumPenScript = Nanum_Pen_Script({

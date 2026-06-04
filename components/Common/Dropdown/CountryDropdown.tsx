@@ -1,5 +1,7 @@
 "use client";
 import React, { useState, useRef, useEffect, useMemo } from "react";
+import { createPortal } from "react-dom";
+import { AnimatePresence, motion } from "motion/react";
 
 const COUNTRY = [
   // Europe
@@ -52,28 +54,40 @@ export const CountryDropdown = ({
   size = "default",
 }: CountryDropdownProps) => {
   const containerStyle = useMemo(() => {
-    const baseStyle = variant === "outlined"
-      ? "border border-primary-divider rounded-xl bg-transparent"
-      : "bg-app-background border-b-2 border-primary-divider rounded-xl";
-    const heightStyle = size === "compact" ? "h-[52px]" : "h-[64px]";
+    const baseStyle =
+      variant === "outlined"
+        ? "border border-primary-divider rounded-xl bg-transparent"
+        : "bg-app-background border-b-2 border-primary-divider rounded-xl";
+    const heightStyle = size === "compact" ? "h-[46px]" : "h-[64px]";
     return `${baseStyle} ${heightStyle}`;
   }, [variant, size]);
 
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+  const [coords, setCoords] = useState<{ top: number; left: number; width: number } | null>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
+      const target = event.target as Node;
+      if (triggerRef.current?.contains(target) || panelRef.current?.contains(target)) return;
+      setIsOpen(false);
     }
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const toggleOpen = () => {
+    if (disabled) return;
+    if (!isOpen && triggerRef.current) {
+      const r = triggerRef.current.getBoundingClientRect();
+      setCoords({ top: r.bottom + 8, left: r.left, width: r.width });
+    }
+    setIsOpen(o => !o);
+  };
 
   const handleCountryClick = (country: string) => {
     onCountrySelect(country);
@@ -81,10 +95,11 @@ export const CountryDropdown = ({
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative">
       <button
         type="button"
-        onClick={() => !disabled && setIsOpen(!isOpen)}
+        ref={triggerRef}
+        onClick={toggleOpen}
         className={`flex items-center gap-2 px-4 py-2 w-full text-left cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed justify-between ${containerStyle}`}
         disabled={disabled}
       >
@@ -93,51 +108,62 @@ export const CountryDropdown = ({
             <img
               src={COUNTRY.find(c => c.label === selectedCountry)?.icon || ""}
               alt={selectedCountry}
-              className={`${size === "compact" ? "w-5 h-5" : "w-6 h-6"} flex-shrink-0`}
+              className="w-5 h-5 flex-shrink-0"
             />
           )}
-          <div className="flex flex-col justify-center">
-            <span className={`text-text-secondary ${size === "compact" ? "text-[12px]" : "text-[14px]"}`}>
-              Select country
-            </span>
-            {selectedCountry && (
-              <p className={`text-text-primary font-semibold ${size === "compact" ? "text-[14px]" : "text-[16px]"}`}>
-                {selectedCountry}
-              </p>
-            )}
-          </div>
+          <span className={`text-[14px] ${selectedCountry ? "text-text-primary" : "text-[#C1C1C1]"}`}>
+            {selectedCountry || "Select country"}
+          </span>
         </div>
-
         <img
           src="/arrow/chevron-down.svg"
           alt="dropdown"
-          className={`w-6 h-6 transition-transform flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
+          className={`w-5 h-5 transition-transform flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
 
-      {isOpen && (
-        <div className="absolute top-full left-0 right-0 mb-5 shadow-lg bg-background border-2 border-primary-divider rounded-xl z-50 overflow-hidden p-2 h-[240px] overflow-y-auto">
-          <div className="px-2 py-1">
-            <p className="text-text-secondary text-xs">Select country</p>
-          </div>
-
-          <div className="flex flex-col">
-            {COUNTRY.map((country, index) => (
-              <button
-                key={country.value}
-                type="button"
-                onClick={() => handleCountryClick(country.label)}
-                className={`w-full flex items-center gap-1 p-2 rounded-lg hover:bg-app-background transition-colors cursor-pointer ${
-                  selectedCountry === country.label ? "bg-app-background" : ""
-                }`}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {isOpen && coords && (
+              <motion.div
+                ref={panelRef}
+                initial={{ opacity: 0, scaleY: 0.55, scale: 0.96, y: -6 }}
+                animate={{ opacity: 1, scaleY: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scaleY: 0.7, scale: 0.97, y: -4 }}
+                transition={{ type: "spring", stiffness: 460, damping: 24, mass: 0.7 }}
+                style={{
+                  position: "fixed",
+                  top: coords.top,
+                  left: coords.left,
+                  width: coords.width,
+                  transformOrigin: "top center",
+                }}
+                className="z-[100] overflow-hidden rounded-2xl border border-white/10 bg-[#26262b]/85 p-1.5 shadow-[0_24px_60px_-14px_rgba(0,0,0,0.6)] backdrop-blur-2xl"
               >
-                <img src={country.icon} alt={country.label} className="w-5 h-5 mr-2" />
-                <span className="text-text-primary font-semibold">{country.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+                <div className="px-2 py-1.5">
+                  <p className="text-[11px] font-medium uppercase tracking-wide text-white/40">Select country</p>
+                </div>
+                <div className="flex max-h-[220px] flex-col gap-0.5 overflow-y-auto">
+                  {COUNTRY.map(country => (
+                    <button
+                      key={country.value}
+                      type="button"
+                      onClick={() => handleCountryClick(country.label)}
+                      className={`flex w-full cursor-pointer items-center gap-2.5 rounded-lg p-2 text-left transition-colors hover:bg-white/[0.08] ${
+                        selectedCountry === country.label ? "bg-white/[0.10]" : ""
+                      }`}
+                    >
+                      <img src={country.icon} alt={country.label} className="h-5 w-5 shrink-0" />
+                      <span className="text-[14px] font-medium text-white/90">{country.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body,
+        )}
     </div>
   );
 };

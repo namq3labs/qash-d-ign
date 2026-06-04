@@ -1,10 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import Welcome from "../Common/Welcome";
-import { PrimaryButton } from "../Common/PrimaryButton";
-import InputOutlined from "../Common/Input/InputOutlined";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import AuthCanvas from "../Login/AuthCanvas";
+import { TextureButton } from "../ui/texture-button";
+import FieldInput from "../Common/Input/FieldInput";
 import { CompanyTypeDropdown } from "../Common/Dropdown/CompanyTypeDropdown";
 import { CountryDropdown } from "../Common/Dropdown/CountryDropdown";
 import { SecondaryButton } from "../Common/SecondaryButton";
@@ -27,8 +28,36 @@ interface OnboardingFormData {
   registrationNumber: string;
 }
 
+/** Success icon: a ring of blinking green dots (matches the toast dot style). */
+function SuccessDots() {
+  return (
+    <span className="relative grid h-12 w-12 place-items-center" aria-hidden>
+      {Array.from({ length: 12 }).map((_, i) => {
+        const a = (i / 12) * 2 * Math.PI - Math.PI / 2;
+        const x = (Math.cos(a) * 16).toFixed(2);
+        const y = (Math.sin(a) * 16).toFixed(2);
+        return (
+          <span
+            key={i}
+            className="toast-dot absolute left-1/2 top-1/2 rounded-full"
+            style={{
+              height: 4,
+              width: 4,
+              background: "#21c07a",
+              opacity: 0.85,
+              transform: `translate(-50%, -50%) translate(${x}px, ${y}px)`,
+              animationDelay: `${((-i / 12) * 1.2).toFixed(3)}s`,
+            }}
+          />
+        );
+      })}
+    </span>
+  );
+}
+
 export default function OnboardingContainer() {
   const router = useRouter();
+  const reduce = useReducedMotion();
   const { isLoggedIn, isOnboarded, completeOnboarding, data, isLoaded } = useDemo();
   const [step, setStep] = useState<Step>("company");
   const [selectedCompanyType, setSelectedCompanyType] = useState<string>("");
@@ -36,12 +65,15 @@ export default function OnboardingContainer() {
   const [showAdditionalDetails, setShowAdditionalDetails] = useState<boolean>(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [phase, setPhase] = useState<"form" | "success">("form");
+  const [leaving, setLeaving] = useState(false);
+  const timers = useRef<number[]>([]);
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { isValid, errors },
+    formState: { errors },
   } = useForm<OnboardingFormData>({
     mode: "onSubmit",
     defaultValues: {
@@ -78,6 +110,8 @@ export default function OnboardingContainer() {
     }
   }, [isLoggedIn, isOnboarded, isLoaded, router]);
 
+  useEffect(() => () => timers.current.forEach(t => clearTimeout(t)), []);
+
   // Cleanup object URL on unmount
   useEffect(() => {
     return () => {
@@ -99,27 +133,47 @@ export default function OnboardingContainer() {
     e.target.value = "";
   };
 
-  const onSubmit = async (formData: OnboardingFormData) => {
-    if (step === "company") {
-      setSubmitting(true);
-      // Simulate API delay
-      setTimeout(() => {
-        completeOnboarding({
-          email: data?.user.email || "demo@example.com",
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          companyName: formData.companyName,
-          country: selectedCountry || "Singapore",
-          industry: data?.company.industry || "Fintech / Crypto Payments",
-          companySize: data?.company.companySize || "1-10",
-        });
-        toast.success("Company registered successfully");
+  const onSubmit = (formData: OnboardingFormData) => {
+    if (step !== "company" || submitting || phase === "success") return;
+    setSubmitting(true);
+    // 1) finish the "create" loading on the button
+    timers.current.push(
+      window.setTimeout(() => {
         setSubmitting(false);
-        setStep("complete");
-      }, 1200);
-    } else if (step === "team") {
-      setStep("complete");
-    }
+        // 2) morph the whole modal into success + pull all decor into the centre
+        setPhase("success");
+        // 3) blur out to the dashboard
+        timers.current.push(
+          window.setTimeout(() => {
+            setLeaving(true);
+            timers.current.push(
+              window.setTimeout(() => {
+                completeOnboarding({
+                  email: data?.user.email || "demo@example.com",
+                  firstName: formData.firstName,
+                  lastName: formData.lastName,
+                  companyName: formData.companyName,
+                  country: selectedCountry || "Singapore",
+                  industry: data?.company.industry || "Fintech / Crypto Payments",
+                  companySize: data?.company.companySize || "1-10",
+                });
+                router.push("/");
+              }, 650),
+            );
+          }, 1700),
+        );
+      }, 1100),
+    );
+  };
+
+  // Leave onboarding and return to the login screen. Clear the demo login flag and
+  // hard-navigate so the provider re-initialises as logged-out (otherwise /login
+  // would redirect straight back here).
+  const handleBackToLogin = () => {
+    try {
+      localStorage.removeItem("qash_demo_login");
+    } catch {}
+    window.location.href = "/login";
   };
 
   const renderStep = () => {
@@ -133,7 +187,11 @@ export default function OnboardingContainer() {
 
             {/* Company Logo Upload */}
             <div className="flex gap-4 items-start w-full">
-              <label className="bg-[#ebf4ff] border border-primary-blue border-dashed rounded-full shrink-0 w-[86px] h-[86px] flex items-center justify-center relative overflow-hidden cursor-pointer hover:bg-blue-50 transition-colors">
+              <label
+                className={`rounded-full shrink-0 w-[86px] h-[86px] flex items-center justify-center relative overflow-hidden cursor-pointer transition-colors ${
+                  previewUrl ? "" : "bg-[#ebf4ff] border border-primary-blue border-dashed hover:bg-blue-50"
+                }`}
+              >
                 {previewUrl ? (
                   <img src={previewUrl} alt="Company logo" className="w-full h-full object-cover" />
                 ) : (
@@ -171,7 +229,7 @@ export default function OnboardingContainer() {
             <form className="flex flex-col gap-3 w-full" onSubmit={handleSubmit(onSubmit)}>
               <div className="flex flex-col sm:flex-row gap-3 w-full">
                 <div className="flex-1">
-                  <InputOutlined
+                  <FieldInput
                     label="First name"
                     placeholder="Enter your first name"
                     size="compact"
@@ -181,7 +239,7 @@ export default function OnboardingContainer() {
                   />
                 </div>
                 <div className="flex-1">
-                  <InputOutlined
+                  <FieldInput
                     label="Last name"
                     placeholder="Enter your last name"
                     size="compact"
@@ -192,7 +250,7 @@ export default function OnboardingContainer() {
                 </div>
               </div>
 
-              <InputOutlined
+              <FieldInput
                 label="Company name"
                 placeholder="Enter your company name"
                 size="compact"
@@ -216,27 +274,34 @@ export default function OnboardingContainer() {
               <div
                 className={`transition-all duration-300 ease-in-out overflow-hidden ${showAdditionalDetails ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"} flex gap-3 flex-col`}
               >
-                <CompanyTypeDropdown
-                  selectedCompanyType={selectedCompanyType}
-                  onCompanyTypeSelect={value => {
-                    setSelectedCompanyType(value);
-                    setValue("companyType", value);
-                  }}
-                  size="compact"
-                />
+                <div className="flex w-full flex-col gap-3 sm:flex-row">
+                  <div className="flex-1">
+                    <label className="mb-1.5 block text-[13px] font-medium text-text-primary">Client type</label>
+                    <CompanyTypeDropdown
+                      selectedCompanyType={selectedCompanyType}
+                      onCompanyTypeSelect={value => {
+                        setSelectedCompanyType(value);
+                        setValue("companyType", value);
+                      }}
+                      size="compact"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="mb-1.5 block text-[13px] font-medium text-text-primary">Country</label>
+                    <CountryDropdown
+                      selectedCountry={selectedCountry}
+                      onCountrySelect={value => {
+                        setSelectedCountry(value);
+                        setValue("country", value);
+                      }}
+                      size="compact"
+                    />
+                  </div>
+                </div>
 
-                <CountryDropdown
-                  selectedCountry={selectedCountry}
-                  onCountrySelect={value => {
-                    setSelectedCountry(value);
-                    setValue("country", value);
-                  }}
-                  size="compact"
-                />
+                <FieldInput label="City" placeholder="Enter city" size="compact" {...register("city")} />
 
-                <InputOutlined label="City" placeholder="Enter city" size="compact" {...register("city")} />
-
-                <InputOutlined
+                <FieldInput
                   label="Address"
                   placeholder="Enter full address (min 5 characters)"
                   size="compact"
@@ -247,16 +312,9 @@ export default function OnboardingContainer() {
                   {...register("address1", { minLength: { value: 5, message: "Address must be at least 5 characters" } })}
                 />
 
-                <InputOutlined
-                  label="Address 2 (optional)"
-                  placeholder="Enter address 2"
-                  size="compact"
-                  {...register("address2")}
-                />
-
                 <div className="flex flex-col sm:flex-row gap-3 w-full">
                   <div className="w-full sm:w-36">
-                    <InputOutlined
+                    <FieldInput
                       label="Postal code"
                       placeholder="e.g. 70000"
                       size="compact"
@@ -266,7 +324,7 @@ export default function OnboardingContainer() {
                     />
                   </div>
                   <div className="flex-1">
-                    <InputOutlined
+                    <FieldInput
                       label="Registration number"
                       placeholder="e.g. 8683949 (min 5 chars)"
                       size="compact"
@@ -287,8 +345,8 @@ export default function OnboardingContainer() {
             <div className="flex flex-col gap-3 md:gap-4 w-full">
               {Array.from({ length: 3 }).map((_, index) => (
                 <div className="flex flex-col sm:flex-row gap-2 w-full" key={index}>
-                  <InputOutlined label={`Member ${index + 1}`} placeholder="Enter name" size="compact" {...register("firstName")} />
-                  <InputOutlined label="Email" placeholder="@mail" size="compact" {...register("lastName")} />
+                  <FieldInput label={`Member ${index + 1}`} placeholder="Enter name" size="compact" {...register("firstName")} />
+                  <FieldInput label="Email" placeholder="@mail" size="compact" {...register("lastName")} />
                 </div>
               ))}
             </div>
@@ -309,13 +367,9 @@ export default function OnboardingContainer() {
               <img src="/onboarding/hexagon-avatar.svg" alt="Onboarding Complete" className="w-[150px] h-[150px] md:w-[220px] md:h-[220px]" />
               <span className="font-bold text-xl md:text-2xl">Congratulations</span>
               <span className="text-base md:text-lg text-text-secondary">Your new account is ready to accept payments</span>
-              <PrimaryButton
-                text="Go to app"
-                containerClassName="w-[180px] mt-6"
-                onClick={() => router.push("/")}
-                icon="/arrow/chevron-right-light.svg"
-                iconPosition="right"
-              />
+              <TextureButton variant="primary" onClick={() => router.push("/")} className="mt-6 w-[180px]">
+                Go to app
+              </TextureButton>
             </div>
           </div>
         );
@@ -323,44 +377,88 @@ export default function OnboardingContainer() {
   };
 
   return (
-    <div className="flex flex-row w-full h-full p-3 md:p-5 bg-background overflow-hidden">
-      <div className="flex flex-col items-start w-full lg:w-1/2 px-4 py-6 md:px-8 md:py-8 lg:p-[60px] h-full overflow-hidden">
-        {/* Progress indicator */}
-        <div className="flex gap-[19px] items-center w-full mb-4 md:mb-8 flex-shrink-0">
-          <div className="flex gap-[4px] items-start flex-1">
-            <div className={`h-1 rounded transition-all duration-500 ease-out ${step === "company" ? "w-7 bg-primary-blue" : "w-2.5 bg-[#D7D7D7]"}`} />
-            <div className={`h-1 rounded transition-all duration-500 ease-out ${step === "team" ? "w-7 bg-primary-blue" : "w-2.5 bg-[#D7D7D7]"}`} />
-            <div className={`h-1 rounded transition-all duration-500 ease-out ${step === "complete" ? "w-7 bg-primary-blue" : "w-2.5 bg-[#D7D7D7]"}`} />
-          </div>
-        </div>
+    <AuthCanvas converge={phase === "success"}>
+      <motion.div
+        layout
+        initial={reduce ? false : { opacity: 0, y: 18, filter: "blur(10px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        transition={{
+          duration: 0.6,
+          ease: [0.16, 1, 0.3, 1],
+          layout: { type: "spring", stiffness: 240, damping: 28 },
+        }}
+        className={`relative z-30 flex w-full flex-col rounded-[26px] border border-primary-divider/70 bg-[#f1f2f4] p-2.5 shadow-[0_34px_70px_-26px_rgba(20,32,64,0.32)] ${
+          phase === "success" ? "max-w-[340px]" : "max-h-[90dvh] max-w-[480px]"
+        }`}
+      >
+        <AnimatePresence mode="wait">
+          {phase === "form" ? (
+            <motion.div
+              key="form"
+              exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+              className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[20px] border border-primary-divider bg-background px-6 py-6 md:px-7"
+            >
+              <div className="-mr-2 min-h-0 w-full flex-1 overflow-y-auto pr-2">{renderStep()}</div>
 
-        {/* Form content */}
-        <div className="w-full flex-1 overflow-y-auto min-h-0">{renderStep()}</div>
+              {step !== "complete" && (
+                <div className="flex w-full flex-shrink-0 items-center justify-between pt-5">
+                  {step === "company" ? (
+                    <SecondaryButton
+                      text="Back to login"
+                      variant="light"
+                      buttonClassName="w-[124px]"
+                      onClick={handleBackToLogin}
+                    />
+                  ) : (
+                    <SecondaryButton text="Go Back" variant="light" buttonClassName="w-[100px]" onClick={() => setStep("company")} />
+                  )}
+                  <TextureButton
+                    type="button"
+                    variant="primary"
+                    onClick={handleSubmit(onSubmit)}
+                    disabled={submitting}
+                    className="w-[150px] disabled:opacity-60"
+                  >
+                    {submitting ? "Creating..." : "Continue"}
+                  </TextureButton>
+                </div>
+              )}
+            </motion.div>
+          ) : (
+            <motion.div
+              key="success"
+              initial={reduce ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="flex flex-col items-center justify-center gap-3 rounded-[20px] border border-primary-divider bg-background px-10 py-12 text-center"
+            >
+              <motion.span
+                initial={reduce ? false : { scale: 0.6, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.12 }}
+              >
+                <SuccessDots />
+              </motion.span>
+              <h2 className="text-[19px] font-semibold text-text-primary">You&apos;re all set</h2>
+              <p className="text-[13px] text-text-secondary">Taking you to your dashboard...</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
-        {step !== "complete" && (
-          <div
-            className="w-full flex items-center pt-4 md:pt-5 flex-shrink-0"
-            style={{ justifyContent: step === "company" ? "flex-end" : "space-between" }}
-          >
-            {step === "team" && (
-              <SecondaryButton text="Go Back" variant="light" buttonClassName="w-[100px]" onClick={() => setStep("company")} />
-            )}
-            <PrimaryButton
-              text="Continue"
-              containerClassName="w-[140px]"
-              icon="/arrow/chevron-right-light.svg"
-              iconPosition="right"
-              onClick={handleSubmit(onSubmit)}
-              loading={submitting}
-              disabled={!isValid || submitting}
-            />
-          </div>
+      <AnimatePresence>
+        {leaving && (
+          <motion.div
+            key="leave"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            className="fixed inset-0 z-[60] bg-app-background"
+            style={{ backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)" }}
+          />
         )}
-      </div>
-
-      <div className="hidden lg:block lg:w-1/2">
-        <Welcome />
-      </div>
-    </div>
+      </AnimatePresence>
+    </AuthCanvas>
   );
 }
