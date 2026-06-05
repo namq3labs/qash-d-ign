@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
-import { CaretDown, Check, CalendarBlank } from "@phosphor-icons/react";
+import { NavArrowDown as CaretDown, Check, Calendar as CalendarBlank } from "iconoir-react";
 
 const PERIOD_OPTIONS = [
   { id: "year", label: "Year" },
@@ -59,9 +59,9 @@ export const PeriodFilterDropdown = ({ period, onChange, label }: PeriodFilterDr
         onClick={toggleOpen}
         className="inline-flex items-center gap-2 rounded-lg border border-primary-divider bg-background px-3 py-1.5 text-sm text-text-secondary transition-colors hover:bg-app-background"
       >
-        <CalendarBlank size={15} weight="bold" className="text-text-secondary" />
+        <CalendarBlank width={15} height={15} strokeWidth={2} className="text-text-secondary" />
         <span className="text-text-primary">{current}</span>
-        <CaretDown size={14} weight="bold" className={`transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <CaretDown width={14} height={14} strokeWidth={2} className={`transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {mounted &&
@@ -99,7 +99,7 @@ export const PeriodFilterDropdown = ({ period, onChange, label }: PeriodFilterDr
                         }`}
                       >
                         <span className="text-[14px] font-medium text-white/90">{opt.label}</span>
-                        {active && <Check size={13} weight="bold" className="ml-auto text-white/80" />}
+                        {active && <Check width={13} height={13} strokeWidth={2} className="ml-auto text-white/80" />}
                       </button>
                     );
                   })}

@@ -36,6 +36,8 @@ import { FiatPayoutFields, FiatPayoutData } from "@/components/Common/FiatPayout
 import InvoicePreview from "@/components/Common/Invoice/InvoicePreview";
 import { useGetMyCompany } from "@/services/api/company";
 import { n } from "@/services/utils/normalizeToken";
+import FieldInput from "../../Common/Input/FieldInput";
+import { NavArrowDown } from "iconoir-react";
 
 interface CreateContactFormData {
   name: string;
@@ -61,30 +63,17 @@ interface FormInputProps {
 }
 
 const FormInput = ({ label, placeholder, type = "text", register, error, disabled, required }: FormInputProps) => (
-  <div className="flex flex-col gap-2">
-    <div className="bg-app-background rounded-xl border-b-2 border-primary-divider">
-      <div className="flex flex-col gap-1 px-4 py-2">
-        <label className="text-text-secondary text-sm font-medium">
-          {label} {!required && <span className="text-text-secondary">(Optional)</span>}
-        </label>
-        <input
-          {...register}
-          type={type}
-          placeholder={placeholder}
-          className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-          autoFocus={label === "Name"}
-          disabled={disabled}
-          autoComplete="off"
-        />
-      </div>
-    </div>
-    {error && (
-      <div className="flex items-center gap-1 pl-2">
-        <img src="/misc/red-circle-warning.svg" alt="warning" className="w-4 h-4" />
-        <span className="text-[#E93544] text-sm">{error}</span>
-      </div>
-    )}
-  </div>
+  <FieldInput
+    label={required ? label : `${label} (Optional)`}
+    type={type}
+    placeholder={placeholder}
+    error={!!error}
+    errorMessage={error}
+    disabled={disabled}
+    autoFocus={label === "Name"}
+    autoComplete="off"
+    {...register}
+  />
 );
 
 const DEFAULT_TOKEN: AssetWithMetadata = {
@@ -111,7 +100,7 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
   const [selectedNetwork, setSelectedNetwork] = useState<{ icon: string; name: string; value: string } | null>(
     DEFAULT_NETWORK,
   );
-  const [selectedGroup, setSelectedGroup] = useState<CompanyGroupResponseDto | undefined>(undefined);
+  const [selectedGroups, setSelectedGroups] = useState<CompanyGroupResponseDto[]>([]);
   const [paymentType, setPaymentType] = useState<"crypto" | "fiat">("crypto");
   const [selectedPayDay, setSelectedPayDay] = useState(28);
   const [fiatData, setFiatData] = useState<FiatPayoutData>({
@@ -184,7 +173,7 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
       setStep(1);
       setSelectedToken(DEFAULT_TOKEN);
       setSelectedNetwork(DEFAULT_NETWORK);
-      setSelectedGroup(undefined);
+      setSelectedGroups([]);
       setPaymentType("crypto");
       setSelectedPayDay(28);
       setFiatData({
@@ -233,7 +222,7 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
       message: "Name can only contain letters, numbers, spaces, hyphens, and underscores",
     },
     validate: () => {
-      if (!selectedGroup) return true;
+      if (!selectedGroups.length) return true;
       if (nameDuplicate?.isDuplicate) return "This name already exists in the selected group";
       return true;
     },
@@ -250,7 +239,7 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
       message: "Address must start with 'mtst1' and contain only letters, numbers, and underscores",
     },
     validate: () => {
-      if (!selectedGroup) return true;
+      if (!selectedGroups.length) return true;
       if (addressDuplicate?.isDuplicate) return "This address already exists in the selected group";
       return true;
     },
@@ -280,7 +269,7 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
     const valid = await trigger(step1Fields);
     if (!valid) return;
 
-    if (!selectedGroup) {
+    if (!selectedGroups.length) {
       toast.error("Please select a group");
       return;
     }
@@ -296,7 +285,7 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
   };
 
   const onSubmit = async (data: CreateContactFormData) => {
-    if (!selectedGroup) {
+    if (!selectedGroups.length) {
       toast.error("Please select a group");
       return;
     }
@@ -316,7 +305,8 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
         : undefined;
 
       const employeePayload: any = {
-        groupId: selectedGroup.id,
+        groupId: selectedGroups[0]?.id,
+        groupIds: selectedGroups.map(g => g.id),
         name: data.name.trim(),
         walletAddress: paymentType === "crypto" ? data.walletAddress.trim() : "",
         email: data.email?.trim() || undefined,
@@ -348,7 +338,7 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
       setStep(1);
       setSelectedToken(DEFAULT_TOKEN);
       setSelectedNetwork(DEFAULT_NETWORK);
-      setSelectedGroup(undefined);
+      setSelectedGroups([]);
       setSelectedPayDay(28);
       onClose();
       closeModal("CHOOSE_CONTACT_TYPE");
@@ -362,9 +352,12 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
     setSelectedToken(token);
   };
 
-  const handleGroupSelect = (group: CompanyGroupResponseDto) => {
-    setSelectedGroup(group);
-    setValue("groupId", group.id, { shouldValidate: true, shouldTouch: true });
+  const handleToggleGroup = (group: CompanyGroupResponseDto) => {
+    const next = selectedGroups.some(g => g.id === group.id)
+      ? selectedGroups.filter(g => g.id !== group.id)
+      : [...selectedGroups, group];
+    setSelectedGroups(next);
+    setValue("groupId", next[0]?.id, { shouldValidate: true, shouldTouch: true });
   };
 
   const handleCancel = () => {
@@ -372,7 +365,7 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
     setStep(1);
     setSelectedToken(DEFAULT_TOKEN);
     setSelectedNetwork(DEFAULT_NETWORK);
-    setSelectedGroup(undefined);
+    setSelectedGroups([]);
     setSelectedPayDay(28);
     onClose();
   };
@@ -532,31 +525,28 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
                     required
                   />
 
-                  <input type="hidden" {...groupIdRegister} value={selectedGroup?.id ?? ""} />
+                  <input type="hidden" {...groupIdRegister} value={selectedGroups[0]?.id ?? ""} />
 
-                  {/* Network Selection */}
-                  <div className="bg-app-background rounded-xl border-b-2 border-primary-divider">
+                  {/* Network + Token, aligned side by side */}
+                  <div className="grid grid-cols-2 gap-3">
                     <button
                       type="button"
                       onClick={() => openModal(MODAL_IDS.SELECT_NETWORK, { onNetworkSelect: setSelectedNetwork })}
-                      className="flex items-center gap-2 px-4 py-2 h-full w-full text-left cursor-pointer"
+                      className="flex items-center gap-2 rounded-xl border border-primary-divider bg-background px-3 py-2.5 text-left transition-colors cursor-pointer hover:bg-app-background disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={createEmployee.isPending}
                     >
-                      {selectedNetwork && <img src={selectedNetwork.icon} alt="network" className="w-8 h-8" />}
-                      <div className="flex-1">
-                        <p className="text-text-secondary text-sm leading-none">Select network</p>
-                        <p className="text-text-primary text-base font-medium">{selectedNetwork?.name || "-"}</p>
+                      {selectedNetwork && <img src={selectedNetwork.icon} alt="network" className="h-7 w-7 flex-shrink-0" />}
+                      <div className="min-w-0 flex-1">
+                        <p className="text-text-secondary text-xs leading-none">Select network</p>
+                        <p className="mt-0.5 truncate text-text-primary text-sm font-medium">{selectedNetwork?.name || "-"}</p>
                       </div>
-                      <img src="/arrow/chevron-down.svg" alt="dropdown" className="w-6 h-6" />
+                      <NavArrowDown width={16} height={16} strokeWidth={2} className="flex-shrink-0 text-text-secondary" />
                     </button>
-                  </div>
 
-                  {/* Token Selection */}
-                  <div className="bg-app-background rounded-xl border-b-2 border-primary-divider">
                     <button
                       type="button"
                       onClick={() => openModal(MODAL_IDS.SELECT_TOKEN, { onTokenSelect: handleTokenSelect })}
-                      className="flex items-center gap-2 px-4 py-2 h-full w-full text-left cursor-pointer"
+                      className="flex items-center gap-2 rounded-xl border border-primary-divider bg-background px-3 py-2.5 text-left transition-colors cursor-pointer hover:bg-app-background disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={createEmployee.isPending}
                     >
                       {selectedToken && (
@@ -567,20 +557,20 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
                               : blo(turnBechToHex(selectedToken.faucetId))
                           }
                           alt="token"
-                          className="w-8 h-8 rounded-full"
+                          className="h-7 w-7 rounded-full flex-shrink-0"
                         />
                       )}
-                      <div className="flex-1">
-                        <p className="text-text-secondary text-sm leading-none">Select token</p>
-                        <p className="text-text-primary text-base font-medium">{selectedToken?.metadata.symbol || "-"}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-text-secondary text-xs leading-none">Select token</p>
+                        <p className="mt-0.5 truncate text-text-primary text-sm font-medium">{selectedToken?.metadata.symbol || "-"}</p>
                       </div>
-                      <img src="/arrow/chevron-down.svg" alt="dropdown" className="w-6 h-6" />
+                      <NavArrowDown width={16} height={16} strokeWidth={2} className="flex-shrink-0 text-text-secondary" />
                     </button>
                   </div>
                 </>
               ) : (
                 <>
-                  <input type="hidden" {...groupIdRegister} value={selectedGroup?.id ?? ""} />
+                  <input type="hidden" {...groupIdRegister} value={selectedGroups[0]?.id ?? ""} />
 
                   <FiatPayoutFields
                     data={fiatData}
@@ -591,16 +581,16 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
               )}
 
               {/* Category Selection */}
-              <div className="bg-app-background rounded-xl border-b-2 border-primary-divider py-2">
+              <div className="rounded-xl border border-primary-divider bg-background py-2.5">
                 <EmployeeGroupDropdown
                   groups={employeeGroups}
-                  selectedGroup={selectedGroup}
-                  onGroupSelect={handleGroupSelect}
+                  selectedGroupIds={selectedGroups.map(g => g.id)}
+                  onToggleGroup={handleToggleGroup}
                 />
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-row gap-3">
+              {/* Action Buttons, sticky footer */}
+              <div className="sticky bottom-0 z-10 -mx-4 -mb-4 mt-1 flex flex-row gap-3 border-t border-primary-divider bg-background px-4 py-3">
                 <SecondaryButton
                   text="Cancel"
                   onClick={handleCancel}
@@ -612,7 +602,7 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
                   text="Next"
                   onClick={handleNext}
                   containerClassName="flex-1"
-                  disabled={!selectedGroup || !isValid}
+                  disabled={selectedGroups.length === 0 || !isValid}
                 />
               </div>
             </>
@@ -621,7 +611,7 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
               {/* Step 2: Payroll Setup */}
               {/* Duration */}
               <div className="flex flex-col gap-2">
-                <div className="bg-app-background rounded-xl p-3 border-b-2 border-primary-divider flex items-center justify-between">
+                <div className="rounded-xl border border-primary-divider bg-background p-3 flex items-center justify-between">
                   <div className="flex flex-col gap-0.5 flex-1">
                     <p className="text-text-secondary text-sm">Duration</p>
                     <input
@@ -719,8 +709,8 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
                 disabled={createEmployee.isPending}
               />
 
-              {/* Action Buttons */}
-              <div className="flex flex-row gap-3">
+              {/* Action Buttons, sticky footer */}
+              <div className="sticky bottom-0 z-10 -mx-4 -mb-4 mt-1 flex flex-row gap-3 border-t border-primary-divider bg-background px-4 py-3">
                 <SecondaryButton
                   text="Back"
                   onClick={() => setStep(1)}
@@ -755,20 +745,20 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
                       text="Back"
                       onClick={() => setStep(2)}
                       variant="light"
-                      buttonClassName="px-8"
+                      buttonClassName="min-w-[140px]"
                       disabled={createEmployee.isPending}
                     />
                     <PrimaryButton
                       text="Create"
                       onClick={handleSubmit(onSubmit)}
-                      buttonClassName="px-8"
+                      containerClassName="min-w-[140px]"
                       loading={createEmployee.isPending}
                     />
                   </div>
                 </div>
                 {/* Right: invoice preview (scaled to fit) */}
                 <div className="w-[500px] h-[560px] overflow-hidden rounded-xl flex-shrink-0">
-                  <div className="origin-top-left scale-[0.52]" style={{ width: "960px" }}>
+                  <div className="origin-top-left scale-[0.78]" style={{ width: "640px" }}>
                     <InvoicePreview {...buildInvoiceData() as any} />
                   </div>
                 </div>

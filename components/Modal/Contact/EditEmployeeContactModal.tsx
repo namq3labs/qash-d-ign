@@ -1,6 +1,7 @@
 "use client";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
+import { EmployeeAvatar, memojiUrl } from "@/components/Common/EmployeeAvatar";
 import { EditEmployeeContactModalProps } from "@/types/modal";
 import { ModalProp } from "@/contexts/ModalManagerProvider";
 import { UpdateAddressBookDto, CompanyGroupResponseDto } from "@qash/types/dto/employee";
@@ -124,8 +125,33 @@ export function EditEmployeeContactModal({
       value: "miden",
     },
   );
-  const [selectedGroup, setSelectedGroup] = useState<CompanyGroupResponseDto | undefined>(undefined);
+  const [selectedGroups, setSelectedGroups] = useState<CompanyGroupResponseDto[]>([]);
+  const [avatarSrc, setAvatarSrc] = useState<string | undefined>(contactData?.avatar);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { openModal } = useModal();
+
+  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image file");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Image must be under 2MB");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => setAvatarSrc(reader.result as string);
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
+  // Pick a fresh default memoji avatar from the library on each click.
+  const handleUseDefaultAvatar = () => {
+    const seed = `${contactData?.name || "qash"}-${Math.random().toString(36).slice(2, 9)}`;
+    setAvatarSrc(memojiUrl(seed));
+  };
 
   const updateEmployee = useUpdateEmployee();
   const { data: employeeGroups = [] } = useGetAllEmployeeGroups({ enabled: isAuthenticated });
@@ -190,10 +216,14 @@ export function EditEmployeeContactModal({
       setValue("walletAddress", contactData.address);
       setValue("email", contactData.email || "");
       setSelectedToken(contactData.token || null);
+      setAvatarSrc(contactData.avatar);
 
-      const matchedGroup = employeeGroups.find(group => group.name === contactData.group);
-      setSelectedGroup(matchedGroup);
-      setValue("groupId", matchedGroup?.id ?? undefined, { shouldValidate: true, shouldTouch: true });
+      const ids = contactData.groupIds?.length
+        ? contactData.groupIds
+        : employeeGroups.filter(group => group.name === contactData.group).map(g => g.id);
+      const matchedGroups = employeeGroups.filter(group => ids.includes(group.id));
+      setSelectedGroups(matchedGroups);
+      setValue("groupId", matchedGroups[0]?.id ?? undefined, { shouldValidate: true, shouldTouch: true });
 
       // Initialize selectedNetwork from contact data if available
       if (contactData.network) {
@@ -231,7 +261,7 @@ export function EditEmployeeContactModal({
       message: "Name can only contain letters, numbers, spaces, hyphens, and underscores",
     },
     validate: value => {
-      if (!selectedGroup) return true;
+      if (!selectedGroups.length) return true;
       if (contactData?.name && contactData.name.trim().toLowerCase() === value.trim().toLowerCase()) return true;
       if (nameDuplicate?.isDuplicate) return "This name already exists in the selected group";
       return true;
@@ -249,7 +279,7 @@ export function EditEmployeeContactModal({
       message: "Address must start with 'mtst1' and contain only letters, numbers, and underscores",
     },
     validate: value => {
-      if (!selectedGroup) return true;
+      if (!selectedGroups.length) return true;
       if (contactData?.address && contactData.address.trim().toLowerCase() === value.trim().toLowerCase()) return true;
       if (addressDuplicate?.isDuplicate) return "This address already exists in the selected group";
       return true;
@@ -290,8 +320,7 @@ export function EditEmployeeContactModal({
       return;
     }
 
-    console.log("🚀 ~ onSubmit ~ selectedGroup:", selectedGroup);
-    if (!selectedGroup) {
+    if (!selectedGroups.length) {
       toast.error("Please select a group");
       return;
     }
@@ -306,10 +335,11 @@ export function EditEmployeeContactModal({
         ? { name: selectedNetwork.name, chainId: networkChainIds[selectedNetwork.value] ?? 0 }
         : undefined;
 
-      const addressBookData: UpdateAddressBookDto = {
+      const addressBookData: any = {
         name: data.name.trim(),
         walletAddress: data.walletAddress.trim(),
-        groupId: selectedGroup.id,
+        groupId: selectedGroups[0]?.id,
+        groupIds: selectedGroups.map(g => g.id),
         email: data.email?.trim() || undefined,
         token: selectedToken
           ? {
@@ -323,13 +353,16 @@ export function EditEmployeeContactModal({
         network: networkPayload,
       };
 
-      await updateEmployee.mutateAsync(addressBookData);
+      await updateEmployee.mutateAsync(Number(contactData.id), {
+        ...addressBookData,
+        avatar: avatarSrc,
+      } as any);
 
       toast.success("Contact updated successfully");
 
       reset();
       setSelectedToken(null);
-      setSelectedGroup(undefined);
+      setSelectedGroups([]);
       setSelectedNetwork(null);
       onClose();
     } catch (error: any) {
@@ -346,17 +379,23 @@ export function EditEmployeeContactModal({
     setSelectedNetwork(network);
   };
 
-  const handleGroupSelect = (group: CompanyGroupResponseDto) => {
-    setSelectedGroup(group);
-    setValue("groupId", group.id, { shouldValidate: true, shouldTouch: true });
+  const handleToggleGroup = (group: CompanyGroupResponseDto) => {
+    const next = selectedGroups.some(g => g.id === group.id)
+      ? selectedGroups.filter(g => g.id !== group.id)
+      : [...selectedGroups, group];
+    setSelectedGroups(next);
+    setValue("groupId", next[0]?.id, { shouldValidate: true, shouldTouch: true });
   };
 
   const handleCancel = () => {
     reset();
     setSelectedToken(contactData?.token || null);
-    const matchedGroup = employeeGroups.find(group => group.name === contactData?.group);
-    setSelectedGroup(matchedGroup);
-    setValue("groupId", matchedGroup?.id ?? undefined, { shouldValidate: true, shouldTouch: true });
+    const ids = contactData?.groupIds?.length
+      ? contactData.groupIds
+      : employeeGroups.filter(group => group.name === contactData?.group).map(g => g.id);
+    const matchedGroups = employeeGroups.filter(group => ids.includes(group.id));
+    setSelectedGroups(matchedGroups);
+    setValue("groupId", matchedGroups[0]?.id ?? undefined, { shouldValidate: true, shouldTouch: true });
 
     setSelectedNetwork(contactData?.network ? getNetworkFromName(contactData.network.name) : null);
 
@@ -370,6 +409,39 @@ export function EditEmployeeContactModal({
       <ModalHeader title="Edit contact" icon="/misc/blue-user-hexagon-icon.svg" onClose={onClose} />
       <div className="bg-background border-2 border-primary-divider rounded-b-2xl w-[500px]">
         <form onSubmit={handleSubmit(onSubmit)} className="p-4 flex flex-col gap-4">
+          {/* Avatar, upload a photo or use a default from the library */}
+          <div className="flex items-center gap-4">
+            <EmployeeAvatar
+              src={avatarSrc}
+              seed={contactData?.email || contactData?.name}
+              name={contactData?.name}
+              className="h-16 w-16"
+              textClassName="text-lg"
+            />
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={updateEmployee.isPending}
+                  className="rounded-xl border border-primary-divider bg-background px-3 py-2 text-sm font-medium text-text-primary transition-colors hover:bg-app-background disabled:opacity-50"
+                >
+                  Upload photo
+                </button>
+                <button
+                  type="button"
+                  onClick={handleUseDefaultAvatar}
+                  disabled={updateEmployee.isPending}
+                  className="rounded-xl border border-primary-divider bg-background px-3 py-2 text-sm font-medium text-text-primary transition-colors hover:bg-app-background disabled:opacity-50"
+                >
+                  Random photo
+                </button>
+              </div>
+              <p className="text-xs text-text-secondary">PNG or JPG, up to 2MB, or pick a random avatar.</p>
+            </div>
+            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
+          </div>
+
           <FormInput
             label="Name"
             placeholder="Enter contact name"
@@ -397,7 +469,7 @@ export function EditEmployeeContactModal({
             required
           />
 
-          <input type="hidden" {...groupIdRegister} value={selectedGroup?.id ?? ""} />
+          <input type="hidden" {...groupIdRegister} value={selectedGroups[0]?.id ?? ""} />
 
           {/* Network Selection */}
           <div className="bg-app-background rounded-xl border-b-2 border-primary-divider">
@@ -449,8 +521,8 @@ export function EditEmployeeContactModal({
           <div className="bg-app-background rounded-xl border-b-2 border-primary-divider py-2">
             <EmployeeGroupDropdown
               groups={employeeGroups}
-              selectedGroup={selectedGroup}
-              onGroupSelect={handleGroupSelect}
+              selectedGroupIds={selectedGroups.map(g => g.id)}
+              onToggleGroup={handleToggleGroup}
               disabled={updateEmployee.isPending}
             />
           </div>
@@ -468,7 +540,7 @@ export function EditEmployeeContactModal({
               text="Update"
               onClick={handleSubmit(onSubmit)}
               containerClassName="flex-1"
-              disabled={!selectedGroup || !isValid}
+              disabled={selectedGroups.length === 0 || !isValid}
               loading={updateEmployee.isPending}
             />
           </div>

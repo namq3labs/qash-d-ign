@@ -44,6 +44,7 @@ interface CountryDropdownProps {
   disabled?: boolean;
   variant?: "outlined" | "filled";
   size?: "default" | "compact";
+  label?: string;
 }
 
 export const CountryDropdown = ({
@@ -52,15 +53,16 @@ export const CountryDropdown = ({
   disabled = false,
   variant = "outlined",
   size = "default",
+  label,
 }: CountryDropdownProps) => {
   const containerStyle = useMemo(() => {
     const baseStyle =
-      variant === "outlined"
+      variant === "outlined" || label
         ? "border border-primary-divider rounded-xl bg-transparent"
         : "bg-app-background border-b-2 border-primary-divider rounded-xl";
     const heightStyle = size === "compact" ? "h-[46px]" : "h-[64px]";
     return `${baseStyle} ${heightStyle}`;
-  }, [variant, size]);
+  }, [variant, size, label]);
 
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -103,17 +105,24 @@ export const CountryDropdown = ({
         className={`flex items-center gap-2 px-4 py-2 w-full text-left cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed justify-between ${containerStyle}`}
         disabled={disabled}
       >
-        <div className="flex flex-row items-center gap-2">
-          {selectedCountry && (
-            <img
-              src={COUNTRY.find(c => c.label === selectedCountry)?.icon || ""}
-              alt={selectedCountry}
-              className="w-5 h-5 flex-shrink-0"
-            />
-          )}
-          <span className={`text-[14px] ${selectedCountry ? "text-text-primary" : "text-[#C1C1C1]"}`}>
-            {selectedCountry || "Select country"}
-          </span>
+        <div className="flex min-w-0 flex-col">
+          {label && <span className="text-[14px] text-text-secondary">{label}</span>}
+          <div className="flex flex-row items-center gap-2 min-w-0">
+            {selectedCountry && (
+              <img
+                src={COUNTRY.find(c => c.label === selectedCountry)?.icon || ""}
+                alt={selectedCountry}
+                className="w-5 h-5 flex-shrink-0"
+              />
+            )}
+            <span
+              className={`truncate ${label ? "text-[16px]" : "text-[14px]"} ${
+                selectedCountry ? "text-text-primary" : "text-[#C1C1C1]"
+              }`}
+            >
+              {selectedCountry || "Select country"}
+            </span>
+          </div>
         </div>
         <img
           src="/arrow/chevron-down.svg"
@@ -139,7 +148,7 @@ export const CountryDropdown = ({
                   width: coords.width,
                   transformOrigin: "top center",
                 }}
-                className="z-[100] overflow-hidden rounded-2xl border border-white/10 bg-[#26262b]/85 p-1.5 shadow-[0_24px_60px_-14px_rgba(0,0,0,0.6)] backdrop-blur-2xl"
+                className="z-[1100] overflow-hidden rounded-2xl border border-white/10 bg-[#26262b]/85 p-1.5 shadow-[0_24px_60px_-14px_rgba(0,0,0,0.6)] backdrop-blur-2xl"
               >
                 <div className="px-2 py-1.5">
                   <p className="text-[11px] font-medium uppercase tracking-wide text-white/40">Select country</p>

@@ -87,7 +87,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${barlow.className} ${repetitionScrolling.variable} ${nanumPenScript.variable} ${inter.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${inter.className} ${inter.variable} ${repetitionScrolling.variable} ${nanumPenScript.variable} antialiased`}
         suppressHydrationWarning
       >
         <ThemeProvider defaultTheme="light" storageKey="ui-theme">

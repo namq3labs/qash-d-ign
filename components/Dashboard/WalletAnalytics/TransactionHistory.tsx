@@ -133,7 +133,7 @@ const TransactionHistory = ({
             text="Export CSV"
             variant="light"
             onClick={() => {}}
-            buttonClassName="w-auto px-4"
+            buttonClassName="w-auto"
           />
         </div>
       </div>

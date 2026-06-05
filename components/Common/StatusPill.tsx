@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { WarningCircle, ArrowCircleUpRight, CheckCircle, XCircle, Clock } from "@phosphor-icons/react";
+import { WarningCircle, ArrowUpRightCircle as ArrowCircleUpRight, CheckCircle, XmarkCircle as XCircle, Clock } from "iconoir-react";
 
 export type PillVariant = "pending" | "submitted" | "success" | "failed" | "expired";
 
@@ -13,7 +13,7 @@ const VARIANTS: Record<PillVariant, { cls: string; Icon: React.ElementType }> = 
 };
 
 /**
- * Status label pill — rounded, tinted background + matching coloured border, an
+ * Status label pill, rounded, tinted background + matching coloured border, an
  * icon and text. Variants: pending / submitted / success / failed / expired.
  * Pass `icon` to override the variant's default icon, `showIcon={false}` to hide it.
  */
@@ -36,7 +36,7 @@ export const StatusPill = ({
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${v.cls} ${className}`}
     >
-      {showIcon && <Icon size={14} weight="bold" />}
+      {showIcon && <Icon width={14} height={14} strokeWidth={2} />}
       <span className="num whitespace-nowrap">{children}</span>
     </span>
   );

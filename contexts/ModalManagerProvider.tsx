@@ -52,7 +52,9 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
 
   const getModalZIndex = useCallback((modalId: string) => {
     const modal = openModals[modalId];
-    if (!modal?.timestamp) return 50;
+    // Base must sit ABOVE the sidebar (z-70) / team sidebar (z-60) so the modal
+    // backdrop blur covers the whole viewport, including the sidebar.
+    if (!modal?.timestamp) return 100;
 
     // Sort open modals by timestamp, most recent gets highest z-index
     const sorted = Object.entries(openModals)
@@ -60,7 +62,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
       .sort(([, a], [, b]) => a.timestamp - b.timestamp);
 
     const position = sorted.findIndex(([id]) => id === modalId);
-    return 50 + position * 10;
+    return 100 + position * 10;
   }, [openModals]);
 
   const value = useMemo(

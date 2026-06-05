@@ -2,6 +2,14 @@
 import { useDemo } from "@/contexts/DemoProvider";
 import { useCallback, useState } from "react";
 
+/** All group ids an employee belongs to (supports the legacy single `groupId`). */
+export const getEmployeeGroupIds = (e: any): number[] =>
+  Array.isArray(e?.groupIds) && e.groupIds.length
+    ? e.groupIds
+    : e?.groupId != null
+      ? [e.groupId]
+      : [];
+
 export function useGetAllEmployees(_page?: number, _limit?: number, _options?: any) {
   const { data, isLoaded } = useDemo();
   const employees = data?.employees ?? [];
@@ -31,7 +39,7 @@ export function useSearchEmployees(_search?: string, _groupId?: number, _page?: 
 
 export function useGetEmployeesByGroup(groupId?: number, _page?: number, _limit?: number) {
   const { data } = useDemo();
-  const employees = (data?.employees ?? []).filter(e => !groupId || e.groupId === groupId);
+  const employees = (data?.employees ?? []).filter(e => !groupId || getEmployeeGroupIds(e).includes(groupId));
   return { data: { data: employees, pagination: {} }, isLoading: false };
 }
 
@@ -64,7 +72,8 @@ export function useCreateEmployee() {
         name: payload.name,
         walletAddress: payload.walletAddress,
         email: payload.email || "",
-        groupId: payload.groupId,
+        groupId: payload.groupId ?? payload.groupIds?.[0],
+        groupIds: payload.groupIds ?? (payload.groupId != null ? [payload.groupId] : []),
         companyId: 1,
         paymentMethod: payload.paymentMethod || "crypto",
         fiatDetails: payload.fiatDetails ?? null,

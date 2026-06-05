@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
-import { CalendarBlank, CaretLeft, CaretRight, CaretDown } from "@phosphor-icons/react";
+import { Calendar as CalendarBlank, NavArrowLeft as CaretLeft, NavArrowRight as CaretRight, NavArrowDown as CaretDown } from "iconoir-react";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTHS = [
@@ -101,13 +101,13 @@ export const DateRangePicker = ({ value, onChange }: DateRangePickerProps) => {
         onClick={toggleOpen}
         className="inline-flex items-center gap-2 rounded-xl border border-primary-divider bg-background px-4 py-2.5 text-sm text-text-primary transition-colors hover:bg-app-background"
       >
-        <CalendarBlank size={16} className="text-text-secondary" />
+        <CalendarBlank width={16} height={16} className="text-text-secondary" />
         <span>{fmt(value.start)}</span>
         <span className="text-text-secondary">–</span>
         <span>{fmt(value.end)}</span>
         <CaretDown
-          size={14}
-          weight="bold"
+          width={14} height={14}
+          strokeWidth={2}
           className={`text-text-secondary transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
@@ -149,14 +149,14 @@ export const DateRangePicker = ({ value, onChange }: DateRangePickerProps) => {
                       onClick={() => setViewDate(d => new Date(d.getFullYear(), d.getMonth() - 1, 1))}
                       className="flex h-7 w-7 items-center justify-center rounded-full border border-primary-divider text-text-primary transition-colors hover:bg-app-background"
                     >
-                      <CaretLeft size={14} weight="bold" />
+                      <CaretLeft width={14} height={14} strokeWidth={2} />
                     </button>
                     <button
                       type="button"
                       onClick={() => setViewDate(d => new Date(d.getFullYear(), d.getMonth() + 1, 1))}
                       className="flex h-7 w-7 items-center justify-center rounded-full border border-primary-divider text-text-primary transition-colors hover:bg-app-background"
                     >
-                      <CaretRight size={14} weight="bold" />
+                      <CaretRight width={14} height={14} strokeWidth={2} />
                     </button>
                   </div>
                 </div>

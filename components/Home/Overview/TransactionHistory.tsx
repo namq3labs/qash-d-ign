@@ -11,7 +11,7 @@ import { formatNumberWithCommas } from "@/services/utils/formatNumber";
 import { supportedTokens } from "@/services/utils/supportedToken";
 import { blo } from "blo";
 import { StatusPill } from "@/components/Common/StatusPill";
-import { TrendUp } from "@phosphor-icons/react";
+import { GraphUp as TrendUp } from "iconoir-react";
 import { turnBechToHex } from "@/services/utils/turnBechToHex";
 import { usePSMProvider, type EnrichedBalance } from "@/contexts/PSMProvider";
 import { useMidenProvider } from "@/contexts/MidenProvider";
@@ -154,7 +154,7 @@ function useResolvedTokenMeta(faucetHexIds: string[]) {
           const bech32 = Address.fromAccountId(faucetAccountId).toBech32(NetworkId.testnet());
           newEntries.push([key, { symbol: meta.symbol, decimals: meta.decimals, bech32 }]);
         } catch {
-          /* skip — will use fallback */
+          /* skip, will use fallback */
         }
       }),
     );
@@ -276,7 +276,7 @@ const TransactionHistory = ({ onCreateAccount }: { onCreateAccount?: () => void 
             <span className="text-xs text-badge-success-text num mt-1">+$3,812.50 earned</span>
           </div>
 
-          {/* Card Pool Balance + Pending Actions — side by side */}
+          {/* Card Pool Balance + Pending Actions, side by side */}
           <div className="flex flex-row gap-2 items-stretch">
           <div className="flex-1 bg-app-background rounded-2xl p-4 flex flex-col gap-1">
             <span className="text-sm text-text-secondary">Card Pool Balance</span>

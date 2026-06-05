@@ -1,21 +1,23 @@
 "use client";
-import React, { useState, useRef, useEffect, useMemo } from "react";
-import { createShapeElement } from "../ToolTip/ShapeSelectionTooltip";
+import React, { useState, useRef, useEffect } from "react";
+import { NavArrowDown, Plus, Check } from "iconoir-react";
 import { CompanyGroupResponseDto } from "@qash/types/dto/employee";
 import { MODAL_IDS } from "@/types/modal";
 import { useModal } from "@/contexts/ModalManagerProvider";
 
 interface EmployeeGroupDropdownProps {
   groups?: CompanyGroupResponseDto[];
-  selectedGroup?: CompanyGroupResponseDto;
-  onGroupSelect: (group: CompanyGroupResponseDto) => void;
+  /** Ids of the groups currently assigned. An employee can belong to several. */
+  selectedGroupIds?: number[];
+  /** Toggle a group on/off. */
+  onToggleGroup: (group: CompanyGroupResponseDto) => void;
   disabled?: boolean;
 }
 
 export const EmployeeGroupDropdown = ({
   groups,
-  selectedGroup,
-  onGroupSelect,
+  selectedGroupIds = [],
+  onToggleGroup,
   disabled = false,
 }: EmployeeGroupDropdownProps) => {
   const { openModal } = useModal();
@@ -28,17 +30,17 @@ export const EmployeeGroupDropdown = ({
         setIsOpen(false);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleGroupClick = (group: any) => {
-    onGroupSelect(group);
-    setIsOpen(false);
-  };
+  const selectedNames = (groups || []).filter(g => selectedGroupIds.includes(g.id)).map(g => g.name);
+  const label =
+    selectedNames.length === 0
+      ? "Select a group"
+      : selectedNames.length <= 2
+        ? selectedNames.join(", ")
+        : `${selectedNames[0]} +${selectedNames.length - 1}`;
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -48,48 +50,51 @@ export const EmployeeGroupDropdown = ({
         className="flex items-center gap-2 px-4 h-full w-full text-left cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed justify-between"
         disabled={disabled}
       >
-        <div className="flex flex-col">
-          <span className="text-text-secondary text-sm">Select group</span>
-          <p className="text-text-primary font-semibold">{selectedGroup?.name || "Select a group"}</p>
+        <div className="flex min-w-0 flex-col">
+          <span className="text-text-secondary text-[13px]">Groups</span>
+          <p className="truncate text-text-primary font-semibold">{label}</p>
         </div>
-        <img
-          src="/arrow/chevron-down.svg"
-          alt="dropdown"
-          className={`w-6 h-6 transition-transform ${isOpen ? "rotate-180" : ""}`}
+        <NavArrowDown
+          width={18}
+          height={18}
+          strokeWidth={2}
+          className={`flex-shrink-0 text-text-secondary transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full left-0 right-0 mb-5 shadow-lg bg-background border-2 border-primary-divider rounded-xl z-50 overflow-hidden p-2 h-fit overflow-y-auto">
-          <div className="px-2 py-1">
-            <p className="text-text-secondary text-xs">Select a group</p>
+        <div className="absolute bottom-full left-0 right-0 mb-2 z-[120] h-fit overflow-y-auto rounded-2xl border border-white/10 bg-[#26262b]/90 p-1.5 shadow-[0_24px_60px_-14px_rgba(0,0,0,0.6)] backdrop-blur-2xl">
+          <div className="px-2 py-1.5">
+            <p className="text-white/50 text-xs">Select one or more groups</p>
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-0.5">
             {groups &&
               groups.length > 0 &&
-              groups.map((group, index) => (
-                <button
-                  key={group.id}
-                  type="button"
-                  onClick={() => handleGroupClick(group)}
-                  className={`w-full flex items-center gap-3 p-2 rounded-lg hover:bg-app-background transition-colors cursor-pointer ${
-                    selectedGroup?.id === group.id ? "bg-app-background" : ""
-                  }`}
-                >
-                  <div className="w-5 h-5 flex items-center justify-center">
-                    {createShapeElement(group.shape, group.color)}
-                  </div>
-                  <span className="text-text-primary font-semibold">{group.name}</span>
-                </button>
-              ))}
+              groups.map(group => {
+                const active = selectedGroupIds.includes(group.id);
+                return (
+                  <button
+                    key={group.id}
+                    type="button"
+                    onClick={() => onToggleGroup(group)}
+                    className={`flex w-full items-center gap-2.5 rounded-lg p-2 transition-colors cursor-pointer hover:bg-white/[0.08] ${
+                      active ? "bg-white/[0.10]" : ""
+                    }`}
+                  >
+                    <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full" style={{ backgroundColor: group.color }} />
+                    <span className="flex-1 truncate text-left text-[14px] font-medium text-white/90">{group.name}</span>
+                    {active && <Check width={15} height={15} strokeWidth={2.4} className="flex-shrink-0 text-white/85" />}
+                  </button>
+                );
+              })}
             <button
               type="button"
-              onClick={() => openModal(MODAL_IDS.CREATE_GROUP, { onGroupCreated: handleGroupClick })}
-              className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-app-background transition-colors cursor-pointer"
+              onClick={() => openModal(MODAL_IDS.CREATE_GROUP, { onGroupCreated: onToggleGroup })}
+              className="flex w-full items-center gap-2.5 rounded-lg p-2 transition-colors cursor-pointer hover:bg-white/[0.08]"
             >
-              <img src="/misc/blue-circle-plus-icon.svg" alt="create new group" className="w-5 h-5" />
-              <span className="text-primary-blue ">Add a new group</span>
+              <Plus width={16} height={16} strokeWidth={2.2} className="flex-shrink-0 text-primary-blue" />
+              <span className="text-[14px] font-medium text-primary-blue">Add a new group</span>
             </button>
           </div>
         </div>

@@ -27,9 +27,9 @@ export interface CreateConsumeProposalDto {
   tokens: TokenDto[];
   /** PSM proposal ID (from MultisigClient TransactionProposal.id) */
   psmProposalId?: string;
-  /** PSM proposal commitment (hex) — when provided, backend skips the Rust server */
+  /** PSM proposal commitment (hex), when provided, backend skips the Rust server */
   summaryCommitment?: string;
-  /** PSM txSummary (base64) — stored as summaryBytesHex */
+  /** PSM txSummary (base64), stored as summaryBytesHex */
   summaryBytesHex?: string;
   /** PSM-created proposal has no separate requestBytes; stored for schema compat */
   requestBytesHex?: string;
@@ -46,7 +46,7 @@ export interface CreateSendProposalDto {
   psmProposalId?: string;
   /** PSM proposal commitment (hex) */
   summaryCommitment?: string;
-  /** PSM txSummary (base64) — stored as summaryBytesHex */
+  /** PSM txSummary (base64), stored as summaryBytesHex */
   summaryBytesHex?: string;
   /** PSM requestBytes (for schema compat) */
   requestBytesHex?: string;
@@ -103,7 +103,7 @@ export interface CreateBatchSendProposalDto {
   psmProposalId?: string;
   /** PSM proposal commitment (hex) */
   summaryCommitment?: string;
-  /** PSM txSummary (base64) — stored as summaryBytesHex */
+  /** PSM txSummary (base64), stored as summaryBytesHex */
   summaryBytesHex?: string;
   /** PSM requestBytes (for schema compat) */
   requestBytesHex?: string;
@@ -117,9 +117,9 @@ export interface CreateProposalFromBillsDto {
   payments?: BatchPaymentItem[];
   /** PSM proposal ID (from MultisigClient TransactionProposal.id) */
   psmProposalId?: string;
-  /** PSM proposal commitment (hex) — when provided, backend skips the Rust server */
+  /** PSM proposal commitment (hex), when provided, backend skips the Rust server */
   summaryCommitment?: string;
-  /** PSM txSummary (base64) — stored as summaryBytesHex */
+  /** PSM txSummary (base64), stored as summaryBytesHex */
   summaryBytesHex?: string;
   /** PSM-created proposal has no separate requestBytes; stored for schema compat */
   requestBytesHex?: string;

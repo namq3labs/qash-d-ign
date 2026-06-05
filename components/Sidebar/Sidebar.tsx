@@ -64,13 +64,16 @@ export const actionItems = [
     badgeCount: 0,
   },
   {
-    icon: "/sidebar/contact-book.svg",
-    filledIcon: "/sidebar/filled-contact-book.svg",
+    icon: "/misc/team-icon.svg",
+    filledIcon: "/misc/team-icon.svg",
     label: "Employee",
     isActive: false,
     link: SidebarLink.ContactBook,
     disabled: false,
     badgeCount: 0,
+    group: "Contact",
+    groupIcon: "/sidebar/contact-book.svg",
+    groupFilledIcon: "/sidebar/filled-contact-book.svg",
   },
   {
     icon: "/sidebar/invoice.svg",
@@ -85,14 +88,14 @@ export const actionItems = [
     groupFilledIcon: "/sidebar/filled-invoice.svg",
   },
   {
-    icon: "/sidebar/contact-book.svg",
-    filledIcon: "/sidebar/filled-contact-book.svg",
-    label: "Client",
+    icon: "/misc/company-icon.svg",
+    filledIcon: "/misc/company-icon.svg",
+    label: "Clients",
     isActive: false,
     link: SidebarLink.Client,
     disabled: false,
     badgeCount: 0,
-    group: "Receive",
+    group: "Contact",
   },
   {
     icon: "/sidebar/global-account.svg",
@@ -240,7 +243,7 @@ export const Sidebar: React.FC<NavProps> = ({ onActionItemClick }) => {
   return (
     <>
       <nav
-        className="sidebar overflow-visible py-2 rounded-lg w-full relative h-screen z-20 bg-app-background"
+        className="sidebar overflow-visible py-2 rounded-lg w-full relative h-screen z-[70] bg-app-background"
         style={{ transition: "padding 200ms ease" }}
       >
         <div className="flex flex-col justify-between h-full">

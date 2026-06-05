@@ -485,7 +485,7 @@ const TransactionDetailContainer = () => {
                       className="grid grid-cols-[1fr_1.5fr_1.5fr_2fr_1.5fr] gap-3 px-4 py-3 border-b border-primary-divider last:border-b-0 items-center"
                     >
                       <p className="text-sm text-text-primary font-medium">{bill.invoiceNumber || `TX${String(idx + 1).padStart(3, "0")}`}</p>
-                      <p className="text-sm text-text-primary font-medium">{bill.recipientName || "—"}</p>
+                      <p className="text-sm text-text-primary font-medium">{bill.recipientName || "-"}</p>
                       <div className="flex justify-center items-center">
                         {bill.group ? (
                           <CategoryBadge
@@ -501,7 +501,7 @@ const TransactionDetailContainer = () => {
                       </div>
                       <div className="flex flex-col gap-1 text-right">
                         <p className="text-sm text-text-primary font-semibold">
-                          {bill.amount || "—"} {tokenSymbol.toUpperCase()}
+                          {bill.amount || "-"} {tokenSymbol.toUpperCase()}
                         </p>
                       </div>
                       <div className="flex justify-end">
@@ -570,7 +570,7 @@ const TransactionDetailContainer = () => {
                 /* Proposals without bills: deposit, earn, cashout, config */
                 <div className="grid grid-cols-[1fr_1.5fr_1.5fr_2fr] gap-3 px-4 py-3 items-center">
                   <p className="text-sm text-text-primary font-medium">TX001</p>
-                  <p className="text-sm text-text-primary font-medium">{proposal.to || proposal.recipientId || "—"}</p>
+                  <p className="text-sm text-text-primary font-medium">{proposal.to || proposal.recipientId || "-"}</p>
                   <div>
                     <span className="inline-block bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
                       {proposal.proposalType === "CONFIG" ? "Config" : "Transfer"}

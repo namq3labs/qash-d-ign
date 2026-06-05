@@ -74,7 +74,7 @@ export function GenerateGiftModal({ isOpen, onClose, zIndex, ...props }: ModalPr
                 <>
                   <img src="/gift/otter-gift.svg" alt="Loading" className="w-40" />
                   <span className="text-text-primary font-bold text-2xl">Generating your gift...</span>
-                  <span className="text-text-secondary text-sm">Ottey is preparing your gift box — almost ready.</span>
+                  <span className="text-text-secondary text-sm">Ottey is preparing your gift box, almost ready.</span>
                 </>
               )}
             </div>
@@ -114,7 +114,7 @@ export function GenerateGiftModal({ isOpen, onClose, zIndex, ...props }: ModalPr
                 <div className="flex flex-col items-center gap-1">
                   <span className="text-text-primary text-2xl font-bold">Gift created successfully</span>
                   <span className="text-text-primary text-sm">
-                    All done! Ottey has finished your gift — now spread the joy with your friends.
+                    All done! Ottey has finished your gift, now spread the joy with your friends.
                   </span>
                 </div>
 

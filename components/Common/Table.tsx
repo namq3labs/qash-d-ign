@@ -80,11 +80,9 @@ const getRowClasses = (isSelected: boolean, customRowClass?: string) => {
   const hasPaddingClass = customRowClass && /\bpy-/.test(customRowClass);
   const defaultPadding = hasPaddingClass ? "" : "py-2";
 
-  return `border-b last:border-b-0 transition-colors ${defaultPadding} ${
-    isSelected
-      ? "bg-[var(--color-table-row-selected-background)]"
-      : "bg-[var(--color-table-row-background)] hover:bg-[var(--color-table-row-background-hover)]"
-  }`;
+  // No special background when a row is selected — selection is indicated by the checkbox.
+  void isSelected;
+  return `border-b last:border-b-0 transition-colors ${defaultPadding} bg-[var(--color-table-row-background)] hover:bg-[var(--color-table-row-background-hover)]`;
 };
 
 const getRowStyle = () => ({
@@ -95,11 +93,7 @@ const getRowStyle = () => ({
 const tableBodyStyle = "overflow-y-auto flex-1";
 const getTableClass = (headerClassName: string = "", className: string = "", showPagination: boolean = false) => {
   const baseClass = "overflow-x-auto table-scrollbar border flex flex-col";
-  const roundedClass = headerClassName.includes("!rounded-none")
-    ? ""
-    : showPagination
-      ? "rounded-t-2xl"
-      : "rounded-2xl";
+  const roundedClass = headerClassName.includes("!rounded-none") ? "" : "rounded-2xl";
   return `${baseClass} ${roundedClass} ${className}`;
 };
 const tableStyle = {
@@ -169,7 +163,7 @@ const SortableTableRow = ({
       {cells.map((cell, index) => (
         <td
           key={index}
-          className={`${tdPadding} text-table-row-text ${index <= 1 ? "text-left" : "text-center"}`}
+          className={`${tdPadding} text-sm text-table-row-text ${index <= 1 ? "text-left" : "text-center"}`}
           style={{
             width: columnWidths[index.toString()],
             borderColor: "var(--color-table-row-border)",
@@ -287,7 +281,7 @@ const TableRow = ({
       {cells.map((cell, index) => (
         <td
           key={index}
-          className={`${tdPadding} text-table-row-text ${index <= 1 ? "text-left" : "text-center"}`}
+          className={`${tdPadding} text-sm text-table-row-text ${index <= 1 ? "text-left" : "text-center"}`}
           style={{
             width: columnWidths[index.toString()],
             borderColor: "var(--color-table-row-border)",
@@ -363,6 +357,10 @@ export function Table({
 
   // Calculate paginated data
   const paginatedData = showPagination ? data.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage) : data;
+
+  // Only surface the pagination control when the data actually overflows a single page.
+  // Small datasets (that fit without scrolling) hide the pagination entirely.
+  const shouldShowPagination = showPagination && data.length > rowsPerPage;
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -451,7 +449,7 @@ export function Table({
             </table>
           </DndContext>
         </div>
-        {showPagination && (
+        {shouldShowPagination && (
           <TableFooter
             totalRows={data.length}
             currentPage={currentPage}
@@ -517,7 +515,7 @@ export function Table({
           )}
         </table>
       </div>
-      {showPagination && (
+      {shouldShowPagination && (
         <TableFooter
           totalRows={data.length}
           currentPage={currentPage}

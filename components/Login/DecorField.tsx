@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { Receipt, Wallet, TrendUp } from "@phosphor-icons/react";
+import { ReceiveDollars as Receipt, Wallet, GraphUp as TrendUp } from "iconoir-react";
 
 /* ---------- shared bits ---------- */
 
@@ -55,7 +55,7 @@ function InvoiceCard({ code, payee, amount, status }: { code: string; payee: str
       <div className="mb-2.5 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#eef4ff" }}>
-            <Receipt size={15} className="text-primary-blue" />
+            <Receipt width={15} height={15} className="text-primary-blue" />
           </div>
           <span className="text-[11px] tracking-wide text-text-secondary">{code}</span>
         </div>
@@ -116,7 +116,7 @@ function BalanceChip() {
   return (
     <div className="flex items-center gap-3 rounded-2xl border border-primary-divider bg-background px-4 py-3 shadow-[0_18px_40px_-18px_rgba(20,32,64,0.24)]">
       <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: "#eef4ff" }}>
-        <Wallet size={18} className="text-primary-blue" />
+        <Wallet width={18} height={18} className="text-primary-blue" />
       </div>
       <div>
         <p className="text-[11px] text-text-secondary">Treasury balance</p>
@@ -133,7 +133,7 @@ function ApyChip() {
       style={{ background: "var(--badge-success-background)", border: "1px solid var(--badge-success-border)" }}
     >
       <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/70">
-        <TrendUp size={18} style={{ color: "var(--badge-success-text)" }} />
+        <TrendUp width={18} height={18} style={{ color: "var(--badge-success-text)" }} />
       </div>
       <div>
         <p className="text-[11px]" style={{ color: "var(--badge-success-text)" }}>

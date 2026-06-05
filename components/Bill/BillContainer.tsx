@@ -1,16 +1,16 @@
 "use client";
 import { n } from "@/services/utils/normalizeToken";
 import React, { useState, useEffect } from "react";
-import { BaseContainer } from "../Common/BaseContainer";
 import { TabContainer } from "../Common/TabContainer";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
 import { SecondaryButton } from "../Common/SecondaryButton";
 import { Badge, BadgeStatus } from "../Common/Badge";
 import { Table } from "../Common/Table";
 import { CustomCheckbox } from "../Common/CustomCheckbox";
-import { FloatingFooter } from "../Common/FloatingFooter";
 import { FloatingAction } from "./FloatingAction";
 import { BillStatusEnum } from "@qash/types/enums";
-import { useGetBills, usePayBills, useGetBillStats } from "@/services/api/bill";
+import { useGetBills, usePayBills } from "@/services/api/bill";
 import { CategoryShapeEnum } from "@qash/types/enums";
 import { CategoryBadge } from "../ContactBook/ContactBookContainer";
 import { useGetAllEmployeeGroups } from "@/services/api/employee";
@@ -21,7 +21,6 @@ import { useInvoice } from "@/hooks/server/useInvoice";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/contexts/ModalManagerProvider";
-import { PageHeader } from "../Common/PageHeader";
 import { useAuth } from "@/services/auth/context";
 import { trackEvent } from "@/services/analytics/posthog";
 import { PostHogEvent } from "@/types/posthog";
@@ -46,50 +45,36 @@ const Card = ({ title, text }: { title: string; text: React.ReactNode }) => {
   );
 };
 
-const renderTabHeader = (activeTab: Tab) => {
-  switch (activeTab) {
-    case "all":
-      return (
-        <div className="flex flex-col gap-2">
-          <span className="text-text-primary text-2xl font-medium leading-none">Overview</span>
-          <span className="text-text-secondary text-[14px] font-medium leading-none">
-            Manage all the invoices you received from vendors, clients and employees
-          </span>
-        </div>
-      );
-    case "paid":
-      return (
-        <div className="flex flex-col gap-2">
-          <span className="text-text-primary text-2xl font-medium leading-none">Paid bills</span>
-          <span className="text-text-secondary text-[14px] font-medium leading-none">
-            All bills that have been fully paid.
-          </span>
-        </div>
-      );
-    case "pending":
-      return (
-        <div className="flex flex-col gap-2">
-          <span className="text-text-primary text-2xl font-medium leading-none">Pending bills</span>
-          <span className="text-text-secondary text-[14px] font-medium leading-none">
-            All bills that pending to be paid.
-          </span>
-        </div>
-      );
-    default:
-      return;
-  }
-};
-
 const BillContainer = () => {
+  const { setTitle, setShowBackArrow } = useTitle();
   const [activeTab, setActiveTab] = useState<Tab>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [checkedRows, setCheckedRows] = React.useState<number[]>([]);
   const { data: groups } = useGetAllEmployeeGroups();
-  const { data: billStats } = useGetBillStats();
   const { openModal } = useModal();
   const { user } = useAuth();
   const isAdmin = user?.teamMembership?.role === "ADMIN" || user?.teamMembership?.role === "OWNER";
+
+  // Breadcrumb in the top title bar: Bills › {active tab}
+  const tabLabel = activeTab === "pending" ? "Pending" : activeTab === "paid" ? "Paid" : "All";
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <button
+          type="button"
+          onClick={() => setActiveTab("all")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Bills
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">{tabLabel}</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
 
   const billActionRenderer = (rowData: Record<string, any>, index: number) =>
     isAdmin ? (
@@ -244,82 +229,49 @@ const BillContainer = () => {
   const checkedPendingCount = checkedRows.filter(idx => bills[idx]?.status === BillStatusEnum.PENDING).length;
   const isAllChecked = pendingBillsCount > 0 && checkedPendingCount === pendingBillsCount;
 
+  // Stat-card counts (by status), matching the Invoice page concept
+  const allBillsCount = bills.length;
+  const paidBillsCount = bills.filter(b => b.status === BillStatusEnum.PAID).length;
+  const overdueBillsCount = bills.filter(b => b.status === BillStatusEnum.OVERDUE).length;
+
   return (
-    <div className="flex flex-col w-full h-full justify-start items-start p-5 gap-5">
-      <div className="flex flex-col w-full px-5 gap-5">
-        <PageHeader icon="/sidebar/bill.svg" label="Bill" button={null} />
-        <div className="flex flex-row w-full gap-2">
-          <Card
-            title="All bills"
-            text={
-              <span className="text-text-primary text-2xl font-bold leading-none">{billStats?.totalBills ?? 0}</span>
-            }
-          />
-          <Card
-            title="Pending"
-            text={
-              <span className="text-text-primary text-2xl font-bold leading-none">{billStats?.totalPending ?? 0}</span>
-            }
-          />
-          <Card
-            title="Paid"
-            text={
-              <span className="text-text-primary text-2xl font-bold leading-none">{billStats?.totalPaid ?? 0}</span>
-            }
-          />
-          <Card
-            title="Overdue"
-            text={
-              <span className="text-text-primary text-2xl font-bold leading-none">{billStats?.totalOverdue ?? 0}</span>
-            }
-          />
+    <div className="relative flex w-full h-full flex-col">
+      {/* Page header (same concept as the Dashboard / Employee / Invoice pages) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Bills</h1>
+          <p className="text-[14px] text-text-secondary">
+            Manage all the invoices you received from vendors, clients and employees.
+          </p>
         </div>
       </div>
 
-      <BaseContainer
-        header={
-          <div className="flex w-full justify-between items-center py-3 px-5">
-            <div className="flex flex-col gap-1">
-              <TabContainer
-                tabs={[
-                  { id: "all", label: "All" },
-                  { id: "pending", label: "Pending" },
-                  { id: "paid", label: "Paid" },
-                ]}
-                activeTab={activeTab}
-                //@ts-ignore
-                setActiveTab={setActiveTab}
-              />
-            </div>
-          </div>
-        }
-        childrenClassName="p-5 gap-5"
-        containerClassName="w-full h-full bg-[#F6F6F6]"
-      >
-        <div className="flex w-full justify-between items-center">
-          {renderTabHeader(activeTab)}
+      {/* Stat cards */}
+      <div className="flex w-full flex-row gap-2 px-6 pb-2">
+        <Card title="All bills" text={<span className="num text-text-primary text-2xl leading-none">{allBillsCount}</span>} />
+        <Card title="Pending" text={<span className="num text-text-primary text-2xl leading-none">{pendingBillsCount}</span>} />
+        <Card title="Paid" text={<span className="num text-text-primary text-2xl leading-none">{paidBillsCount}</span>} />
+        <Card title="Overdue" text={<span className="num text-text-primary text-2xl leading-none">{overdueBillsCount}</span>} />
+      </div>
 
-          {/* Filter Button */}
-          <div className="flex items-center gap-2">
-            {/* TODO: IMPLEMENT SORT AND FILTER */}
-            {/* <SecondaryButton
-              text="Sort"
-              icon="/misc/sort-icon.svg"
-              onClick={() => console.log("Sort button clicked")}
-              iconPosition="left"
-              variant="light"
-              buttonClassName="px-2"
-            /> */}
-            {/* <SecondaryButton
-              text="Filter"
-              icon="/wallet-analytics/setting-icon.gif"
-              onClick={() => console.log("Filter button clicked")}
-              iconPosition="left"
-              variant="light"
-              buttonClassName="px-2"
-            /> */}
-          </div>
-        </div>
+      {/* Tab bar + count */}
+      <div className="mt-2 flex w-full items-center justify-between gap-2 border-b border-primary-divider px-6 pb-3">
+        <TabContainer
+          tabs={[
+            { id: "all", label: "All" },
+            { id: "pending", label: "Pending" },
+            { id: "paid", label: "Paid" },
+          ]}
+          activeTab={activeTab}
+          //@ts-ignore
+          setActiveTab={setActiveTab}
+          textSize="sm"
+        />
+        <span className="text-sm text-text-secondary">{bills.length} bills</span>
+      </div>
+
+      {/* Bills table */}
+      <div className="w-full p-5">
         <Table
           headers={[
             <div className="flex justify-center items-center">
@@ -337,6 +289,7 @@ const BillContainer = () => {
           className="w-full"
           rowClassName="py-5"
           headerClassName="py-3"
+          showFooter={false}
           showPagination={true}
           actionColumn={true}
           actionRenderer={billActionRenderer}
@@ -350,7 +303,7 @@ const BillContainer = () => {
             router.push(`/bill/detail?uuid=${invoiceUUID}&billUuid=${billUUID}`);
           }}
         />
-      </BaseContainer>
+      </div>
 
       <Tooltip
         id="bill-action-tooltip"
@@ -450,7 +403,8 @@ const BillContainer = () => {
           actionButtons={
             <SecondaryButton
               text="Pay all"
-              buttonClassName="w-40 rounded-full"
+              variant="light"
+              buttonClassName="w-fit whitespace-nowrap rounded-xl"
               onClick={async () => {
                 const uuids = checkedRows.map(i => bills[i]?.invoice?.uuid).filter(Boolean) as string[];
                 if (uuids.length === 0) return;

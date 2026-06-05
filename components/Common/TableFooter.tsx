@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import { NavArrowUp, NavArrowLeft, NavArrowRight, Check } from "iconoir-react";
 
 interface TableFooterProps {
   totalRows: number;
@@ -8,6 +10,8 @@ interface TableFooterProps {
   onRowsPerPageChange?: (rowsPerPage: number) => void;
   className?: string;
 }
+
+const PAGE_SIZE_OPTIONS = [10, 20, 30, 50, 100];
 
 export function TableFooter({
   totalRows,
@@ -19,131 +23,98 @@ export function TableFooter({
 }: TableFooterProps) {
   const [rowsPerPageState, setRowsPerPageState] = useState(rowsPerPage);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const totalPages = Math.ceil(totalRows / rowsPerPageState);
-  const pageNumbers = [];
+  useEffect(() => setRowsPerPageState(rowsPerPage), [rowsPerPage]);
 
-  // Generate page numbers for pagination
-  const generatePageNumbers = () => {
-    const pages = [];
-    const maxPagesToShow = 5;
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    const onDoc = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setDropdownOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, [dropdownOpen]);
 
-    if (totalPages <= maxPagesToShow) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      pages.push(1);
-      if (currentPage > 3) pages.push("...");
+  const totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPageState));
+  const start = totalRows === 0 ? 0 : (currentPage - 1) * rowsPerPageState + 1;
+  const end = Math.min(currentPage * rowsPerPageState, totalRows);
 
-      const start = Math.max(2, currentPage - 1);
-      const end = Math.min(totalPages - 1, currentPage + 1);
-
-      for (let i = start; i <= end; i++) {
-        if (!pages.includes(i)) pages.push(i);
-      }
-
-      if (currentPage < totalPages - 2) pages.push("...");
-      pages.push(totalPages);
-    }
-    return pages;
-  };
-
-  const handleRowsPerPageChange = (newRowsPerPage: number) => {
-    setRowsPerPageState(newRowsPerPage);
-    onRowsPerPageChange?.(newRowsPerPage);
+  const handleRowsPerPageChange = (n: number) => {
+    setRowsPerPageState(n);
+    onRowsPerPageChange?.(n);
     setDropdownOpen(false);
   };
 
   return (
-    <div
-      className={`bg-background border-l border-r border-b border-primary-divider content-stretch flex items-center justify-between px-5 py-3 relative rounded-bl-2xl rounded-br-2xl ${className}`}
-      data-name="TableFooter"
-    >
-      {/* Pagination Controls */}
-      <div className="flex gap-2 items-start">
-        {/* First Button */}
-        <button
-          disabled={totalPages === 0 || currentPage === 1}
-          onClick={() => onPageChange?.(1)}
-          className="flex flex-col h-8 items-center justify-center overflow-clip px-3 py-2 relative rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-        >
-          <p className="font-medium leading-5 text-sm text-text-secondary">First</p>
-        </button>
-
-        {/* Previous Button */}
-        <button
-          disabled={totalPages === 0 || currentPage === 1}
-          onClick={() => onPageChange?.(currentPage - 1)}
-          className="flex flex-col h-8 items-center justify-center overflow-clip px-3 py-2 relative rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-        >
-          <p className="font-medium leading-5 text-sm text-primary-blue">Previous</p>
-        </button>
-
-        {/* Page Numbers */}
-        <div className="flex gap-1 items-start px-2 py-0">
-          {generatePageNumbers().map((page, index) => (
+    <div className={`flex justify-center py-3 ${className}`} data-name="TableFooter">
+      <div className="inline-flex items-center gap-4 rounded-2xl bg-app-background p-1.5 shadow-[0_1px_3px_rgba(20,32,64,0.08)]">
+        {/* Left group: Show N + range */}
+        <div className="flex items-center gap-3">
+          {/* Rows-per-page dropdown */}
+          <div className="relative" ref={dropdownRef}>
             <button
-              key={index}
-              onClick={() => typeof page === "number" && onPageChange?.(page)}
-              disabled={page === "..." || page === currentPage}
-              className={`flex flex-col h-8 items-center justify-center px-3 py-2 relative rounded-lg ${
-                page === currentPage
-                  ? "bg-primary-blue text-white"
-                  : "text-text-primary hover:bg-gray-100 disabled:opacity-50"
-              }`}
+              type="button"
+              onClick={() => setDropdownOpen(o => !o)}
+              className="flex items-center gap-1.5 rounded-xl border border-primary-divider/70 bg-background px-3.5 py-2 text-sm text-text-secondary shadow-sm transition-colors hover:bg-app-background"
             >
-              <p className="font-medium leading-5 text-sm">{page}</p>
+              Show <span className="num font-semibold text-text-primary">{rowsPerPageState}</span>
+              <NavArrowUp
+                width={14}
+                height={14}
+                strokeWidth={2}
+                className={`text-text-secondary transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+              />
             </button>
-          ))}
+            {dropdownOpen && (
+              <div className="absolute bottom-full left-0 z-50 mb-2 min-w-[110px] overflow-hidden rounded-xl border border-white/10 bg-[#26262b]/90 p-1 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.6)] backdrop-blur-2xl">
+                {PAGE_SIZE_OPTIONS.map(option => (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => handleRowsPerPageChange(option)}
+                    className={`flex w-full items-center justify-between gap-3 rounded-lg px-3 py-1.5 text-sm transition-colors hover:bg-white/[0.08] ${
+                      option === rowsPerPageState ? "bg-white/[0.10] text-white" : "text-white/85"
+                    }`}
+                  >
+                    <span className="num">{option}</span>
+                    {option === rowsPerPageState && <Check width={13} height={13} strokeWidth={2.2} className="text-white/80" />}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          {/* Range */}
+          <span className="num whitespace-nowrap px-1 text-sm text-text-secondary">
+            Item {start} to {end}
+          </span>
         </div>
 
-        {/* Next Button */}
-        <button
-          disabled={totalPages === 0 || currentPage === totalPages}
-          onClick={() => onPageChange?.(currentPage + 1)}
-          className="flex flex-col h-8 items-center justify-center overflow-clip px-3 py-2 relative rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-        >
-          <p className="font-medium leading-5 text-sm text-primary-blue">Next</p>
-        </button>
-
-        {/* Last Button */}
-        <button
-          disabled={totalPages === 0 || currentPage === totalPages}
-          onClick={() => onPageChange?.(totalPages)}
-          className="flex flex-col h-8 items-center justify-center overflow-clip px-3 py-2 relative rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-        >
-          <p className="font-medium leading-5 text-sm text-text-secondary">Last</p>
-        </button>
-      </div>
-
-      {/* Rows Per Page Selector */}
-      <div className="flex gap-2 items-center">
-        <p className="font-medium leading-5 text-sm text-text-primary">Rows per page:</p>
-        <div className="relative">
+        {/* Right group: page count + prev/next */}
+        <div className="flex items-stretch overflow-hidden rounded-xl border border-primary-divider/70 bg-background shadow-sm">
+          <span className="num flex items-center px-4 py-2 text-sm font-medium text-text-primary">
+            {currentPage} / {totalPages}
+          </span>
+          <span className="w-px self-stretch bg-primary-divider/70" />
           <button
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="bg-background border border-primary-divider border-solid flex gap-2 items-center px-4 py-2 relative rounded-lg cursor-pointer"
+            type="button"
+            disabled={currentPage <= 1}
+            onClick={() => onPageChange?.(currentPage - 1)}
+            className="flex items-center px-3 text-text-primary transition-colors hover:bg-app-background disabled:cursor-not-allowed disabled:opacity-40"
+            aria-label="Previous page"
           >
-            <p className="font-medium leading-6 text-base text-text-primary">{rowsPerPageState}</p>
-            <img alt="dropdown" className="w-4" src="/arrow/chevron-down.svg" />
+            <NavArrowLeft width={16} height={16} strokeWidth={2} />
           </button>
-
-          {dropdownOpen && (
-            <div className="absolute bottom-full right-0 mb-1 bg-background border border-primary-divider rounded-lg shadow-lg z-10">
-              {[5, 10, 25, 50].map(option => (
-                <button
-                  key={option}
-                  onClick={() => handleRowsPerPageChange(option)}
-                  className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${
-                    option === rowsPerPageState ? "bg-blue-50 font-medium" : ""
-                  }`}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          )}
+          <span className="w-px self-stretch bg-primary-divider/70" />
+          <button
+            type="button"
+            disabled={currentPage >= totalPages}
+            onClick={() => onPageChange?.(currentPage + 1)}
+            className="flex items-center px-3 text-text-primary transition-colors hover:bg-app-background disabled:cursor-not-allowed disabled:opacity-40"
+            aria-label="Next page"
+          >
+            <NavArrowRight width={16} height={16} strokeWidth={2} />
+          </button>
         </div>
       </div>
     </div>

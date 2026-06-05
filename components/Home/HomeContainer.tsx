@@ -4,7 +4,7 @@ import { CardContainer } from "./CardContainer";
 import { Overview } from "./Overview";
 import { ReportsSection } from "./ReportsSection";
 import { useTitle } from "@/contexts/TitleProvider";
-import { CaretRight } from "@phosphor-icons/react";
+import { NavArrowRight as CaretRight } from "iconoir-react";
 import { TabContainer } from "../Common/TabContainer";
 import { useModal } from "@/contexts/ModalManagerProvider";
 import TransactionHistory from "../Dashboard/WalletAnalytics/TransactionHistory";
@@ -37,7 +37,7 @@ export const HomeContainer = () => {
       setTitle(
         <div className="flex items-center gap-1.5 text-[14px]">
           <span className="text-text-secondary">Dashboard</span>
-          <CaretRight size={12} weight="bold" className="text-text-secondary/50" />
+          <CaretRight width={12} height={12} strokeWidth={2} className="text-text-secondary/50" />
           <span className="font-medium text-text-primary">{activeLabel}</span>
         </div>,
       );

@@ -28,20 +28,22 @@ interface FormInputProps {
 }
 
 const FormInput = ({ label, placeholder, type = "text", register, error, disabled, required }: FormInputProps) => (
-  <div className="flex flex-col gap-2">
-    <div className="bg-app-background rounded-xl border-b-2 border-primary-divider">
-      <div className="flex flex-col gap-1 px-4 py-2">
-        <label className="text-text-secondary text-sm font-medium">{label}</label>
-        <input
-          {...register}
-          type={type}
-          placeholder={placeholder}
-          className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-          autoFocus={label === "Name"}
-          disabled={disabled}
-          autoComplete="off"
-        />
-      </div>
+  <div className="flex w-full flex-col gap-2">
+    <div
+      className={`flex h-[64px] flex-col justify-center rounded-[12px] border px-4 py-2 w-full ${
+        error ? "border-[#E93544]" : "border-primary-divider"
+      }`}
+    >
+      <label className="truncate text-[14px] text-text-secondary">{label}</label>
+      <input
+        {...register}
+        type={type}
+        placeholder={placeholder}
+        className="w-full bg-transparent text-[16px] text-text-primary outline-none placeholder:text-[#C1C1C1]"
+        autoFocus={label === "Name"}
+        disabled={disabled}
+        autoComplete="off"
+      />
     </div>
     {error && (
       <div className="flex items-center gap-1 pl-2">
@@ -184,55 +186,54 @@ export function EditClientContactModal({
             error={errors.companyName?.message}
           />
 
-          {/* Company Type and Country Row */}
+          {/* Client Type (full width) */}
+          <CompanyTypeDropdown
+            label="Client type"
+            selectedCompanyType={selectedCompanyType}
+            onCompanyTypeSelect={value => {
+              setSelectedCompanyType(value);
+              setValue("companyType", value);
+            }}
+          />
+
+          {/* Country and City Row (align ngang) */}
           <div className="flex gap-2 w-full">
             <div className="flex-1">
-              <CompanyTypeDropdown
-                selectedCompanyType={selectedCompanyType}
-                onCompanyTypeSelect={value => {
-                  setSelectedCompanyType(value);
-                  setValue("companyType", value);
-                }}
-                variant="filled"
-              />
-            </div>
-            <div className="flex-1">
               <CountryDropdown
+                label="Country"
                 selectedCountry={selectedCountry}
                 onCountrySelect={value => {
                   setSelectedCountry(value);
                   setValue("country", value);
                 }}
-                variant="filled"
               />
             </div>
+            <div className="flex-1">
+              <FormInput label="City" placeholder="Enter city" register={register("city")} />
+            </div>
           </div>
-
-          {/* City */}
-          <FormInput label="City" placeholder="Enter city" register={register("city")} />
 
           {/* Address 1 */}
           <FormInput label="Address 1" placeholder="Enter address 1" register={register("address1")} />
 
-          {/* Address 2 */}
-          <FormInput label="Address 2 (optional)" placeholder="Enter address 2" register={register("address2")} />
-
-          {/* Tax ID and Postal Code Row */}
-          <div className="flex gap-4 w-full">
-            <div className="flex-1">
-              <FormInput label="Tax ID" placeholder="e.g. 123-45-6789" register={register("taxId")} />
+          {/* Tax ID + Postal code (together = 50% of the row) and Company registration number (= 50%) */}
+          <div className="flex gap-2 w-full">
+            <div className="flex flex-1 gap-2">
+              <div className="flex-1">
+                <FormInput label="Tax ID" placeholder="e.g. 123-45-6789" register={register("taxId")} />
+              </div>
+              <div className="flex-1">
+                <FormInput label="Postal code" placeholder="e.g. 94103" register={register("postalCode")} />
+              </div>
             </div>
             <div className="flex-1">
-              <FormInput label="Postal code" placeholder="e.g. 94103" register={register("postalCode")} />
+              <FormInput
+                label="Company registration number"
+                placeholder="e.g. REG-12345"
+                register={register("registrationNumber")}
+              />
             </div>
           </div>
-
-          {/* Company Registration Number */}
-          <FormInput
-            label="Company registration number"
-            placeholder="e.g. REG-12345"
-            register={register("registrationNumber")}
-          />
 
           <div className="flex gap-2 w-full">
             <SecondaryButton variant="light" text="Cancel" onClick={handleCancel} />

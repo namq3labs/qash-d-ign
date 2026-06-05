@@ -1,8 +1,9 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Tooltip } from "react-tooltip";
 import { PrimaryButton } from "../Common/PrimaryButton";
-import { BaseContainer } from "../Common/BaseContainer";
 import { TabContainer } from "../Common/TabContainer";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
 import { Table } from "../Common/Table";
 import { CustomCheckbox } from "../Common/CustomCheckbox";
 import { useRouter } from "next/navigation";
@@ -17,9 +18,7 @@ import { blo } from "blo";
 import { turnBechToHex } from "@/services/utils/turnBechToHex";
 import toast from "react-hot-toast";
 import { PaymentLinkActionsTooltip } from "./PaymentLinkActionsTooltip";
-import { SecondaryButton } from "../Common/SecondaryButton";
 import { Badge, BadgeStatus } from "../Common/Badge";
-import { PageHeader } from "../Common/PageHeader";
 import { useAuth } from "@/services/auth/context";
 import { trackEvent } from "@/services/analytics/posthog";
 import { PostHogEvent } from "@/types/posthog";
@@ -37,24 +36,26 @@ const tabs = [
   },
 ];
 
-const Card = ({ title, amount }: { title: string; amount: string }) => {
+const Card = ({ title, text }: { title: string; text: React.ReactNode }) => {
   return (
-    <div className="relative w-full h-full rounded-xl border border-primary-divider p-5 flex flex-col overflow-hidden">
-      <span className="text-text-secondary text-sm">{title}</span>
-      <span className="text-text-primary font-semibold text-2xl">{amount}</span>
-
-      <img
-        src="/card/background.svg"
-        alt=""
-        className="absolute -top-3.5 right-5 w-[152px] h-[154px] opacity-80"
-        aria-hidden="true"
-      />
+    <div
+      className="relative w-full h-full rounded-xl border border-primary-divider p-4 flex flex-col overflow-hidden gap-3"
+      style={{
+        backgroundImage: `url(/card/background.svg)`,
+        backgroundSize: "30%",
+        backgroundPosition: "right",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <span className="text-text-secondary text-sm leading-none">{title}</span>
+      {text}
     </div>
   );
 };
 
 const PaymentLinkContainer = () => {
   const router = useRouter();
+  const { setTitle, setShowBackArrow } = useTitle();
   const { user } = useAuth();
   const isAdmin = user?.teamMembership?.role === "ADMIN" || user?.teamMembership?.role === "OWNER";
   const [activeTab, setActiveTab] = useState(tabs[0]);
@@ -67,6 +68,25 @@ const PaymentLinkContainer = () => {
   const deactivatePaymentLinkMutation = useDeactivatePaymentLink();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  // Breadcrumb in the top title bar: Payment Link › {active tab}
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <button
+          type="button"
+          onClick={() => setActiveTab(tabs[0])}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Payment Link
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">{activeTab.label}</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab.id]);
 
   // Close tooltip when clicking outside
   useEffect(() => {
@@ -192,24 +212,36 @@ const PaymentLinkContainer = () => {
           />
         </div>
       ),
-      Link: (
-        <span className="text-text-primary text-sm leading-none underline">
-          {getAppUrl()}/payment/{link.code}
-        </span>
+      Title: (
+        <div className="flex items-center gap-2">
+          <span className="text-text-primary text-sm">{link.title}</span>
+          <img
+            src="/misc/copy-icon.svg"
+            alt="copy link"
+            className="w-4 h-4 cursor-pointer opacity-60 transition-opacity hover:opacity-100"
+            onClick={e => {
+              e.stopPropagation();
+              navigator.clipboard.writeText(`${getAppUrl()}/payment/${link.code}`);
+              toast.success("Payment link copied to clipboard");
+            }}
+          />
+        </div>
       ),
-      Title: link.title,
-      Timestamp: new Date(link.createdAt).toLocaleString("sv-SE", { hour12: false }),
-      Amount: (
-        <div className="flex justify-center items-center gap-1">
-          <span className="text-text-primary leading-none">{link.amount ?? "Any"}</span>
+      Currency: (
+        <div className="flex justify-center items-center gap-1.5">
           <img
             src={`/token/${((link as any).currency || link.acceptedTokens?.[0]?.symbol || "usdt").toLowerCase()}.svg`}
             onError={(e) => { (e.target as HTMLImageElement).src = "/token/usdt.svg"; }}
             alt={(link as any).currency || link.acceptedTokens?.[0]?.symbol || "USDT"}
-            className="w-4 h-4"
+            className="w-3 h-3"
           />
+          <span className="text-text-primary text-sm leading-none">
+            {(link as any).currency || link.acceptedTokens?.[0]?.symbol || "USDT"}
+          </span>
         </div>
       ),
+      Amount: <span className="num text-text-primary leading-none">{link.amount ?? "Any"}</span>,
+      Timestamp: new Date(link.createdAt).toLocaleString("sv-SE", { hour12: false }),
       Account: (() => {
         const recipientAddr = (link as any).recipientAddress;
         const account = demoData?.accounts.find(a => a.accountId === recipientAddr);
@@ -228,21 +260,6 @@ const PaymentLinkContainer = () => {
           text={link.status}
           className="!py-2"
         />
-      ),
-      Action: (
-        <div className="flex justify-center items-center" onClick={e => e.stopPropagation()}>
-          <SecondaryButton
-            text="Copy Link"
-            onClick={() => {
-              const url = `${getAppUrl()}/payment/${link.code}`;
-              navigator.clipboard.writeText(url);
-              toast.success("Payment link copied to clipboard");
-            }}
-            icon="/misc/thin-copy-icon.svg"
-            iconPosition="left"
-            buttonClassName="w-[130px] "
-          />
-        </div>
       ),
       " ": isAdmin ? (
         <div className="flex justify-center items-center">
@@ -269,59 +286,52 @@ const PaymentLinkContainer = () => {
     <div className="flex justify-center items-center">
       <CustomCheckbox checked={isAllChecked as boolean} onChange={handleCheckAll} />
     </div>,
-    "Link",
     "Title",
-    "Timestamp",
+    "Currency",
     "Amount",
+    "Timestamp",
     "Account",
     "Status",
-    "Action",
     " ",
   ];
   return (
-    <div className="flex flex-col w-full h-full p-4 items-center justify-start gap-5">
-      {/* Header */}
-      <div className="w-full flex flex-col gap-5 px-7">
-        <PageHeader
-          icon="/sidebar/payment-link.svg"
-          label="Payment Links"
-          button={
-            <PrimaryButton
-              text="Create payment link"
-              icon="/misc/plus-icon.svg"
-              iconPosition="left"
-              onClick={() => {
-                router.push("/payment-link/create");
-              }}
-              containerClassName="w-[200px]"
-            />
-          }
-        />
-        <div className="w-full flex flex-row gap-2">
-          <Card title="All payment links" amount={allLinks.length.toString()} />
-          <Card title="Active links" amount={activeLinks.length.toString()} />
-          <Card title="Deactivated links" amount={inactiveLinks.length.toString()} />
+    <div className="relative flex w-full h-full flex-col">
+      {/* Page header (same concept as the Dashboard / Invoice / Bills pages) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Payment Links</h1>
+          <p className="text-[14px] text-text-secondary">Create and share links to get paid.</p>
         </div>
+        <PrimaryButton
+          text="Create payment link"
+          icon="/misc/plus-icon.svg"
+          iconPosition="left"
+          onClick={() => router.push("/payment-link/create")}
+          containerClassName="w-[200px]"
+          buttonClassName="whitespace-nowrap"
+        />
       </div>
 
-      <BaseContainer
-        header={
-          <div className="w-full flex items-center justify-start p-5">
-            <TabContainer
-              tabs={tabs}
-              activeTab={activeTab.id}
-              setActiveTab={(tab: string) => setActiveTab(tabs.find(t => t.id === tab) || tabs[0])}
-            />
-          </div>
-        }
-        childrenClassName="p-5 gap-5"
-        containerClassName="w-full h-full relative"
-      >
-        <div className="flex flex-col gap-2">
-          <span className="text-text-primary text-2xl leading-none">{activeTab.title}</span>
-          <span className="text-text-secondary text-sm leading-none">{activeTab.description}</span>
-        </div>
+      {/* Stat cards */}
+      <div className="flex w-full flex-row gap-2 px-6 pb-2">
+        <Card title="All payment links" text={<span className="num text-text-primary text-2xl leading-none">{allLinks.length}</span>} />
+        <Card title="Active links" text={<span className="num text-text-primary text-2xl leading-none">{activeLinks.length}</span>} />
+        <Card title="Deactivated links" text={<span className="num text-text-primary text-2xl leading-none">{inactiveLinks.length}</span>} />
+      </div>
 
+      {/* Tab bar + count */}
+      <div className="mt-2 flex w-full items-center justify-between gap-2 border-b border-primary-divider px-6 pb-3">
+        <TabContainer
+          tabs={tabs}
+          activeTab={activeTab.id}
+          setActiveTab={(tab: string) => setActiveTab(tabs.find(t => t.id === tab) || tabs[0])}
+          textSize="sm"
+        />
+        <span className="text-sm text-text-secondary">{displayedLinks.length} links</span>
+      </div>
+
+      {/* Payment links table */}
+      <div className="w-full p-5">
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <img src="/loading-square.gif" alt="loading" className="w-12 h-12" />
@@ -343,9 +353,8 @@ const PaymentLinkContainer = () => {
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={setRowsPerPage}
             columnWidths={{
-              "1": "330px",
-              "3": "180px",
-              "6": "80px",
+              "0": "52px",
+              "4": "180px",
               "7": "50px",
             }}
             onRowClick={(_, index) => {
@@ -356,17 +365,17 @@ const PaymentLinkContainer = () => {
             }}
           />
         )}
+      </div>
 
-        {selectedRows.length > 0 && (
-          <div
-            className="flex flex-row items-center justify-between absolute bottom-20 right-5 bg-background rounded-lg p-3 border border-primary-divider gap-2 cursor-pointer hover:bg-red-50 transition-colors"
-            onClick={handleBulkDelete}
-          >
-            <img src="/misc/trashcan-icon.svg" alt="trash" className="w-5 h-5" />
-            <span className="text-[#E93544]">Remove {selectedRows.length} links</span>
-          </div>
-        )}
-      </BaseContainer>
+      {selectedRows.length > 0 && (
+        <div
+          className="absolute bottom-6 right-6 flex flex-row items-center justify-between bg-background rounded-lg p-3 border border-primary-divider gap-2 cursor-pointer hover:bg-red-50 transition-colors"
+          onClick={handleBulkDelete}
+        >
+          <img src="/misc/trashcan-icon.svg" alt="trash" className="w-5 h-5" />
+          <span className="text-[#E93544]">Remove {selectedRows.length} links</span>
+        </div>
+      )}
 
       {/* Payment Link Actions Tooltips */}
       {displayedLinks.map((link, index) => (

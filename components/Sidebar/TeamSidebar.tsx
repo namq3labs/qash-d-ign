@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { MOVE_CRYPTO_SIDEBAR_OFFSET } from "./Sidebar";
 import { PrimaryButton } from "../Common/PrimaryButton";
-import { SecondaryButton } from "../Common/SecondaryButton";
+import { Plus } from "iconoir-react";
 import { useGetTeamStats } from "@/services/api/team-member";
 import { useGetMyCompany } from "@/services/api/company";
 import { useListAccountsByCompany } from "@/services/api/multisig";
@@ -58,7 +58,7 @@ export default function TeamSidebar({ isOpen, onClose }: TeamSidebarProps) {
       {/* Backdrop overlay for click outside detection */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-[5] bg-transparent"
+          className="fixed inset-0 z-[55] bg-transparent"
           onClick={onClose}
           style={{
             pointerEvents: isOpen ? "auto" : "none",
@@ -66,7 +66,7 @@ export default function TeamSidebar({ isOpen, onClose }: TeamSidebarProps) {
         />
       )}
       <div
-        className="absolute top-0 h-[100%] w-[400px] z-5 rounded-tr-lg rounded-br-lg p-4 flex flex-col gap-4 transition-all duration-300 ease-in-out overflow-y-auto bg-background"
+        className="absolute top-0 h-[100%] w-[400px] z-[60] rounded-tr-lg rounded-br-lg p-4 flex flex-col gap-4 transition-all duration-300 ease-in-out overflow-y-auto bg-background"
         style={{
           left: isOpen ? `${MOVE_CRYPTO_SIDEBAR_OFFSET}px` : "-20px",
           transform: isOpen ? "translateX(0)" : "translateX(-100%)",
@@ -112,12 +112,19 @@ export default function TeamSidebar({ isOpen, onClose }: TeamSidebarProps) {
         {/* Action Buttons */}
         <div className="flex flex-row gap-2">
           <PrimaryButton
-            text="Create new account"
+            text="New Account"
             icon="/misc/circle-plus-icon.svg"
             iconPosition="left"
             onClick={handleCreateNewAccount}
           />
-          <SecondaryButton text="Add member" icon="/misc/plus-icon.svg" iconPosition="left" onClick={handleAddMember} />
+          <button
+            type="button"
+            onClick={handleAddMember}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-blue px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-blue/90"
+          >
+            <Plus width={16} height={16} strokeWidth={2} />
+            Add member
+          </button>
         </div>
 
         {/* Multisig Accounts Section */}

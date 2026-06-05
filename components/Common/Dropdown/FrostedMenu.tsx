@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
-import { CaretDown, Check } from "@phosphor-icons/react";
+import { NavArrowDown as CaretDown, Check } from "iconoir-react";
 
 export interface FrostedMenuItem {
   key: string;
@@ -74,8 +74,8 @@ export const FrostedMenu = ({
       >
         <span className="truncate">{label}</span>
         <CaretDown
-          size={14}
-          weight="bold"
+          width={14} height={14}
+          strokeWidth={2}
           className={`flex-shrink-0 text-text-secondary transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
@@ -97,7 +97,7 @@ export const FrostedMenu = ({
                   width: coords.width,
                   transformOrigin: "top center",
                 }}
-                className="z-[100] overflow-hidden rounded-2xl border border-white/10 bg-[#26262b]/85 p-1.5 shadow-[0_24px_60px_-14px_rgba(0,0,0,0.6)] backdrop-blur-2xl"
+                className="z-[1000] overflow-hidden rounded-2xl border border-white/10 bg-[#26262b]/85 p-1.5 shadow-[0_24px_60px_-14px_rgba(0,0,0,0.6)] backdrop-blur-2xl"
               >
                 <div className="flex max-h-[280px] flex-col gap-0.5 overflow-y-auto">
                   {items.map(item => {
@@ -115,9 +115,9 @@ export const FrostedMenu = ({
                           active ? "bg-white/[0.10]" : ""
                         }`}
                       >
-                        {Icon && <Icon size={16} weight="bold" className="flex-shrink-0 text-white/70" />}
+                        {Icon && <Icon width={16} height={16} strokeWidth={2} className="flex-shrink-0 text-white/70" />}
                         <span className="flex-1 text-[14px] font-medium text-white/90">{item.label}</span>
-                        {active && <Check size={14} weight="bold" className="flex-shrink-0 text-white/80" />}
+                        {active && <Check width={14} height={14} strokeWidth={2} className="flex-shrink-0 text-white/80" />}
                       </button>
                     );
                   })}

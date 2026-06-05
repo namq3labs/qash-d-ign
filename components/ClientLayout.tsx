@@ -46,7 +46,6 @@ const fullscreenPages = new Set([
   "/onboarding",
   "/payment/",
   "/invoice-review",
-  "/invoice/create",
   "/team-invite",
 ]);
 

@@ -38,7 +38,7 @@ export default function DeployFaucetPage() {
       const wallet = await client.newWallet(AccountStorageMode.public(), true, 1);
       console.log("[DeployFaucet] Temp wallet created:", wallet.id().toString());
 
-      // 3. Mint a small amount to the temp wallet — this publishes the faucet on-chain
+      // 3. Mint a small amount to the temp wallet, this publishes the faucet on-chain
       setStatus("Minting initial tokens to publish faucet on-chain...");
       await client.syncState();
       const mintTxRequest = client.newMintTransactionRequest(

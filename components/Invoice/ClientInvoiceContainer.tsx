@@ -1,7 +1,8 @@
 "use client";
 import { n } from "@/services/utils/normalizeToken";
-import React, { useState } from "react";
-import { BaseContainer } from "../Common/BaseContainer";
+import React, { useState, useEffect } from "react";
+import { NavArrowRight } from "iconoir-react";
+import { useTitle } from "@/contexts/TitleProvider";
 import { TabContainer } from "../Common/TabContainer";
 import { SecondaryButton } from "../Common/SecondaryButton";
 import { Badge, BadgeStatus } from "../Common/Badge";
@@ -23,7 +24,6 @@ import { useRouter } from "next/navigation";
 import { useModal } from "@/contexts/ModalManagerProvider";
 import { PrimaryButton } from "../Common/PrimaryButton";
 import { cancelB2BInvoice } from "@/services/api/invoice";
-import { PageHeader } from "../Common/PageHeader";
 import { useAuth } from "@/services/auth/context";
 import { trackEvent } from "@/services/analytics/posthog";
 import { PostHogEvent } from "@/types/posthog";
@@ -47,41 +47,33 @@ const Card = ({ title, text }: { title: string; text: React.ReactNode }) => {
   );
 };
 
-const renderTabHeader = (activeTab: Tab) => {
-  switch (activeTab) {
-    case "all":
-      return (
-        <div className="flex flex-col gap-2">
-          <span className="text-text-primary text-2xl font-medium leading-none">Overview</span>
-          <span className="text-text-secondary text-[14px] font-medium leading-none">Manage all the invoices</span>
-        </div>
-      );
-    case "sent":
-      return (
-        <div className="flex flex-col gap-2">
-          <span className="text-text-primary text-2xl font-medium leading-none">Sent invoices</span>
-          <span className="text-text-secondary text-[14px] font-medium leading-none">Track your invoice progress</span>
-        </div>
-      );
-    case "paid":
-      return (
-        <div className="flex flex-col gap-2">
-          <span className="text-text-primary text-2xl font-medium leading-none">Paid invoices</span>
-          <span className="text-text-secondary text-[14px] font-medium leading-none">
-            Invoices that have been approved and processed successfully
-          </span>
-        </div>
-      );
-    default:
-      return;
-  }
-};
-
 const ClientInvoiceContainer = () => {
+  const { setTitle, setShowBackArrow } = useTitle();
   const [activeTab, setActiveTab] = useState<Tab>("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [checkedRows, setCheckedRows] = React.useState<number[]>([]);
+
+  const tabLabel = activeTab === "sent" ? "Sent" : activeTab === "paid" ? "Paid" : "All";
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <span className="text-text-secondary">Receive</span>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <button
+          type="button"
+          onClick={() => setActiveTab("all")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Invoice
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">{tabLabel}</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
   const { data: groups } = useGetAllEmployeeGroups();
   const queryClient = useQueryClient();
   const { openModal } = useModal();
@@ -121,11 +113,11 @@ const ClientInvoiceContainer = () => {
 
   // Fetch B2B invoices from API
   const { data: invoicesResponse, isLoading } = useQuery({
-    queryKey: ["b2b-invoices", currentPage, rowsPerPage, activeTab],
+    queryKey: ["b2b-invoices", activeTab],
     queryFn: () =>
       getB2BInvoices({
-        page: currentPage,
-        limit: rowsPerPage,
+        page: 1,
+        limit: 1000,
         direction: "sent",
         status:
           activeTab === "all" ? undefined : activeTab === "sent" ? InvoiceStatusEnum.SENT : InvoiceStatusEnum.PAID,
@@ -207,7 +199,7 @@ const ClientInvoiceContainer = () => {
       Email: invoice.toCompanyEmail || invoice.emailTo || "-",
       Amount: (
         <div className="flex items-center gap-2 justify-center">
-          <span>{invoice.total || "0"}</span>
+          <span className="num">{invoice.total || "0"}</span>
           <img
             alt={`${n(invoice.paymentToken?.symbol).toLowerCase()}`}
             className="w-4"
@@ -221,7 +213,7 @@ const ClientInvoiceContainer = () => {
       "Due Date": dueDate,
       Status: (
         <div className="w-full flex justify-center items-center">
-          <Badge text={invoice.status} status={badgeStatus} className="px-5" />
+          <Badge text={invoice.status} status={badgeStatus} />
         </div>
       ),
     };
@@ -230,106 +222,61 @@ const ClientInvoiceContainer = () => {
   const isAllChecked = checkedRows.length === invoiceDatas?.length;
 
   return (
-    <div className="flex flex-col w-full h-full justify-start items-start p-5 gap-5">
-      <div className="flex flex-col w-full px-5 gap-5">
-        <PageHeader
-          icon="/sidebar/invoice.svg"
-          label="Invoices"
-          button={
-            <PrimaryButton
-              text="Create invoice"
-              icon="/misc/plus-icon.svg"
-              iconPosition="left"
-              onClick={() => {
-                router.push("/invoice/create");
-              }}
-              containerClassName="w-[140px]"
-              // buttonClassName="py-2"
-            />
-          }
-        />
-        <div className="flex flex-row w-full gap-2">
-          <Card
-            title="All invoices"
-            text={
-              <span className="text-text-primary text-2xl font-bold leading-none">
-                {(invoiceStats?.sent?.totalDraft ?? 0) +
-                  (invoiceStats?.sent?.totalSent ?? 0) +
-                  (invoiceStats?.sent?.totalConfirmed ?? 0) +
-                  (invoiceStats?.sent?.totalPaid ?? 0)}
-              </span>
-            }
-          />
-          <Card
-            title="Sent"
-            text={
-              <span className="text-text-primary text-2xl font-bold leading-none">
-                {invoiceStats?.sent?.totalSent ?? 0}
-              </span>
-            }
-          />
-          <Card
-            title="Draft"
-            text={
-              <span className="text-text-primary text-2xl font-bold leading-none">
-                {invoiceStats?.sent?.totalDraft ?? 0}
-              </span>
-            }
-          />
-          <Card
-            title="Paid"
-            text={
-              <span className="text-text-primary text-2xl font-bold leading-none">
-                {invoiceStats?.sent?.totalPaid ?? 0}
-              </span>
-            }
-          />
+    <div className="relative flex w-full h-full flex-col">
+      {/* Page header (same concept as the Dashboard / Employee pages) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Invoices</h1>
+          <p className="text-[14px] text-text-secondary">Create and manage the invoices you send to clients.</p>
         </div>
+        <PrimaryButton
+          text="Create invoice"
+          icon="/misc/plus-icon.svg"
+          iconPosition="left"
+          onClick={() => router.push("/invoice/create")}
+          containerClassName="w-[170px]"
+          buttonClassName="whitespace-nowrap"
+        />
       </div>
 
-      <BaseContainer
-        header={
-          <div className="flex w-full justify-between items-center py-3 px-5">
-            <div className="flex flex-col gap-1">
-              <TabContainer
-                tabs={[
-                  { id: "all", label: "All" },
-                  { id: "sent", label: "Sent" },
-                  { id: "paid", label: "Paid" },
-                ]}
-                activeTab={activeTab}
-                //@ts-ignore
-                setActiveTab={setActiveTab}
-              />
-            </div>
-          </div>
-        }
-        childrenClassName="p-5 gap-5"
-        containerClassName="w-full h-full bg-[#F6F6F6]"
-      >
-        <div className="flex w-full justify-between items-center">
-          {renderTabHeader(activeTab)}
+      {/* Stat cards */}
+      <div className="flex w-full flex-row gap-2 px-6 pb-2">
+        <Card
+          title="All invoices"
+          text={<span className="num text-text-primary text-2xl leading-none">{invoiceStats?.total ?? 0}</span>}
+        />
+        <Card
+          title="Sent"
+          text={<span className="num text-text-primary text-2xl leading-none">{invoiceStats?.sent ?? 0}</span>}
+        />
+        <Card
+          title="Draft"
+          text={<span className="num text-text-primary text-2xl leading-none">{invoiceStats?.draft ?? 0}</span>}
+        />
+        <Card
+          title="Paid"
+          text={<span className="num text-text-primary text-2xl leading-none">{invoiceStats?.paid ?? 0}</span>}
+        />
+      </div>
 
-          {/* Filter Button */}
-          {/* <div className="flex items-center gap-2">
-            <SecondaryButton
-              text="Sort"
-              icon="/misc/sort-icon.svg"
-              onClick={() => console.log("Sort button clicked")}
-              iconPosition="left"
-              variant="light"
-              buttonClassName="px-2"
-            />
-            <SecondaryButton
-              text="Filter"
-              icon="/wallet-analytics/setting-icon.gif"
-              onClick={() => console.log("Filter button clicked")}
-              iconPosition="left"
-              variant="light"
-              buttonClassName="px-2"
-            />
-          </div> */}
-        </div>
+      {/* Tab bar (same concept as the Employee page) */}
+      <div className="mt-2 flex w-full items-center justify-between gap-2 border-b border-primary-divider px-6 pb-3">
+        <TabContainer
+          tabs={[
+            { id: "all", label: "All" },
+            { id: "sent", label: "Sent" },
+            { id: "paid", label: "Paid" },
+          ]}
+          activeTab={activeTab}
+          //@ts-ignore
+          setActiveTab={setActiveTab}
+          textSize="sm"
+        />
+        <span className="text-sm text-text-secondary">{invoiceDatas.length} invoices</span>
+      </div>
+
+      {/* Invoice table */}
+      <div className="w-full p-5">
         <Table
           headers={[
             <div className="flex justify-center items-center">
@@ -347,6 +294,7 @@ const ClientInvoiceContainer = () => {
           className="w-full"
           rowClassName="py-5"
           headerClassName="py-3"
+          showFooter={false}
           showPagination={true}
           actionColumn={true}
           actionRenderer={billActionRenderer}
@@ -359,7 +307,7 @@ const ClientInvoiceContainer = () => {
             router.push(`/invoice/detail?id=${invoiceUUID}`);
           }}
         />
-      </BaseContainer>
+      </div>
 
       <Tooltip
         id="bill-action-tooltip"
@@ -452,7 +400,8 @@ const ClientInvoiceContainer = () => {
           actionButtons={
             <SecondaryButton
               text="Pay all"
-              buttonClassName="w-40 rounded-full"
+              variant="light"
+              buttonClassName="w-fit whitespace-nowrap rounded-xl"
               onClick={async () => {
                 const uuids = checkedRows.map(i => invoices[i]?.uuid).filter(Boolean) as string[];
                 if (uuids.length === 0) return;

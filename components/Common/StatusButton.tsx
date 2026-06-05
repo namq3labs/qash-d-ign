@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { Check } from "@phosphor-icons/react";
+import { Check } from "iconoir-react";
 
 export type ButtonStatus = "idle" | "loading" | "success" | "error";
 type Variant = "dark" | "light" | "outline";
@@ -126,7 +126,7 @@ export default function StatusButton({
   } else if (isSuccess) {
     leftNode = (
       <span className="grid place-items-center rounded-full bg-white/25" style={{ width: s.check, height: s.check }}>
-        <Check size={Math.round(s.check * 0.62)} weight="bold" />
+        <Check width={Math.round(s.check * 0.62)} height={Math.round(s.check * 0.62)} strokeWidth={2.5} />
       </span>
     );
   } else if (leadingIcon) {

@@ -17,20 +17,20 @@ interface AccountContextType {
 
 const AccountContext = createContext<AccountContextType | undefined>(undefined);
 
-export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const value: AccountContextType = {
-    assets: [],
-    loading: false,
-    error: null,
-    isAccountDeployed: true,
-    accountId: "demo-account",
-    isError: false,
-    refreshAccount: async () => {},
-    refetchAssets: async () => {},
-    forceFetch: async () => {},
-  };
+const ACCOUNT_VALUE: AccountContextType = {
+  assets: [],
+  loading: false,
+  error: null,
+  isAccountDeployed: true,
+  accountId: "demo-account",
+  isError: false,
+  refreshAccount: async () => {},
+  refetchAssets: async () => {},
+  forceFetch: async () => {},
+};
 
-  return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>;
+export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return <AccountContext.Provider value={ACCOUNT_VALUE}>{children}</AccountContext.Provider>;
 };
 
 export const useAccountContext = () => {

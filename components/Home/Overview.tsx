@@ -330,7 +330,7 @@ const BalanceOverviewHeader = ({
         }
       }
     } else {
-      // No transaction data — only use saved localStorage history (no backfilling)
+      // No transaction data, only use saved localStorage history (no backfilling)
       for (const [mk, record] of historyMap) {
         const balances: Record<string, number> = {};
         for (const s of symbols) {

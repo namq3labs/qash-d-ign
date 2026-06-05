@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
-import { CaretDown, Check } from "@phosphor-icons/react";
+import { NavArrowDown as CaretDown, Check } from "iconoir-react";
 
 interface TokenFilterDropdownProps {
   tokens: string[];
@@ -63,7 +63,7 @@ export const TokenFilterDropdown = ({ tokens, selected, onToggle, colors = {}, l
         className="inline-flex items-center gap-2 rounded-lg border border-primary-divider bg-background px-3 py-1.5 text-sm text-text-secondary transition-colors hover:bg-app-background"
       >
         <span className="text-text-primary">{displayLabel}</span>
-        <CaretDown size={14} weight="bold" className={`transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <CaretDown width={14} height={14} strokeWidth={2} className={`transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {mounted &&
@@ -105,7 +105,7 @@ export const TokenFilterDropdown = ({ tokens, selected, onToggle, colors = {}, l
                             checked ? "border-white bg-white" : "border-white/30"
                           }`}
                         >
-                          {checked && <Check size={11} weight="bold" className="text-[#26262b]" />}
+                          {checked && <Check width={11} height={11} strokeWidth={2} className="text-[#26262b]" />}
                         </span>
                         <img
                           src={`/token/${token.toLowerCase()}.svg`}

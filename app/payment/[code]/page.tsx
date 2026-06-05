@@ -23,10 +23,10 @@ const Header = () => {
 
   const handleWalletClick = () => {
     if (paraAddress) {
-      // Para connected — open Para account modal (shows balances)
+      // Para connected, open Para account modal (shows balances)
       openParaModal?.();
     } else if (adapterAddress) {
-      // Miden wallet adapter connected — open portfolio modal
+      // Miden wallet adapter connected, open portfolio modal
       openModal(MODAL_IDS.PORTFOLIO);
     }
   };
@@ -116,13 +116,13 @@ const PaymentLinkDetailPage = () => {
       let txHash: string;
 
       if (adapterConnected && adapterAddress && requestSend) {
-        // Miden Wallet Adapter flow — amount must be in smallest unit (raw)
+        // Miden Wallet Adapter flow, amount must be in smallest unit (raw)
         const rawAmount = paymentAmount * 10 ** tokenDecimals;
         const sendTx = new SendTransaction(adapterAddress, recipientAddress, paymentTokenAddress, "private", rawAmount);
         txHash = await requestSend(sendTx);
         console.log("txHash", txHash);
       } else if (paraAddress && midenClient) {
-        // Para (social login) flow — build and submit transaction via WebClient
+        // Para (social login) flow, build and submit transaction via WebClient
         txHash = await handleParaPayment(paraAddress, recipientAddress, paymentTokenAddress, paymentAmount);
       } else {
         toast.error("No wallet connected");

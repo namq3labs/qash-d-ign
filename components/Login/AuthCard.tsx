@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { Envelope } from "@phosphor-icons/react";
+import { Mail as Envelope } from "iconoir-react";
 import OtpInput from "./OtpInput";
 import StatusButton from "../Common/StatusButton";
 import FieldInput from "../Common/Input/FieldInput";
@@ -151,7 +151,7 @@ export default function AuthCard({ onComplete }: { onComplete: (email: string) =
                   label="Email"
                   type="email"
                   autoComplete="email"
-                  leadingIcon={<Envelope size={18} weight="regular" />}
+                  leadingIcon={<Envelope width={18} height={18} />}
                   value={email}
                   onChange={e => {
                     setEmail(e.target.value);

@@ -19,7 +19,7 @@ export interface BatchRecipientSerialized {
  * Strips the routing-parameter suffix (everything after '_') if present.
  */
 export async function bech32ToHex(address: string): Promise<string> {
-  // Already hex-prefixed — return as-is
+  // Already hex-prefixed, return as-is
   if (address.startsWith("0x") || address.startsWith("0X")) {
     return address;
   }

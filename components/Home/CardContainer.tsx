@@ -4,6 +4,7 @@ import { useMultisigAssets, useListAccountsByCompany } from "@/services/api/mult
 import { useGetMyCompany } from "@/services/api/company";
 import { useGetPayrollStats } from "@/services/api/payroll";
 import type { AccountBalanceStatDto } from "@qash/types/dto/multisig";
+import { Calendar } from "iconoir-react";
 
 function formatPayDate(isoDate: string): string {
   const d = new Date(isoDate);
@@ -19,22 +20,14 @@ function formatPayDate(isoDate: string): string {
   return d.toLocaleDateString("en-US", { month: "short", year: "numeric" }).replace(",", ` ${day}${suffix},`);
 }
 
-// Decorative mini bar "sparkline" — most bars muted, a couple accented (dark).
-const StatSparkline = ({ heights, accent }: { heights: number[]; accent: number[] }) => (
-  <div className="flex h-9 items-end gap-[3px]" aria-hidden>
-    {heights.map((h, i) => (
-      <span
-        key={i}
-        className={`w-[3px] rounded-full ${accent.includes(i) ? "bg-text-primary" : "bg-primary-divider"}`}
-        style={{ height: `${h}%` }}
-      />
-    ))}
-  </div>
-);
+// Demo list of upcoming payroll runs (shown on the right of the Upcoming Payroll card).
+const UPCOMING_PAYROLLS = [
+  { name: "Engineering", when: "Apr 1", amount: "$16,500" },
+  { name: "Design & Product", when: "Apr 1", amount: "$9,300" },
+  { name: "Contractors", when: "Apr 15", amount: "$5,200" },
+];
 
-const PAYROLL_SPARK = [38, 28, 50, 33, 62, 44, 72, 92, 98, 58, 40, 52, 30, 44];
-
-// Demo token prices (USD) for the composition share — real per-token USD isn't in the demo data.
+// Demo token prices (USD) for the composition share, real per-token USD isn't in the demo data.
 const TOKEN_PRICE: Record<string, number> = {
   USDC: 1,
   USDT: 1,
@@ -85,36 +78,6 @@ const BreakdownBar = ({ segments }: { segments: { label: string; pct: number; co
   </div>
 );
 
-const StatCardShell = ({
-  label,
-  icon,
-  spark,
-  children,
-  footer,
-}: {
-  label: string;
-  icon: string;
-  spark: { heights: number[]; accent: number[] };
-  children: React.ReactNode;
-  footer: React.ReactNode;
-}) => (
-  <div className="flex h-[180px] w-full min-w-[300px] flex-col justify-between rounded-2xl border border-primary-divider bg-background p-5">
-    <div className="flex items-start justify-between gap-3">
-      <span className="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">{label}</span>
-      <StatSparkline heights={spark.heights} accent={spark.accent} />
-    </div>
-
-    <div className="flex items-baseline gap-2">{children}</div>
-
-    <div className="flex items-center justify-between border-t border-primary-divider pt-3">
-      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-app-background">
-        <img src={icon} alt="" className="h-3.5 w-3.5" />
-      </span>
-      <span className="num text-xs text-text-secondary">{footer}</span>
-    </div>
-  </div>
-);
-
 const TreasuryCard = ({
   text,
   subtitle,
@@ -154,35 +117,63 @@ const TreasuryCard = ({
 const UpcomingPayrollCard = ({
   text,
   subtitle,
-  icon,
   nextPayDate,
   totalPayees,
 }: {
   text: string;
   subtitle: string;
-  icon: string;
   nextPayDate: string | null;
   totalPayees: number;
 }) => (
-  <StatCardShell
-    label={text}
-    icon={icon}
-    spark={{ heights: PAYROLL_SPARK, accent: [7, 8] }}
-    footer={
-      nextPayDate ? (
-        <>
-          Due on <span className="font-semibold text-text-primary">{formatPayDate(nextPayDate)}</span>
-        </>
-      ) : (
-        <span>No upcoming payroll</span>
-      )
-    }
-  >
-    <span className="num text-3xl text-text-primary">{subtitle}</span>
-    <span className="text-sm text-text-secondary">
-      {totalPayees} {totalPayees === 1 ? "Payee" : "Payees"}
-    </span>
-  </StatCardShell>
+  <div className="flex h-[180px] w-full min-w-[300px] gap-5 rounded-2xl border border-primary-divider bg-background p-5">
+    {/* Left: label + amount (aligned with Treasury) + due date */}
+    <div className="flex shrink-0 flex-col justify-between">
+      <div>
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">{text}</span>
+        <div className="mt-2 flex items-baseline gap-2">
+          <span className="num text-3xl text-text-primary">{subtitle}</span>
+          <span className="text-sm text-text-secondary">
+            {totalPayees} {totalPayees === 1 ? "Payee" : "Payees"}
+          </span>
+        </div>
+      </div>
+      <span className="num text-xs text-text-secondary">
+        {nextPayDate ? (
+          <>
+            Due on <span className="font-semibold text-text-primary">{formatPayDate(nextPayDate)}</span>
+          </>
+        ) : (
+          "No upcoming payroll"
+        )}
+      </span>
+    </div>
+
+    {/* Right: upcoming payroll runs + See all */}
+    <div className="flex min-w-0 flex-1 flex-col gap-2 border-l border-primary-divider pl-5">
+      <div className="flex items-center justify-between">
+        <span className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">Schedule</span>
+        <button type="button" className="text-xs font-medium text-primary-blue transition-colors hover:underline">
+          See all
+        </button>
+      </div>
+      <div className="flex flex-col gap-2 overflow-hidden">
+        {UPCOMING_PAYROLLS.map(p => (
+          <div key={p.name} className="flex items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-app-background">
+                <Calendar width={13} height={13} className="text-text-secondary" />
+              </span>
+              <div className="min-w-0">
+                <p className="truncate text-xs font-medium text-text-primary">{p.name}</p>
+                <p className="text-[11px] text-text-secondary">{p.when}</p>
+              </div>
+            </div>
+            <span className="num whitespace-nowrap text-xs font-semibold text-text-primary">{p.amount}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
 );
 
 export const CardContainer = () => {
@@ -223,7 +214,6 @@ export const CardContainer = () => {
       <UpcomingPayrollCard
         text="Upcoming Payroll"
         subtitle={payrollAmount}
-        icon="/card/calendar-icon.svg"
         nextPayDate={payrollStats?.nextPayDate ?? null}
         totalPayees={payrollStats?.totalPayees ?? 0}
       />

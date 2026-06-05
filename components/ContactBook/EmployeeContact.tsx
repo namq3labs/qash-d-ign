@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Tooltip } from "react-tooltip";
-import { useRouter } from "next/navigation";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight, Plus } from "iconoir-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { BaseContainer } from "../Common/BaseContainer";
 import { TabContainer } from "../Common/TabContainer";
 import { Table } from "../Common/Table";
+import { EmployeeAvatar } from "../Common/EmployeeAvatar";
 import { MultipleContactActionsTooltip } from "../Common/ToolTip/MultipleContactActionsTooltip";
 import {
   useGetAllEmployeeGroups,
@@ -11,13 +14,13 @@ import {
   useGetAllEmployees,
   useBulkDeleteEmployees,
   useUpdateEmployee,
+  getEmployeeGroupIds,
 } from "@/services/api/employee";
 import { MODAL_IDS } from "@/types/modal";
 import { useModal } from "@/contexts/ModalManagerProvider";
 import { CustomCheckbox } from "../Common/CustomCheckbox";
 import { formatAddress } from "@/services/utils/miden/address";
 import { CategoryShapeEnum } from "@qash/types/enums";
-import { createShapeElement } from "../Common/ToolTip/ShapeSelectionTooltip";
 import { QASH_TOKEN_ADDRESS } from "@/services/utils/constant";
 import { blo } from "blo";
 import { turnBechToHex } from "@/services/utils/turnBechToHex";
@@ -27,7 +30,7 @@ import { CategoryTab } from "./ContactBookContainer";
 import { MoreActionsTooltip } from "../Common/ToolTip/MoreActionsTooltip";
 import { FIAT_COUNTRIES } from "@/data/fiat-payout";
 
-export const CategoryBadge = ({ shape, color, name }: { shape: CategoryShapeEnum; color: string; name: string }) => {
+export const CategoryBadge = ({ color, name }: { shape?: CategoryShapeEnum; color: string; name: string }) => {
   // Special design for "Client" - just orange text without background or icon
   if (name === "Client") {
     return <span className="font-semibold text-[#F5A623]">{name}</span>;
@@ -35,11 +38,10 @@ export const CategoryBadge = ({ shape, color, name }: { shape: CategoryShapeEnum
 
   return (
     <div
-      className={`flex flex-row items-center justify-center gap-1.5 px-2.5 py-1 rounded-full border w-fit`}
+      className="flex flex-row items-center justify-center px-2.5 py-1 rounded-full border w-fit"
       style={{ borderColor: color, backgroundColor: `${color}20` }}
     >
-      {createShapeElement(shape, color)}
-      <span className="font-medium text-xs truncate" style={{ color: color }}>
+      <span className="font-medium text-xs truncate" style={{ color }}>
         {name}
       </span>
     </div>
@@ -55,6 +57,38 @@ export const EmployeeContact = () => {
   const [activeTab, setActiveTab] = useState<string>("all");
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const { data: groups } = useGetAllEmployeeGroups();
+  const searchParams = useSearchParams();
+
+  // Pre-select a group when arriving from a breadcrumb link (/contact-book?group=<id>)
+  useEffect(() => {
+    const g = searchParams?.get("group");
+    if (g) {
+      setActiveTab(g);
+      setSelectedCategoryId(g);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const { setTitle } = useTitle();
+
+  // Breadcrumb in the top title bar: Employee › <active group>
+  const activeGroupLabel =
+    !activeTab || activeTab === "all" || activeTab === "more"
+      ? "All groups"
+      : (groups?.find(g => g.id.toString() === activeTab)?.name ?? "All groups");
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      setTitle(
+        <div className="flex items-center gap-1.5 text-[14px]">
+          <span className="text-text-secondary">Contact</span>
+          <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+          <span className="text-text-secondary">Employee</span>
+          <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+          <span className="font-medium text-text-primary">{activeGroupLabel}</span>
+        </div>,
+      );
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, [activeGroupLabel, setTitle]);
   const { mutate: deleteEmployees } = useBulkDeleteEmployees();
   const { mutate: updateEmployeeMutate } = useUpdateEmployee();
   const { data: allAddressBooksData, isLoading: isLoadingAllAddressBooks } = useGetAllEmployees(1, 1000, {
@@ -116,13 +150,9 @@ export const EmployeeContact = () => {
         categoryTabs.push({
           id: "more",
           label: (
-            <div
-              data-tooltip-id="category-more-tooltip"
-              className="flex flex-row items-center justify-center gap-2 h-10 cursor-pointer"
-            >
-              <img src="/misc/category-icon.svg" alt="category" className="w-5 h-5" />
-              <span className="text-text-primary truncate">{remainingCount} more...</span>
-            </div>
+            <span data-tooltip-id="category-more-tooltip" className="cursor-pointer truncate">
+              {remainingCount} more...
+            </span>
           ),
         });
       }
@@ -332,13 +362,8 @@ export const EmployeeContact = () => {
       const isCrypto = contact.paymentMethod !== "fiat";
       const isContractor = contact.employeeType === "contractor";
       const isActive = contact.isActive !== false;
-      const group = groups?.find((cat: any) => cat.id === contact.groupId);
-      const initials = contact.name
-        ?.split(" ")
-        .map((w: string) => w[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2);
+      const contactGroupIds = getEmployeeGroupIds(contact);
+      const contactGroups = (groups || []).filter((cat: any) => contactGroupIds.includes(cat.id));
 
       // Compute next payment date (28th of current or next month)
       const nextPayDate = (() => {
@@ -358,9 +383,12 @@ export const EmployeeContact = () => {
         ),
         Name: (
           <div className={`flex items-center gap-3 ${!isActive ? "opacity-50" : ""}`}>
-            <div className="w-8 h-8 rounded-full bg-primary-blue/10 flex items-center justify-center text-primary-blue text-xs font-bold flex-shrink-0">
-              {initials}
-            </div>
+            <EmployeeAvatar
+              src={contact.avatar}
+              seed={contact.email || contact.walletAddress || contact.name}
+              name={contact.name}
+              className="w-8 h-8"
+            />
             <div className="flex flex-col">
               <span className="text-text-primary font-medium text-sm">{contact.name}</span>
               <span className="text-text-secondary text-xs">{contact.email || "-"}</span>
@@ -379,12 +407,19 @@ export const EmployeeContact = () => {
           </div>
         ),
         Group: (
-          <div className="flex items-center justify-center">
-            <CategoryBadge
-              shape={group?.shape || CategoryShapeEnum.CIRCLE}
-              color={group?.color || "#35ADE9"}
-              name={group?.name || "-"}
-            />
+          <div className="flex flex-wrap items-center justify-center gap-1">
+            {contactGroups.length === 0 ? (
+              <CategoryBadge color="#35ADE9" name="-" />
+            ) : contactGroups.length > 2 ? (
+              <>
+                <CategoryBadge color={contactGroups[0].color || "#35ADE9"} name={contactGroups[0].name} />
+                <span className="rounded-full border border-primary-divider bg-app-background px-2 py-[3px] text-xs font-medium text-text-secondary">
+                  +{contactGroups.length - 1}
+                </span>
+              </>
+            ) : (
+              contactGroups.map((g: any) => <CategoryBadge key={g.id} color={g.color || "#35ADE9"} name={g.name} />)
+            )}
           </div>
         ),
         Payment: (
@@ -507,40 +542,40 @@ export const EmployeeContact = () => {
     }) || [];
 
   return (
-    <BaseContainer
-      header={
-        <div className="w-full flex flex-row items-center justify-between gap-2 px-6 py-4">
-          <div className="flex flex-row items-center justify-center gap-2">
-            <TabContainer
-              tabs={[
-                {
-                  id: "all",
-                  label: <CategoryTab label="All groups" />,
-                },
-                ...tabs,
-              ]}
-              activeTab={activeTab}
-              setActiveTab={tab => {
-                setActiveTab(tab);
-                setSelectedCategoryId(tab);
-                setCheckedRows([]); // Clear checked rows when switching tabs
-              }}
-            />
-            {isAdmin && (
-              <div
-                className="flex flex-row items-center justify-center gap-2 cursor-pointer bg-background rounded-lg p-1.5"
-                onClick={() => openModal(MODAL_IDS.CREATE_GROUP)}
-              >
-                <img src="/misc/plus-icon.svg" alt="plus-icon" className="w-full" style={{ filter: "invert(1)" }} />
-              </div>
-            )}
-          </div>
-          <span className="text-text-primary">{addressBooks?.length || 0} contacts</span>
+    <div className="w-full flex-1 min-h-0 flex flex-col">
+      {/* Tab bar header (Dashboard-style, fills the page card directly) */}
+      <div className="w-full flex items-center justify-between gap-2 border-b border-primary-divider px-6 pb-3">
+        <div className="flex items-center gap-2">
+          <TabContainer
+            tabs={[
+              {
+                id: "all",
+                label: <CategoryTab label="All groups" />,
+              },
+              ...tabs,
+            ]}
+            activeTab={activeTab}
+            setActiveTab={tab => {
+              setActiveTab(tab);
+              setSelectedCategoryId(tab);
+              setCheckedRows([]); // Clear checked rows when switching tabs
+            }}
+            textSize="sm"
+          />
+          {isAdmin && (
+            <button
+              type="button"
+              className="flex items-center justify-center rounded-lg bg-text-primary p-1.5 text-white cursor-pointer transition-colors hover:bg-text-primary/90"
+              onClick={() => openModal(MODAL_IDS.CREATE_GROUP)}
+              aria-label="Add group"
+            >
+              <Plus width={16} height={16} strokeWidth={2} />
+            </button>
+          )}
         </div>
-      }
-      containerClassName="w-full h-full"
-    >
-      <div className="w-full p-5 h-full">
+        <span className="text-sm text-text-secondary">{addressBooks?.length || 0} contacts</span>
+      </div>
+      <div className="w-full flex-1 min-h-0 overflow-y-auto p-5">
         <Table
           data={tableData}
           headers={tableHeaders}
@@ -639,6 +674,6 @@ export const EmployeeContact = () => {
           </div>
         )}
       />
-    </BaseContainer>
+    </div>
   );
 };
