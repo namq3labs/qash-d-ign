@@ -400,7 +400,7 @@ export function ConnectWalletModal({ isOpen, onClose, zIndex }: ModalProp<Connec
                         <span className="text-2xl font-bold">
                           {isImporting ? "Wallets Imported Successfully" : "Your Wallet is Ready"}
                         </span>
-                        <span className="text-sm">You’re all set — your wallet has been created and secured.</span>
+                        <span className="text-sm">You’re all set, your wallet has been created and secured.</span>
                       </>
                     )}
                   </div>

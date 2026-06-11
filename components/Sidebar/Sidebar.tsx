@@ -64,13 +64,16 @@ export const actionItems = [
     badgeCount: 0,
   },
   {
-    icon: "/sidebar/contact-book.svg",
-    filledIcon: "/sidebar/filled-contact-book.svg",
+    icon: "/misc/team-icon.svg",
+    filledIcon: "/misc/team-icon.svg",
     label: "Employee",
     isActive: false,
     link: SidebarLink.ContactBook,
     disabled: false,
     badgeCount: 0,
+    group: "Contact",
+    groupIcon: "/sidebar/contact-book.svg",
+    groupFilledIcon: "/sidebar/filled-contact-book.svg",
   },
   {
     icon: "/sidebar/invoice.svg",
@@ -85,14 +88,14 @@ export const actionItems = [
     groupFilledIcon: "/sidebar/filled-invoice.svg",
   },
   {
-    icon: "/sidebar/contact-book.svg",
-    filledIcon: "/sidebar/filled-contact-book.svg",
-    label: "Client",
+    icon: "/misc/company-icon.svg",
+    filledIcon: "/misc/company-icon.svg",
+    label: "Clients",
     isActive: false,
     link: SidebarLink.Client,
     disabled: false,
     badgeCount: 0,
-    group: "Receive",
+    group: "Contact",
   },
   {
     icon: "/sidebar/global-account.svg",
@@ -240,7 +243,7 @@ export const Sidebar: React.FC<NavProps> = ({ onActionItemClick }) => {
   return (
     <>
       <nav
-        className="sidebar overflow-visible py-2 rounded-lg w-full relative h-screen z-20 bg-app-background"
+        className="sidebar overflow-visible py-2 rounded-lg w-full relative h-screen z-[70] bg-app-background"
         style={{ transition: "padding 200ms ease" }}
       >
         <div className="flex flex-col justify-between h-full">
@@ -297,7 +300,7 @@ export const Sidebar: React.FC<NavProps> = ({ onActionItemClick }) => {
             <div className="mx-2 mb-3 mt-1 rounded-xl bg-background shadow-sm border border-primary-divider cursor-pointer">
               <div className="flex items-center justify-between px-3 py-2.5 border-b border-primary-divider">
                 <span className="text-xs text-text-secondary">Total Balance</span>
-                <span className="text-sm font-medium">
+                <span className="text-sm num">
                   ${totalBalance.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>

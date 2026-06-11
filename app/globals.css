@@ -139,7 +139,7 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring)); */
   --radius: var(--radius);
-  --font-sans: var(--font-barlow);
+  --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 
   --animate-wiggle: wiggle 1s ease-in-out infinite;
@@ -174,10 +174,29 @@
   font-family: "DFVN", sans-serif;
 }
 
+/* Numeric display: Inter Medium with tabular figures (financial values) */
+.num {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-weight: 500;
+  font-feature-settings: "tnum" 1, "cv01" 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+/* Kill the default focus outline recharts puts on its focusable SVG wrapper/layers */
+.recharts-wrapper:focus,
+.recharts-wrapper:focus-visible,
+.recharts-surface:focus,
+.recharts-surface:focus-visible,
+.recharts-wrapper *:focus,
+.recharts-wrapper *:focus-visible {
+  outline: none !important;
+}
+
 html,
 body {
   background-color: var(--app-background);
-  font-family: var(--font-barlow), system-ui, sans-serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
 }
 
 @media (max-width: 1280px) {
@@ -216,6 +235,35 @@ input:-webkit-autofill:active {
 input:-moz-autofill {
   background-color: transparent !important;
   color: var(--text-primary) !important;
+}
+
+/* ActionButton blade spinner */
+@keyframes ab-spinner-fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.15;
+  }
+}
+.ab-spinner-bar {
+  animation: ab-spinner-fade 0.8s linear infinite;
+}
+
+/* Toast status dots (ring of blinking dots) */
+@keyframes toast-dot-blink {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .toast-dot {
+    animation: toast-dot-blink 1.2s ease-in-out infinite;
+  }
 }
 
 input:-webkit-autofill-background-color {

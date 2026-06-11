@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import { useDemo, DemoCard } from "@/contexts/DemoProvider";
-import { PageHeader } from "@/components/Common/PageHeader";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
 import { PrimaryButton } from "@/components/Common/PrimaryButton";
 import { SecondaryButton } from "@/components/Common/SecondaryButton";
 import { Badge, BadgeStatus } from "@/components/Common/Badge";
 import { Table } from "@/components/Common/Table";
-import { BaseContainer } from "@/components/Common/BaseContainer";
 import { ModalHeader } from "@/components/Common/ModalHeader";
 import BaseModal from "@/components/Modal/BaseModal";
 import InputFilled from "@/components/Common/Input/InputFilled";
@@ -376,12 +376,26 @@ function CardOverview({
   onAddCard: () => void;
   onTopUp: () => void;
 }) {
+  const { setTitle, setShowBackArrow } = useTitle();
   const totalSpend = cards.reduce((sum, c) => sum + c.currentSpend, 0);
   const totalLimit = cards.reduce((sum, c) => sum + c.spendingLimit, 0);
   const activeCards = cards.filter((c) => !c.frozen).length;
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Breadcrumb in the top title bar: Expenses › Corporate Card
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <span className="text-text-secondary">Expenses</span>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Corporate Card</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const tableHeaders = ["Card", "Cardholder", "Brand", "Expires", "Spending", "Status"];
 
@@ -425,68 +439,65 @@ function CardOverview({
   };
 
   return (
-    <div className="flex flex-col w-full h-full p-5 gap-5 overflow-y-auto">
-      <PageHeader
-        icon="/sidebar/credit-card.svg"
-        label="Corporate Card"
-        button={
-          <div className="flex items-center gap-2">
-            <SecondaryButton text="Top Up Pool" onClick={onTopUp} variant="light" buttonClassName="px-5" />
-            <PrimaryButton
-              text="Add Card"
-              icon="/misc/plus-icon.svg"
-              iconPosition="left"
-              onClick={onAddCard}
-              containerClassName="w-fit"
-              buttonClassName="px-4"
-            />
-          </div>
-        }
-      />
+    <div className="flex w-full h-full flex-col overflow-y-auto">
+      {/* Page header (same concept as the Bill / Invoice pages) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Corporate Card</h1>
+          <p className="text-[14px] text-text-secondary">Issue and manage virtual cards for your team.</p>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <SecondaryButton text="Top Up Pool" onClick={onTopUp} variant="light" buttonClassName="w-fit whitespace-nowrap" />
+          <PrimaryButton
+            text="Add Card"
+            icon="/misc/plus-icon.svg"
+            iconPosition="left"
+            onClick={onAddCard}
+            containerClassName="w-[130px]"
+            buttonClassName="whitespace-nowrap"
+          />
+        </div>
+      </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="flex w-full flex-row gap-2 px-6 pb-2">
         <StatCard title="Card Pool Balance">
-          <span className="text-text-primary text-2xl font-bold leading-none">${poolBalance.toLocaleString()}</span>
+          <span className="num text-text-primary text-2xl leading-none">${poolBalance.toLocaleString()}</span>
         </StatCard>
         <StatCard title="Total Cards">
-          <span className="text-text-primary text-2xl font-bold leading-none">{cards.length}</span>
+          <span className="num text-text-primary text-2xl leading-none">{cards.length}</span>
         </StatCard>
         <StatCard title="Active Cards">
-          <span className="text-text-primary text-2xl font-bold leading-none">{activeCards}</span>
+          <span className="num text-text-primary text-2xl leading-none">{activeCards}</span>
         </StatCard>
         <StatCard title="Total Spend">
-          <span className="text-text-primary text-2xl font-bold leading-none">
+          <span className="num text-text-primary text-2xl leading-none">
             ${totalSpend.toLocaleString()}
             <span className="text-text-secondary text-sm font-medium"> / ${totalLimit.toLocaleString()}</span>
           </span>
         </StatCard>
       </div>
 
-      {/* Cards Table */}
-      <BaseContainer
-        header={
-          <div className="w-full flex flex-row items-center justify-between gap-2 px-6 py-4">
-            <span className="text-text-primary font-medium">Your Cards</span>
-            <span className="text-text-secondary text-sm">{cards.length} cards</span>
-          </div>
-        }
-        containerClassName="w-full"
-      >
-        <div className="w-full p-5">
-          <Table
-            data={tableData}
-            headers={tableHeaders}
-            showFooter={false}
-            showPagination={true}
-            currentPage={currentPage}
-            rowsPerPage={rowsPerPage}
-            onPageChange={setCurrentPage}
-            onRowsPerPageChange={setRowsPerPage}
-            onRowClick={handleRowClick}
-          />
-        </div>
-      </BaseContainer>
+      {/* Toolbar + count */}
+      <div className="mt-2 flex w-full items-center justify-between gap-2 border-b border-primary-divider px-6 pb-3">
+        <span className="text-lg font-semibold text-text-primary">Your Cards</span>
+        <span className="text-sm text-text-secondary">{cards.length} cards</span>
+      </div>
+
+      {/* Cards table */}
+      <div className="w-full p-5">
+        <Table
+          data={tableData}
+          headers={tableHeaders}
+          showFooter={false}
+          showPagination={true}
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          onPageChange={setCurrentPage}
+          onRowsPerPageChange={setRowsPerPage}
+          onRowClick={handleRowClick}
+        />
+      </div>
     </div>
   );
 }
@@ -525,12 +536,34 @@ function CardDetail({
   onToggleFreeze: () => void;
   onOpenSettings: () => void;
 }) {
+  const { setTitle, setShowBackArrow } = useTitle();
   const [showCvv, setShowCvv] = useState(false);
   const [txPage, setTxPage] = useState(1);
   const [txRows, setTxRows] = useState(10);
 
   const transactions = data.cardTransactions;
   const labelStyles = "py-1 text-base font-medium text-text-secondary";
+
+  // Breadcrumb in the top title bar: Expenses › Corporate Card › {cardholder}
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <span className="text-text-secondary">Expenses</span>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <button
+          type="button"
+          onClick={onBack}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Corporate Card
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">{card.cardholder}</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [card.cardholder]);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text.replace(/[\s*]/g, ""));
@@ -577,44 +610,38 @@ function CardDetail({
   }));
 
   return (
-    <div className="flex flex-col w-full h-full p-5 gap-4 overflow-y-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between w-full">
+    <div className="flex w-full h-full flex-col overflow-y-auto">
+      {/* Header (concept layout, breadcrumb handles back) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
         <div className="flex items-center gap-3">
-          <img
-            src="/arrow/chevron-left.svg"
-            alt="Back"
-            className="w-5 h-5 cursor-pointer opacity-60 hover:opacity-100 transition-opacity"
-            onClick={onBack}
-          />
           <CardVisual card={card} size="sm" />
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-0.5">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-2xl text-text-primary">{card.cardholder}</span>
+              <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">{card.cardholder}</h1>
               <Badge
                 status={card.frozen ? BadgeStatus.FAIL : BadgeStatus.SUCCESS}
                 text={card.frozen ? "Frozen" : "Active"}
                 className="px-3"
               />
             </div>
-            <span className="text-text-secondary text-sm">
-              {card.brand} **** {card.last4} - Virtual
-            </span>
+            <p className="text-[14px] text-text-secondary">
+              {card.brand} **** {card.last4}, Virtual
+            </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <SecondaryButton text="Spending Limits" variant="light" onClick={onOpenSettings} buttonClassName="px-5" />
+        <div className="flex shrink-0 items-center gap-2">
+          <SecondaryButton text="Spending Limits" variant="light" onClick={onOpenSettings} buttonClassName="w-fit whitespace-nowrap" />
           <SecondaryButton
             text={card.frozen ? "Unfreeze Card" : "Freeze Card"}
             variant={card.frozen ? "dark" : "red"}
             onClick={onToggleFreeze}
-            buttonClassName="px-5"
+            buttonClassName="w-fit whitespace-nowrap"
           />
         </div>
       </div>
 
       {/* Overview Cards */}
-      <div className="flex gap-3 items-stretch w-full">
+      <div className="flex gap-3 items-stretch w-full px-6 pb-2">
         <div className="flex-1 border border-primary-divider rounded-2xl px-5 py-4 flex flex-col gap-1">
           <span className="text-text-secondary text-sm">Balance</span>
           <span className="text-text-primary text-xl font-bold">${data.totalBalance.toLocaleString()}</span>
@@ -637,7 +664,7 @@ function CardDetail({
       </div>
 
       {/* Card Details + Limits */}
-      <div className="flex gap-3 items-start w-full">
+      <div className="flex gap-3 items-start w-full px-6 pt-2 pb-2">
         {/* Card Info */}
         <div className="flex-1 border border-primary-divider rounded-2xl px-4 py-3 flex gap-3 items-center">
           <div className="flex flex-col gap-1 w-[110px]">
@@ -686,28 +713,22 @@ function CardDetail({
       </div>
 
       {/* Transaction History */}
-      <BaseContainer
-        header={
-          <div className="w-full flex items-center justify-between px-6 py-4">
-            <span className="text-text-primary font-medium">Transactions</span>
-            <span className="text-text-secondary text-sm">{transactions.length} transactions</span>
-          </div>
-        }
-        containerClassName="w-full"
-      >
-        <div className="w-full p-5">
-          <Table
-            data={txData}
-            headers={txHeaders}
-            showFooter={false}
-            showPagination={true}
-            currentPage={txPage}
-            rowsPerPage={txRows}
-            onPageChange={setTxPage}
-            onRowsPerPageChange={setTxRows}
-          />
-        </div>
-      </BaseContainer>
+      <div className="mt-2 flex w-full items-center justify-between gap-2 border-b border-primary-divider px-6 pb-3">
+        <span className="text-lg font-semibold text-text-primary">Transactions</span>
+        <span className="text-sm text-text-secondary">{transactions.length} transactions</span>
+      </div>
+      <div className="w-full p-5">
+        <Table
+          data={txData}
+          headers={txHeaders}
+          showFooter={false}
+          showPagination={true}
+          currentPage={txPage}
+          rowsPerPage={txRows}
+          onPageChange={setTxPage}
+          onRowsPerPageChange={setTxRows}
+        />
+      </div>
     </div>
   );
 }

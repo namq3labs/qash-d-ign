@@ -173,7 +173,7 @@ const PayrollContainer = () => {
                   onClick={() => console.log("Sort button clicked")}
                   iconPosition="left"
                   variant="light"
-                  buttonClassName="px-2"
+                  buttonClassName="w-fit whitespace-nowrap"
                 />
                 <SecondaryButton
                   text="Filter"
@@ -181,7 +181,7 @@ const PayrollContainer = () => {
                   onClick={() => console.log("Filter button clicked")}
                   iconPosition="left"
                   variant="light"
-                  buttonClassName="px-2"
+                  buttonClassName="w-fit whitespace-nowrap"
                 /> */}
               </div>
             </div>

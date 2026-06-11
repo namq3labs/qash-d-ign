@@ -24,20 +24,21 @@ interface MockAuthContextValue {
 const MockAuthContext = createContext<MockAuthContextValue | undefined>(undefined);
 
 export function MockAuthProvider({ children }: { children: ReactNode }) {
-  const { data } = useDemo();
+  const { data, isLoggedIn, isOnboarded } = useDemo();
 
-  const { isLoggedIn, isOnboarded } = useDemo();
-
-  const value: MockAuthContextValue = {
-    isAuthenticated: isLoggedIn && isOnboarded,
-    user: data?.user ?? null,
-    isLoading: false,
-    error: null,
-    loginWithPara: async () => data?.user ?? null,
-    logout: async () => {},
-    refreshUser: async () => {},
-    clearError: () => {},
-  };
+  const value: MockAuthContextValue = React.useMemo(
+    () => ({
+      isAuthenticated: isLoggedIn && isOnboarded,
+      user: data?.user ?? null,
+      isLoading: false,
+      error: null,
+      loginWithPara: async () => data?.user ?? null,
+      logout: async () => {},
+      refreshUser: async () => {},
+      clearError: () => {},
+    }),
+    [data, isLoggedIn, isOnboarded],
+  );
 
   return <MockAuthContext.Provider value={value}>{children}</MockAuthContext.Provider>;
 }
@@ -67,21 +68,21 @@ interface MockMidenContextType {
 
 const MockMidenContext = createContext<MockMidenContextType | undefined>(undefined);
 
-export function MockMidenProvider({ children }: { children: ReactNode }) {
-  const value: MockMidenContextType = {
-    isConnected: true,
-    isLoading: false,
-    wallet: { id: "demo-wallet" },
-    openModal: () => {},
-    logoutAsync: async () => {},
-    client: null,
-    address: "demo-address",
-    balances: { balances: [], totalUsd: 0 },
-    balancesLoading: false,
-    fetchBalances: async () => {},
-  };
+const MOCK_MIDEN_VALUE: MockMidenContextType = {
+  isConnected: true,
+  isLoading: false,
+  wallet: { id: "demo-wallet" },
+  openModal: () => {},
+  logoutAsync: async () => {},
+  client: null,
+  address: "demo-address",
+  balances: { balances: [], totalUsd: 0 },
+  balancesLoading: false,
+  fetchBalances: async () => {},
+};
 
-  return <MockMidenContext.Provider value={value}>{children}</MockMidenContext.Provider>;
+export function MockMidenProvider({ children }: { children: ReactNode }) {
+  return <MockMidenContext.Provider value={MOCK_MIDEN_VALUE}>{children}</MockMidenContext.Provider>;
 }
 
 export function useMidenProvider(): MockMidenContextType {
@@ -113,25 +114,25 @@ interface MockPSMContextType {
 
 const MockPSMContext = createContext<MockPSMContextType | undefined>(undefined);
 
-export function MockPSMProvider({ children }: { children: ReactNode }) {
-  const value: MockPSMContextType = {
-    multisigClient: {},
-    psmCommitment: "demo-commitment",
-    psmPublicKey: "demo-public-key",
-    psmStatus: "connected",
-    error: null,
-    syncWarning: null,
-    reconnect: async () => {},
-    ensureConnected: async () => ({}),
-    registerMultisig: () => {},
-    getMultisig: () => undefined,
-    pauseSync: () => {},
-    resumeSync: () => {},
-    sync: async () => {},
-    accountCacheMap: new Map(),
-  };
+const MOCK_PSM_VALUE: MockPSMContextType = {
+  multisigClient: {},
+  psmCommitment: "demo-commitment",
+  psmPublicKey: "demo-public-key",
+  psmStatus: "connected",
+  error: null,
+  syncWarning: null,
+  reconnect: async () => {},
+  ensureConnected: async () => ({}),
+  registerMultisig: () => {},
+  getMultisig: () => undefined,
+  pauseSync: () => {},
+  resumeSync: () => {},
+  sync: async () => {},
+  accountCacheMap: new Map(),
+};
 
-  return <MockPSMContext.Provider value={value}>{children}</MockPSMContext.Provider>;
+export function MockPSMProvider({ children }: { children: ReactNode }) {
+  return <MockPSMContext.Provider value={MOCK_PSM_VALUE}>{children}</MockPSMContext.Provider>;
 }
 
 export function usePSMProvider(): MockPSMContextType {
@@ -149,12 +150,10 @@ const MockSocketContext = createContext<{ socket: null; changeSocketUrl: (url: s
   changeSocketUrl: () => {},
 });
 
+const MOCK_SOCKET_VALUE = { socket: null as null, changeSocketUrl: () => {} };
+
 export function MockSocketProvider({ children }: { children: ReactNode }) {
-  return (
-    <MockSocketContext.Provider value={{ socket: null, changeSocketUrl: () => {} }}>
-      {children}
-    </MockSocketContext.Provider>
-  );
+  return <MockSocketContext.Provider value={MOCK_SOCKET_VALUE}>{children}</MockSocketContext.Provider>;
 }
 
 export function useSocket() {
@@ -177,20 +176,20 @@ interface MockAccountContextType {
 
 const MockAccountContext = createContext<MockAccountContextType | undefined>(undefined);
 
-export function MockAccountProvider({ children }: { children: ReactNode }) {
-  const value: MockAccountContextType = {
-    assets: [],
-    loading: false,
-    error: null,
-    isAccountDeployed: true,
-    accountId: "demo-account",
-    isError: false,
-    refreshAccount: async () => {},
-    refetchAssets: async () => {},
-    forceFetch: async () => {},
-  };
+const MOCK_ACCOUNT_VALUE: MockAccountContextType = {
+  assets: [],
+  loading: false,
+  error: null,
+  isAccountDeployed: true,
+  accountId: "demo-account",
+  isError: false,
+  refreshAccount: async () => {},
+  refetchAssets: async () => {},
+  forceFetch: async () => {},
+};
 
-  return <MockAccountContext.Provider value={value}>{children}</MockAccountContext.Provider>;
+export function MockAccountProvider({ children }: { children: ReactNode }) {
+  return <MockAccountContext.Provider value={MOCK_ACCOUNT_VALUE}>{children}</MockAccountContext.Provider>;
 }
 
 export function useAccountContext(): MockAccountContextType {
@@ -205,6 +204,8 @@ export function useAccountContext(): MockAccountContextType {
 
 const MockTransactionContext = createContext<any>(null);
 
+const MOCK_TRANSACTION_VALUE = {};
+
 export function MockTransactionProvider({ children }: { children: ReactNode }) {
-  return <MockTransactionContext.Provider value={{}}>{children}</MockTransactionContext.Provider>;
+  return <MockTransactionContext.Provider value={MOCK_TRANSACTION_VALUE}>{children}</MockTransactionContext.Provider>;
 }

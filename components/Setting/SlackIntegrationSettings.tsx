@@ -175,7 +175,7 @@ export default function SlackIntegrationSettings() {
                 iconPosition="left"
                 onClick={handleConnect}
                 containerClassName="w-auto"
-                buttonClassName="px-5"
+                buttonClassName="w-fit whitespace-nowrap"
               />
             </div>
           </div>
@@ -200,7 +200,7 @@ export default function SlackIntegrationSettings() {
                 text="Disconnect"
                 onClick={handleDisconnect}
                 variant="red"
-                buttonClassName="px-4 w-auto"
+                buttonClassName="w-fit whitespace-nowrap"
               />
             </div>
 

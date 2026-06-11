@@ -427,7 +427,7 @@ export const CancelPayment = () => {
             setRecallingNoteId(null);
           }
         }}
-        buttonClassName="w-fit px-10"
+        buttonClassName="w-fit whitespace-nowrap"
       />
     </div>
   );

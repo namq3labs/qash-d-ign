@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-import { SelectClientModalProps } from "@/types/modal";
+import { SelectClientModalProps, MODAL_IDS } from "@/types/modal";
 import { ModalProp, useModal } from "@/contexts/ModalManagerProvider";
 import { ModalHeader } from "../../Common/ModalHeader";
 import BaseModal from "../BaseModal";
@@ -38,10 +38,15 @@ function ClientItem({ name, email, companyType, isSelected = false, onSelect }: 
   );
 }
 
-export function SelectClientModal({ isOpen, onClose, onSave }: ModalProp<SelectClientModalProps>) {
+export function SelectClientModal({ isOpen, onClose, onSave, zIndex }: ModalProp<SelectClientModalProps>) {
   // **************** Custom Hooks *******************
   const { isAuthenticated } = useAuth();
+  const { openModal } = useModal();
   const { register, watch, reset } = useForm();
+
+  const handleAddClient = () => {
+    openModal(MODAL_IDS.CREATE_CLIENT_CONTACT);
+  };
   const {
     data: clientsData,
     isLoading,
@@ -116,7 +121,7 @@ export function SelectClientModal({ isOpen, onClose, onSave }: ModalProp<SelectC
   // Loading state
   if (isLoading) {
     return (
-      <BaseModal isOpen={isOpen} onClose={onClose}>
+      <BaseModal isOpen={isOpen} onClose={onClose} zIndex={zIndex}>
         <ModalHeader title="Select client from contact" onClose={onClose} />
         <div className="flex flex-col items-center justify-center rounded-b-2xl border-2 bg-background border-primary-divider h-[580px] w-[650px] p-5">
           <div className="flex flex-col items-center gap-3">
@@ -131,7 +136,7 @@ export function SelectClientModal({ isOpen, onClose, onSave }: ModalProp<SelectC
   // Error state
   if (error) {
     return (
-      <BaseModal isOpen={isOpen} onClose={onClose}>
+      <BaseModal isOpen={isOpen} onClose={onClose} zIndex={zIndex}>
         <ModalHeader title="Select client from contact" onClose={onClose} />
         <div className="flex flex-col items-center justify-center rounded-b-2xl border-2 bg-background border-primary-divider h-[580px] w-[650px] p-5">
           <div className="flex flex-col items-center gap-3">
@@ -145,7 +150,7 @@ export function SelectClientModal({ isOpen, onClose, onSave }: ModalProp<SelectC
   }
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}>
+    <BaseModal isOpen={isOpen} onClose={onClose} zIndex={zIndex}>
       <ModalHeader title="Select client from contact" onClose={onClose} />
       <div className="flex flex-col items-start rounded-b-2xl border-2 bg-background border-primary-divider h-[580px] w-[650px] p-3">
         {/* Search Input */}
@@ -160,11 +165,7 @@ export function SelectClientModal({ isOpen, onClose, onSave }: ModalProp<SelectC
         </section>
 
         {/* Client List */}
-        <section className="overflow-y-auto flex flex-col gap-2.5 items-start self-stretch flex-[1_0_0] w-full">
-          <h2 className="leading-5 text-text-secondary mt-1">
-            {filteredClients?.length || 0} contact{filteredClients?.length !== 1 ? "s" : ""}
-          </h2>
-
+        <section className="overflow-y-auto flex flex-col gap-2.5 items-start self-stretch flex-[1_0_0] w-full pt-2">
           {filteredClients && filteredClients.length > 0 ? (
             <div className="flex flex-col items-start h-full w-full">
               {filteredClients.map((client: ClientResponseDto) => (
@@ -180,21 +181,16 @@ export function SelectClientModal({ isOpen, onClose, onSave }: ModalProp<SelectC
             </div>
           ) : search ? (
             <div className="flex items-center justify-center h-full w-full">
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-3">
                 <img src="/misc/blue-search-icon.svg" alt="no results" className="w-8 h-8 opacity-50" />
                 <p className="text-text-secondary">No contacts match "{search}"</p>
+                <PrimaryButton text="Add client" onClick={handleAddClient} containerClassName="w-40" />
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-center h-full w-full flex-col gap-2">
-              <p className="text-text-secondary text-xl">No contacts available. Create your first client</p>
-              <PrimaryButton
-                text="Create Client"
-                onClick={() => {
-                  router.push("/contact-book");
-                }}
-                containerClassName="w-40"
-              />
+            <div className="flex items-center justify-center h-full w-full flex-col gap-3">
+              <p className="text-text-secondary text-xl">No contacts available. Add your first client.</p>
+              <PrimaryButton text="Add client" onClick={handleAddClient} containerClassName="w-40" />
             </div>
           )}
         </section>

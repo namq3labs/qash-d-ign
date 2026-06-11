@@ -113,7 +113,7 @@ export function CreateWalletModal({ isOpen, onClose, zIndex }: ModalProp<CreateW
                   <img src="/modal/hexagon-success-icon.svg" alt="Loading" className="w-40" />
                   <span className="text-text-primary font-bold text-2xl">Your Wallet Is Ready</span>
                   <span className="text-text-secondary text-sm">
-                    You’re all set — your wallet has been created and secured.
+                    You’re all set, your wallet has been created and secured.
                   </span>
                 </>
               )}

@@ -255,7 +255,7 @@ export function AddMemberModal({
             onClick={handleAddMembers}
             disabled={selectedCount === 0}
             text="Add"
-            buttonClassName="w-fit px-6"
+            buttonClassName="w-fit whitespace-nowrap"
           />
         </div>
       </div>

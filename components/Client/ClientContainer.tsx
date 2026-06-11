@@ -1,28 +1,46 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import { ClientContact } from "../ContactBook/ClientContact";
-import { PageHeader } from "../Common/PageHeader";
 import { useModal } from "@/contexts/ModalManagerProvider";
 import { MODAL_IDS } from "@/types/modal";
 import { PrimaryButton } from "../Common/PrimaryButton";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
 
 const ClientContainer = () => {
   const { openModal } = useModal();
+  const { setTitle, setShowBackArrow } = useTitle();
+
+  // Breadcrumb in the top title bar: Contact › Clients
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <span className="text-text-secondary">Contact</span>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Clients</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <div className="w-full h-full p-5 flex flex-col items-start gap-4">
-      <PageHeader
-        icon="/sidebar/contact-book.svg"
-        label="Client"
-        button={
-          <PrimaryButton
-            text="Add client"
-            icon="/misc/plus-icon.svg"
-            iconPosition="left"
-            onClick={() => openModal(MODAL_IDS.CREATE_CLIENT_CONTACT)}
-            containerClassName="w-[140px]"
-          />
-        }
-      />
+    <div className="flex w-full h-full flex-col">
+      {/* Page header (same concept as the Dashboard / Employee / Invoice pages) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Clients</h1>
+          <p className="text-[14px] text-text-secondary">Manage the clients you invoice and get paid by.</p>
+        </div>
+        <PrimaryButton
+          text="Add client"
+          icon="/misc/plus-icon.svg"
+          iconPosition="left"
+          onClick={() => openModal(MODAL_IDS.CREATE_CLIENT_CONTACT)}
+          containerClassName="w-[150px]"
+          buttonClassName="whitespace-nowrap"
+        />
+      </div>
 
       <ClientContact />
     </div>

@@ -166,7 +166,7 @@ export default function GoogleSheetsIntegrationSettings() {
                 text="Connect Google Sheets"
                 onClick={handleConnect}
                 containerClassName="w-auto"
-                buttonClassName="px-5"
+                buttonClassName="w-fit whitespace-nowrap"
               />
             </div>
           </div>
@@ -191,7 +191,7 @@ export default function GoogleSheetsIntegrationSettings() {
                 text="Disconnect"
                 onClick={handleDisconnect}
                 variant="red"
-                buttonClassName="px-4 w-auto"
+                buttonClassName="w-fit whitespace-nowrap"
               />
             </div>
 

@@ -39,7 +39,10 @@ const BaseModal: React.FC<BaseModalProps> = ({ isOpen, zIndex = 950, children })
           isVisible ? "scale-100 opacity-100" : "scale-95 opacity-0"
         }`}
       >
-        {children}
+        {/* Grey "matte" container around the modal, matches the login card framing */}
+        <div className="rounded-[26px] border border-primary-divider/70 bg-[#f1f2f4] p-2.5 shadow-[0_34px_70px_-26px_rgba(20,32,64,0.32)]">
+          {children}
+        </div>
       </div>
     </div>
   );

@@ -2,7 +2,6 @@
 import { n } from "@/services/utils/normalizeToken";
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useParams } from "next/navigation";
-import { BaseContainer } from "../Common/BaseContainer";
 import { Table } from "../Common/Table";
 import { TabContainer } from "../Common/TabContainer";
 import { Badge, BadgeStatus } from "../Common/Badge";
@@ -11,16 +10,30 @@ import { useRouter } from "next/navigation";
 import { useGetPayrollDetails } from "@/services/api/payroll";
 import toast from "react-hot-toast";
 import { CategoryBadge } from "../ContactBook/ContactBookContainer";
-import { useGetAllEmployeeGroups, useGetEmployeeById, useUpdateEmployee } from "@/services/api/employee";
+import {
+  useGetAllEmployeeGroups,
+  useGetEmployeeById,
+  useUpdateEmployee,
+  useDeleteEmployee,
+  getEmployeeGroupIds,
+} from "@/services/api/employee";
 import { CategoryShapeEnum } from "@qash/types/enums";
 import { InvoiceStatusEnum } from "@qash/types/enums";
 import { useModal } from "@/contexts/ModalManagerProvider";
-import { InvoiceModalProps } from "@/types/modal";
+import { InvoiceModalProps, MODAL_IDS } from "@/types/modal";
 import { useInvoice } from "@/hooks/server/useInvoice";
 import { SecondaryButton } from "../Common/SecondaryButton";
 import { ToggleSwitch } from "../Common/ToggleSwitch";
+import { NavArrowRight } from "iconoir-react";
+import { EmployeeAvatar } from "../Common/EmployeeAvatar";
 
 const labelStyles = "py-1 text-base font-medium text-text-secondary";
+
+// Demo token prices (USD) for the USD-value estimate, matches CardContainer.
+const TOKEN_USD: Record<string, number> = {
+  USDC: 1, USDT: 1, DAI: 1, ETH: 3000, WETH: 3000, BTC: 60000, WBTC: 60000, STRK: 1.2, PARA: 0.5, MID: 2,
+};
+const usdOf = (s: string) => TOKEN_USD[(s || "").toUpperCase()] ?? 1;
 
 const PayrollDetail = () => {
   const router = useRouter();
@@ -35,6 +48,7 @@ const PayrollDetail = () => {
   const { data: groups } = useGetAllEmployeeGroups();
   const { data: employeeData } = useGetEmployeeById(payrollId);
   const { mutate: updateEmployeeMutate } = useUpdateEmployee();
+  const { mutate: deleteEmployeeMutate } = useDeleteEmployee();
   const { fetchInvoiceByUUID } = useInvoice();
 
   const isActive = (employeeData as any)?.isActive !== false;
@@ -65,6 +79,36 @@ const PayrollDetail = () => {
     const active = typeof newActive === "boolean" ? newActive : !isActive;
     updateEmployeeMutate((employeeData as any).id, { isActive: active });
     toast.success(active ? "Payment enabled" : "Payment disabled");
+  };
+
+  const handleRemove = () => {
+    openModal(MODAL_IDS.REMOVE_CONTACT_CONFIRMATION, {
+      contactName: payrollData?.employee?.name,
+      contactAddress: payrollData?.employee?.walletAddress,
+      onRemove: () => {
+        const id = (employeeData as any)?.id ?? payrollId;
+        deleteEmployeeMutate(id);
+        toast.success("Employee removed");
+        router.push("/contact-book");
+      },
+    });
+  };
+
+  const handleEditContact = () => {
+    if (!payrollData) return;
+    openModal(MODAL_IDS.EDIT_EMPLOYEE_CONTACT, {
+      contactData: {
+        id: String((employeeData as any)?.id ?? payrollId),
+        name: payrollData.employee.name,
+        address: payrollData.employee.walletAddress || "",
+        email: payrollData.employee.email,
+        group: groups?.find((g: any) => g.id === payrollData?.employee?.groupId)?.name ?? "",
+        groupIds: getEmployeeGroupIds(employeeData ?? payrollData?.employee),
+        token: payrollData.token,
+        network: payrollData.network,
+        avatar: (employeeData as any)?.avatar || (payrollData.employee as any).avatar,
+      },
+    });
   };
 
   const [activeTab, setActiveTab] = useState("all");
@@ -144,25 +188,52 @@ const PayrollDetail = () => {
   };
 
   const isEmployeeRoute = typeof params?.id === "string";
+  const employeeGroupList = (groups || []).filter((g: any) =>
+    getEmployeeGroupIds(employeeData ?? payrollData?.employee).includes(g.id),
+  );
+  const breadcrumbGroupName = (employeeGroupList[0] as any)?.name;
 
   useEffect(() => {
     if (payrollData?.employee) {
+      const crumbClass = "text-text-secondary transition-colors cursor-pointer hover:text-text-primary";
       setTitle(
-        <div className="flex items-center gap-2">
-          <span className="text-text-secondary">{isEmployeeRoute ? "Employee /" : "Payroll /"}</span>
-          <span className="text-text-primary">{payrollData.employee.name}{isEmployeeRoute ? "" : "'s payroll"}</span>
+        <div className="flex items-center gap-1.5 text-[14px]">
+          {isEmployeeRoute && (
+            <>
+              <span className="text-text-secondary">Contact</span>
+              <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+            </>
+          )}
+          <button type="button" onClick={() => router.push(isEmployeeRoute ? "/contact-book" : "/payroll")} className={crumbClass}>
+            {isEmployeeRoute ? "Employee" : "Payroll"}
+          </button>
+          <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+          {isEmployeeRoute && breadcrumbGroupName && (
+            <>
+              <button
+                type="button"
+                onClick={() => router.push(`/contact-book?group=${payrollData.employee.groupId ?? ""}`)}
+                className={crumbClass}
+              >
+                {breadcrumbGroupName}
+              </button>
+              <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+            </>
+          )}
+          <span className="font-medium text-text-primary">{payrollData.employee.name}{isEmployeeRoute ? "" : "'s payroll"}</span>
         </div>,
       );
     }
-    setShowBackArrow(true);
-    setOnBackClick(() => () => router.back());
+    // Back arrow removed, navigation happens via the clickable breadcrumb.
+    setShowBackArrow(false);
+    setOnBackClick(undefined);
 
     return () => {
       setOnBackClick(undefined);
       setShowBackArrow(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [payrollData?.employee?.name, isEmployeeRoute]);
+  }, [payrollData?.employee?.name, isEmployeeRoute, breadcrumbGroupName]);
 
   if (isLoading) {
     return (
@@ -202,7 +273,16 @@ const PayrollDetail = () => {
   const paymentHistoryData = getFilteredInvoices().map(invoice => ({
     "Creation date": new Date(invoice.createdAt).toLocaleDateString(),
     Invoice: `${invoice.invoiceNumber}`,
-    Name: invoice.fromDetails?.name || payrollData.employee.name,
+    Chain: (
+      <div className="flex items-center gap-2 justify-center">
+        <img
+          className="w-4"
+          alt={payrollData.network?.name || "Miden"}
+          src={`/chain/${(payrollData.network?.name || "miden").toLowerCase().replace(" ", "-")}.svg`}
+        />
+        <span>{payrollData.network?.name || "Miden"}</span>
+      </div>
+    ),
     Amount: (
       <div className="flex items-center gap-2 justify-center">
         <span>{invoice.total}</span>
@@ -225,54 +305,25 @@ const PayrollDetail = () => {
                 ? BadgeStatus.SUCCESS
                 : BadgeStatus.AWAITING
           }
-          className="px-5"
         />
       </div>
     ),
   }));
 
-  const renderHeader = () => {
-    switch (activeTab) {
-      case "all":
-        return (
-          <div className="flex flex-col gap-2">
-            <span className="text-text-primary text-2xl font-medium leading-none">Overview</span>
-            <span className="text-text-secondary text-[14px] font-medium leading-none">
-              Manage all the invoices you received from vendors
-            </span>
-          </div>
-        );
-      case "awaiting":
-        return (
-          <div className="flex flex-col gap-2">
-            <span className="text-text-primary text-2xl font-medium leading-none">Pending bills</span>
-            <span className="text-text-secondary text-[14px] font-medium leading-none">
-              Waiting for vendor to review and confirm their invoices.
-            </span>
-          </div>
-        );
-      case "paid":
-        return (
-          <div className="flex flex-col gap-2">
-            <span className="text-text-primary text-2xl font-medium leading-none">Paid bills</span>
-            <span className="text-text-secondary text-[14px] font-medium leading-none">
-              All bills that have been fully paid.
-            </span>
-          </div>
-        );
-      default:
-        return "Payments";
-    }
-  };
-
   return (
-    <div className="p-5 flex flex-col items-start justify-start w-full h-full gap-4">
+    <div className="w-full h-full flex flex-col">
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="p-5 pb-12 flex flex-col items-start justify-start w-full gap-4">
       {/* Header with name, badges, and toggle */}
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-full bg-primary-blue/10 flex items-center justify-center text-primary-blue text-lg font-bold">
-            {payrollData.employee.name?.split(" ").map((w: string) => w[0]).join("").toUpperCase().slice(0, 2)}
-          </div>
+          <EmployeeAvatar
+            src={(employeeData as any)?.avatar || (payrollData.employee as any).avatar}
+            seed={payrollData.employee.email || payrollData.employee.walletAddress || payrollData.employee.name}
+            name={payrollData.employee.name}
+            className="w-12 h-12"
+            textClassName="text-lg"
+          />
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
               <span className="font-bold text-2xl text-text-primary">{payrollData.employee.name}</span>
@@ -289,18 +340,25 @@ const PayrollDetail = () => {
             <span className="text-text-secondary text-sm">{payrollData.employee.email}</span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
+          {/* Enable / disable payment toggle */}
+          <div className="flex items-center gap-2 rounded-xl border border-primary-divider bg-background px-3 py-2">
+            <span className="text-sm font-medium text-text-secondary whitespace-nowrap">
+              {isActive ? "Enabled" : "Disabled"}
+            </span>
+            <ToggleSwitch enabled={isActive} onChange={handleToggleActive} />
+          </div>
           <SecondaryButton
-            text="Edit Payroll"
-            onClick={() => router.push(`/payroll/edit?id=${payrollId}`)}
+            text="Edit contact"
+            onClick={handleEditContact}
             variant="light"
-            buttonClassName="px-5"
+            buttonClassName="w-fit whitespace-nowrap"
           />
           <SecondaryButton
-            text={isActive ? "Disable Payment" : "Enable Payment"}
-            onClick={() => handleToggleActive()}
-            variant={isActive ? "red" : "dark"}
-            buttonClassName="px-5"
+            text="Remove"
+            onClick={handleRemove}
+            variant="red"
+            buttonClassName="w-fit whitespace-nowrap"
           />
         </div>
       </div>
@@ -333,6 +391,12 @@ const PayrollDetail = () => {
               {payrollData.amount?.toLocaleString()} {n(payrollData.token.symbol)}
             </span>
           </div>
+          <span className="text-text-secondary text-xs">
+            ≈ ${((payrollData.amount || 0) * usdOf(n(payrollData.token.symbol))).toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })} USD
+          </span>
         </div>
 
         {/* Contract Left */}
@@ -344,15 +408,15 @@ const PayrollDetail = () => {
           </span>
         </div>
 
-        {/* Group */}
+        {/* Groups (an employee can belong to several) */}
         <div className="flex-1 border border-primary-divider rounded-2xl px-5 py-4 flex flex-col gap-1">
-          <span className="text-text-secondary text-sm">Group</span>
-          <div className="mt-1">
-            <CategoryBadge
-              shape={groups?.find((cat: any) => cat.id === payrollData?.employee?.groupId)?.shape || CategoryShapeEnum.CIRCLE}
-              color={groups?.find((cat: any) => cat.id === payrollData?.employee?.groupId)?.color || "#35ADE9"}
-              name={groups?.find((cat: any) => cat.id === payrollData?.employee?.groupId)?.name || "-"}
-            />
+          <span className="text-text-secondary text-sm">{employeeGroupList.length > 1 ? "Groups" : "Group"}</span>
+          <div className="mt-1 flex flex-wrap items-center gap-1.5">
+            {employeeGroupList.length ? (
+              employeeGroupList.map((g: any) => <CategoryBadge key={g.id} color={g.color || "#35ADE9"} name={g.name} />)
+            ) : (
+              <CategoryBadge color="#35ADE9" name="-" />
+            )}
           </div>
         </div>
       </div>
@@ -419,63 +483,36 @@ const PayrollDetail = () => {
         </div>
       </div>
 
-      <BaseContainer
-        header={
-          <div className="flex w-full justify-between items-center py-3 px-5">
-            <div className="flex flex-col gap-1">
-              <TabContainer
-                tabs={[
-                  { id: "all", label: "All" },
-                  { id: "awaiting", label: "Awaiting" },
-                  { id: "paid", label: "Paid" },
-                ]}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-              />
-            </div>
-          </div>
-        }
-        childrenClassName="p-5 gap-5"
-        containerClassName="w-full h-full bg-[#F6F6F6]"
-      >
-        <div className="flex w-full justify-between items-center">
-          {renderHeader()}
-
-          {/* Filter Button */}
-          <div className="flex items-center gap-2">
-            {/* TODO: IMPLEMENT SORT AND FILTER */}
-            {/* <SecondaryButton
-              text="Sort"
-              icon="/misc/sort-icon.svg"
-              onClick={() => console.log("Sort button clicked")}
-              iconPosition="left"
-              variant="light"
-              buttonClassName="px-2"
-            />
-            <SecondaryButton
-              text="Filter"
-              icon="/wallet-analytics/setting-icon.gif"
-              onClick={() => console.log("Filter button clicked")}
-              iconPosition="left"
-              variant="light"
-              buttonClassName="px-2"
-            /> */}
-          </div>
+      {/* Invoice history, same layout as the Employee page table */}
+      <div className="w-full flex flex-col">
+        <div className="w-full flex items-center justify-between gap-2 border-b border-primary-divider pb-3">
+          <TabContainer
+            tabs={[
+              { id: "all", label: "All" },
+              { id: "awaiting", label: "Awaiting" },
+              { id: "paid", label: "Paid" },
+            ]}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            textSize="sm"
+          />
+          <span className="text-sm text-text-secondary">{getFilteredInvoices().length} invoices</span>
         </div>
-        <Table
-          headers={["Creation date", "Invoice", "Name", "Amount", "Due Date", "Status"]}
-          data={paymentHistoryData}
-          className="w-full"
-          rowClassName="py-5"
-          headerClassName="py-3"
-          showPagination={true}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={setRowsPerPage}
-          onRowClick={handleRowClick}
-        />
-      </BaseContainer>
+        <div className="w-full pt-5">
+          <Table
+            headers={["Creation date", "Invoice", "Chain", "Amount", "Due Date", "Status"]}
+            data={paymentHistoryData}
+            className="w-full"
+            rowClassName="py-5"
+            headerClassName="py-3"
+            showFooter={false}
+            showPagination={false}
+            onRowClick={handleRowClick}
+          />
+        </div>
+      </div>
+        </div>
+      </div>
     </div>
   );
 };

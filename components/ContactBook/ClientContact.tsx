@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import { useRouter } from "next/navigation";
-import { BaseContainer } from "../Common/BaseContainer";
-import { TabContainer } from "../Common/TabContainer";
 import { Table, CellContent } from "../Common/Table";
 import { MultipleContactActionsTooltip } from "../Common/ToolTip/MultipleContactActionsTooltip";
 import { useGetClients, useDeleteClient } from "@/services/api/client";
@@ -217,12 +215,6 @@ export const ClientContact = () => {
   ];
 
   const tableData = clients.map((client: any, index: number) => {
-    const initials = (client.companyName || "")
-      .split(" ")
-      .map((w: string) => w[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
     const addedDate = client.createdAt
       ? new Date(client.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
       : "-";
@@ -235,14 +227,9 @@ export const ClientContact = () => {
         </div>
       ),
       Company: (
-        <div className="flex items-center gap-3 text-left">
-          <div className="w-8 h-8 rounded-lg bg-[#7D52F4]/10 flex items-center justify-center text-[#7D52F4] text-xs font-bold flex-shrink-0">
-            {initials}
-          </div>
-          <div className="flex flex-col">
-            <span className="text-text-primary font-medium text-sm">{client.companyName}</span>
-            <span className="text-text-secondary text-xs">{client.email || "-"}</span>
-          </div>
+        <div className="flex flex-col text-left">
+          <span className="text-text-primary font-medium text-sm">{client.companyName}</span>
+          <span className="text-text-secondary text-xs">{client.email || "-"}</span>
         </div>
       ),
       Type: client.companyType ? (
@@ -278,31 +265,28 @@ export const ClientContact = () => {
   });
 
   return (
-    <BaseContainer
-      header={
-        <div className="w-full flex flex-row items-center justify-between gap-2 px-6 py-4">
-          <div className="bg-[#F5F5F6] border border-primary-divider flex flex-row gap-2 items-center pr-1 pl-3 py-1 rounded-lg w-[300px]">
-            <div className="flex flex-row gap-2 flex-1">
-              <input
-                type="text"
-                placeholder="Search by name"
-                className="font-medium text-sm text-text-secondary bg-transparent border-none outline-none w-full"
-                {...register("searchTerm")}
-              />
-            </div>
-            <button
-              type="button"
-              className="flex flex-row gap-1.5 items-center rounded-lg w-6 h-6 justify-center cursor-pointer"
-            >
-              <img src="/wallet-analytics/finder.svg" alt="search" className="w-4 h-4" />
-            </button>
-          </div>
-          <span className="text-text-primary">{clients.length || 0} clients</span>
+    <>
+      {/* Toolbar: search + count (same concept as the Invoice page tab bar row) */}
+      <div className="flex w-full items-center justify-between gap-2 border-b border-primary-divider px-6 pb-3">
+        <div className="flex h-10 w-[300px] flex-row items-center gap-2 rounded-lg border border-primary-divider bg-app-background pl-3 pr-1">
+          <input
+            type="text"
+            placeholder="Search by name"
+            className="w-full flex-1 border-none bg-transparent text-sm text-text-primary outline-none placeholder:text-text-secondary"
+            {...register("searchTerm")}
+          />
+          <button
+            type="button"
+            className="flex h-6 w-6 items-center justify-center rounded-lg cursor-pointer"
+          >
+            <img src="/wallet-analytics/finder.svg" alt="search" className="w-4 h-4" />
+          </button>
         </div>
-      }
-      containerClassName="w-full h-full"
-    >
-      <div className="w-full p-5 h-full">
+        <span className="text-sm text-text-secondary">{clients.length || 0} clients</span>
+      </div>
+
+      {/* Client table */}
+      <div className="w-full p-5">
         <Table
           data={tableData}
           headers={tableHeaders}
@@ -400,6 +384,6 @@ export const ClientContact = () => {
           </div>
         )}
       />
-    </BaseContainer>
+    </>
   );
 };

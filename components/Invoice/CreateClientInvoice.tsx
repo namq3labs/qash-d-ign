@@ -11,7 +11,7 @@ import { DueDateDropdown } from "@/components/Common/Dropdown/DueDateDropdown";
 import InvoicePreview from "../Common/Invoice/InvoicePreview";
 import { useModal } from "@/contexts/ModalManagerProvider";
 import { MODAL_IDS, PermissionRequiredModalProps } from "@/types/modal";
-import { createB2BInvoice, sendB2BInvoice } from "@/services/api/invoice";
+import { createB2BInvoice, sendB2BInvoice, downloadB2BInvoicePdf } from "@/services/api/invoice";
 import { useGetMyCompany } from "@/services/api/company";
 import { useListAccountsByCompany } from "@/services/api/multisig";
 import {
@@ -31,6 +31,8 @@ import { useDemo } from "@/contexts/DemoProvider";
 import { InvoiceModalProps } from "@/types/modal";
 import { trackEvent } from "@/services/analytics/posthog";
 import { PostHogEvent } from "@/types/posthog";
+import { Eye, EyeClosed, NavArrowRight } from "iconoir-react";
+import { useTitle } from "@/contexts/TitleProvider";
 
 interface FormItem {
   description: string;
@@ -76,8 +78,11 @@ interface FormData {
   paymentMethodId: string;
 }
 
-const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-  <h2 className="text-lg font-semibold text-text-primary">{children}</h2>
+const SectionTitle = ({ children, subtitle }: { children: React.ReactNode; subtitle?: string }) => (
+  <div className="flex flex-col gap-0.5">
+    <h2 className="text-lg font-semibold text-text-primary">{children}</h2>
+    {subtitle && <p className="text-sm text-text-secondary">{subtitle}</p>}
+  </div>
 );
 
 const SectionDivider = () => <div className="h-px w-full bg-primary-divider" />;
@@ -85,6 +90,7 @@ const SectionDivider = () => <div className="h-px w-full bg-primary-divider" />;
 const CreateClientInvoice = () => {
   const { openModal } = useModal();
   const router = useRouter();
+  const { setTitle, setShowBackArrow, setOnBackClick } = useTitle();
   const { user } = useAuth();
   const { data: demoData } = useDemo();
   const invoiceSettings = demoData?.invoiceSettings;
@@ -93,12 +99,15 @@ const CreateClientInvoice = () => {
     enabled: !!myCompany?.id,
   });
   const [invoiceSent, setInvoiceSent] = useState(false);
+  const [showPreview, setShowPreview] = useState(true);
   const [expandFromDetails, setExpandFromDetails] = useState(false);
   const [expandBillToDetails, setExpandBillToDetails] = useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState<{ icon: string; name: string; value: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [createdInvoice, setCreatedInvoice] = useState<any>(null);
   const [ccEmailInput, setCcEmailInput] = useState("");
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
   const isAdmin = user?.teamMembership?.role === "ADMIN" || user?.teamMembership?.role === "OWNER";
 
@@ -110,6 +119,28 @@ const CreateClientInvoice = () => {
       });
     }
   }, [user, isAdmin]);
+
+  // Breadcrumb in the top title bar: Invoice › Create invoice
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <span className="text-text-secondary">Receive</span>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <button
+          type="button"
+          onClick={() => router.push("/invoice")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Invoice
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Create invoice</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    setOnBackClick(undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { register, watch, setValue, formState: { errors } } = useForm<FormData>({
     mode: "onBlur",
@@ -256,6 +287,15 @@ const CreateClientInvoice = () => {
     setValue("items", formData.items.filter((_, i) => i !== index));
   };
 
+  // Drag-and-drop reorder for product rows
+  const handleReorderItems = (from: number, to: number) => {
+    if (from === to || from < 0 || to < 0) return;
+    const next = [...formData.items];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    setValue("items", next);
+  };
+
   const handleAddCcEmail = () => {
     const email = ccEmailInput.trim();
     if (!email) return;
@@ -311,6 +351,51 @@ const CreateClientInvoice = () => {
     } catch (err: any) {
       const msg = err.response?.data?.message || err.message || "Failed to send invoice";
       toast.error(typeof msg === "string" ? msg : JSON.stringify(msg));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDownloadInvoice = async () => {
+    try {
+      let invoice = createdInvoice;
+      if (!invoice?.uuid) {
+        invoice = await createB2BInvoice(buildCreateInvoiceDto());
+        setCreatedInvoice(invoice);
+      }
+      if (!invoice?.uuid) throw new Error("Could not prepare invoice");
+      const blob = await downloadB2BInvoicePdf(invoice.uuid);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `invoice-${invoice.invoiceNumber || formData.invoiceNumber || invoice.uuid}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      toast.success("Invoice downloaded");
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to download invoice");
+    }
+  };
+
+  const handleSaveDraft = async () => {
+    if (formData.items.length === 0) {
+      toast.error("Please add at least one item");
+      return;
+    }
+    setIsLoading(true);
+    try {
+      let invoice = createdInvoice;
+      if (!invoice) {
+        const dto = buildCreateInvoiceDto();
+        invoice = await createB2BInvoice(dto);
+        setCreatedInvoice(invoice);
+      }
+      toast.success("Saved as draft");
+      router.push("/invoice");
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to save draft");
     } finally {
       setIsLoading(false);
     }
@@ -381,20 +466,48 @@ const CreateClientInvoice = () => {
   }
 
   return (
-    <div className="flex flex-row relative h-full bg-background">
-      {/* Left: Form (60%) */}
-      <div className="w-[60%] flex flex-col gap-6 p-6 overflow-y-auto pb-24">
-        {/* Back */}
-        <button onClick={() => router.push("/invoice")} className="flex gap-1 items-center text-[#066eff] hover:opacity-80 transition-opacity cursor-pointer w-fit">
-          <img src="/arrow/chevron-left.svg" alt="back" className="w-5 h-5" />
-          <span className="font-medium text-sm">Back to Invoices</span>
-        </button>
+    <div className="flex h-full w-full flex-col bg-background">
+      {/* Header with actions */}
+      <div className="flex items-start justify-between gap-4 px-6 pt-6 pb-4">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Create Invoice</h1>
+          <p className="text-[14px] text-text-secondary">Generate and send a new invoice.</p>
+        </div>
+        <div className="flex shrink-0 items-center gap-2 pt-1">
+          <button
+            type="button"
+            onClick={() => setShowPreview(p => !p)}
+            className="flex items-center gap-2 rounded-xl border border-primary-divider bg-background px-3.5 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-app-background"
+          >
+            {showPreview ? <EyeClosed width={16} height={16} strokeWidth={2} /> : <Eye width={16} height={16} strokeWidth={2} />}
+            {showPreview ? "Hide Preview" : "Show Preview"}
+          </button>
+          <SecondaryButton
+            text="Save as Draft"
+            variant="light"
+            onClick={handleSaveDraft}
+            buttonClassName="w-fit whitespace-nowrap"
+            disabled={isLoading}
+          />
+          <PrimaryButton
+            text={isLoading ? "Sending..." : "Send Invoice"}
+            onClick={handleSendInvoice}
+            containerClassName="w-[150px]"
+            buttonClassName="whitespace-nowrap"
+            disabled={isLoading}
+          />
+        </div>
+      </div>
 
-        <h1 className="text-2xl font-bold text-text-primary">Create Invoice</h1>
+      {/* Body: form + preview */}
+      <div className="flex min-h-0 flex-1 gap-6 overflow-hidden px-6 pb-6">
+        {/* Form */}
+        <div className={`flex flex-col overflow-y-auto pb-4 ${showPreview ? "flex-1" : "mx-auto w-full max-w-[860px]"}`}>
+          <div className="flex flex-col gap-6 rounded-2xl border border-primary-divider bg-background p-6">
 
         {/* === Section 1: Your Information === */}
         <div className="flex flex-col gap-3">
-          <SectionTitle>Your Information</SectionTitle>
+          <SectionTitle subtitle="Who is sending this invoice.">Your Information</SectionTitle>
           <div className="flex gap-3">
             <InputOutlined label="Name" placeholder="Your name" {...register("name")} containerClassName="flex-1" />
             <InputOutlined label="Email" placeholder="your@email.com" type="email" {...register("email")} containerClassName="flex-1" />
@@ -409,11 +522,15 @@ const CreateClientInvoice = () => {
 
         <SectionDivider />
 
-        {/* === Section 2: Bill To === */}
+        {/* === Section 2: Bill To (mirrors the Your Information layout) === */}
         <div className="flex flex-col gap-3">
-          <SectionTitle>Bill To</SectionTitle>
+          <SectionTitle subtitle="Who is receiving this invoice.">Bill To</SectionTitle>
+          <div className="flex gap-3">
+            <InputOutlined label="Name" placeholder="Client name" {...register("billToContactName")} containerClassName="flex-1" />
+            <InputOutlined label="Email" placeholder="client@email.com" type="email" {...register("billToEmail")} containerClassName="flex-1" />
+          </div>
           <InputOutlined
-            label="Client"
+            label="Company name"
             placeholder="Select client"
             value={formData.billToCompanyName}
             onChange={() => {}}
@@ -421,7 +538,6 @@ const CreateClientInvoice = () => {
             icon="/misc/address-book-icon.svg"
             iconOnClick={() => openModal("SELECT_CLIENT", { onSave: handleClientSelect })}
           />
-          <InputOutlined label="Email" placeholder="client@email.com" type="email" {...register("billToEmail")} />
           <button onClick={() => setExpandBillToDetails(!expandBillToDetails)} className="flex gap-1 items-center text-text-secondary cursor-pointer w-fit text-sm">
             <span>Additional details</span>
             <img src="/arrow/chevron-down.svg" alt="" className={`w-4 h-4 transition-transform ${expandBillToDetails ? "rotate-180" : ""}`} />
@@ -456,25 +572,93 @@ const CreateClientInvoice = () => {
 
         <SectionDivider />
 
-        {/* === Section 4: Items === */}
+        {/* === Section 4: Product Details (table) === */}
         <div className="flex flex-col gap-3">
-          <SectionTitle>Items</SectionTitle>
-          {formData.items.map((item, index) => (
-            <div key={index} className="flex gap-2 items-end w-full">
-              <InputOutlined label="Item" placeholder="Description" name="description" value={item.description}
-                onChange={e => handleItemChange(index, "description", e.target.value)} containerClassName="flex-1" />
-              <InputOutlined label="Price" placeholder="0.00" name="price" type="number" value={item.price}
-                onChange={e => handleItemChange(index, "price", e.target.value)} containerClassName="w-28" />
-              <InputOutlined label="Qty" placeholder="1" name="qty" type="number" value={item.qty}
-                onChange={e => handleItemChange(index, "qty", e.target.value)} containerClassName="w-20" />
-              <InputOutlined label="Amount" placeholder="0.00" name="amount" type="number" value={item.amount}
-                containerClassName="w-28" />
-              <button onClick={() => handleRemoveItem(index)} className="flex justify-center items-center w-10 h-10 border border-primary-divider rounded-lg text-text-secondary hover:border-red-500 hover:text-red-500 transition-colors mb-0.5 shrink-0" title="Remove">
-                <span className="text-lg leading-none">&minus;</span>
-              </button>
+          <SectionTitle subtitle="Enter product details.">Product Details</SectionTitle>
+          <div className="overflow-hidden rounded-xl border border-primary-divider">
+            {/* Table header */}
+            <div className="grid grid-cols-[22px_1fr_64px_112px_112px_32px] items-center gap-2 bg-app-background px-3 py-2.5 text-xs font-medium text-text-secondary">
+              <span />
+              <span>Item</span>
+              <span className="text-center">QTY</span>
+              <span>Cost</span>
+              <span>Total</span>
+              <span />
             </div>
-          ))}
-          <button onClick={handleAddItem} className="w-full border border-dashed border-primary-divider rounded-lg py-3 flex items-center justify-center gap-2 hover:bg-app-background transition-colors text-sm text-text-secondary">
+            {/* Rows */}
+            {formData.items.map((item, index) => (
+              <div
+                key={index}
+                onDragOver={e => {
+                  if (dragIndex !== null) {
+                    e.preventDefault();
+                    setDragOverIndex(index);
+                  }
+                }}
+                onDrop={e => {
+                  e.preventDefault();
+                  if (dragIndex !== null) handleReorderItems(dragIndex, index);
+                  setDragIndex(null);
+                  setDragOverIndex(null);
+                }}
+                className={`grid grid-cols-[22px_1fr_64px_112px_112px_32px] items-center gap-2 border-t border-primary-divider px-3 py-2 transition-colors ${
+                  dragIndex === index ? "opacity-40" : dragOverIndex === index && dragIndex !== null ? "bg-app-background" : ""
+                }`}
+              >
+                <span
+                  draggable
+                  onDragStart={e => {
+                    setDragIndex(index);
+                    e.dataTransfer.effectAllowed = "move";
+                  }}
+                  onDragEnd={() => {
+                    setDragIndex(null);
+                    setDragOverIndex(null);
+                  }}
+                  className="cursor-grab select-none text-base leading-none text-text-secondary/40 transition-colors hover:text-text-secondary active:cursor-grabbing"
+                  title="Drag to reorder"
+                >
+                  ⋮⋮
+                </span>
+                <input
+                  placeholder="Item name"
+                  value={item.description}
+                  onChange={e => handleItemChange(index, "description", e.target.value)}
+                  className="w-full rounded-lg border border-primary-divider bg-background px-2.5 py-1.5 text-sm text-text-primary outline-none transition-colors focus:border-primary-blue"
+                />
+                <input
+                  type="number"
+                  placeholder="1"
+                  value={item.qty}
+                  onChange={e => handleItemChange(index, "qty", e.target.value)}
+                  className="num w-full rounded-lg border border-primary-divider bg-background px-2 py-1.5 text-center text-sm text-text-primary outline-none transition-colors focus:border-primary-blue"
+                />
+                <input
+                  type="number"
+                  placeholder="0.00"
+                  value={item.price}
+                  onChange={e => handleItemChange(index, "price", e.target.value)}
+                  className="num w-full rounded-lg border border-primary-divider bg-background px-2.5 py-1.5 text-sm text-text-primary outline-none transition-colors focus:border-primary-blue"
+                />
+                <input
+                  readOnly
+                  value={item.amount}
+                  className="num w-full rounded-lg border border-primary-divider bg-app-background px-2.5 py-1.5 text-sm text-text-secondary outline-none"
+                />
+                <button
+                  onClick={() => handleRemoveItem(index)}
+                  className="flex h-7 w-7 items-center justify-center rounded-lg text-text-secondary transition-colors hover:bg-app-background hover:text-red-500"
+                  title="Remove"
+                >
+                  <span className="text-base leading-none">&minus;</span>
+                </button>
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={handleAddItem}
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-primary-divider py-2.5 text-sm text-text-secondary transition-colors hover:bg-app-background"
+          >
             <img src="/misc/circle-plus-icon.svg" alt="add" className="w-4 h-4" />
             Add item
           </button>
@@ -524,27 +708,47 @@ const CreateClientInvoice = () => {
             className="w-full h-20 border border-primary-divider rounded-lg p-3 placeholder-text-secondary focus:outline-none focus:border-primary-blue text-sm" />
         </div>
 
-        {/* === Section 7: Email CC === */}
+        {/* === Section 7: Email CC (tag input: type + Enter -> pill, keep typing) === */}
         <div className="flex flex-col gap-2">
           <SectionTitle>CC Recipients (optional)</SectionTitle>
-          <div className="flex items-center gap-2 flex-wrap">
+          <label className="flex w-full cursor-text flex-wrap items-center gap-2 rounded-lg border border-primary-divider px-3 py-2.5 transition-colors focus-within:border-primary-blue">
             {formData.billToCcEmails.map((email, index) => (
-              <div key={index} className="bg-app-background rounded-lg px-3 py-1 flex items-center gap-2 text-sm">
-                <span>{email}</span>
-                <button onClick={() => setValue("billToCcEmails", formData.billToCcEmails.filter((_, i) => i !== index))} className="text-text-secondary hover:text-red-500">&times;</button>
-              </div>
+              <span key={index} className="flex items-center gap-1.5 rounded-md bg-app-background px-2.5 py-1 text-sm text-text-primary">
+                {email}
+                <button
+                  type="button"
+                  onClick={() => setValue("billToCcEmails", formData.billToCcEmails.filter((_, i) => i !== index))}
+                  className="leading-none text-text-secondary transition-colors hover:text-red-500"
+                  aria-label={`Remove ${email}`}
+                >
+                  &times;
+                </button>
+              </span>
             ))}
-            <input type="email" placeholder="Add CC email" value={ccEmailInput} onChange={e => setCcEmailInput(e.target.value)}
-              onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); handleAddCcEmail(); } }}
+            <input
+              type="email"
+              placeholder={formData.billToCcEmails.length ? "Add another email" : "Add CC email"}
+              value={ccEmailInput}
+              onChange={e => setCcEmailInput(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === "Enter" || e.key === ",") {
+                  e.preventDefault();
+                  handleAddCcEmail();
+                } else if (e.key === "Backspace" && !ccEmailInput && formData.billToCcEmails.length) {
+                  setValue("billToCcEmails", formData.billToCcEmails.slice(0, -1));
+                }
+              }}
               onBlur={() => { if (ccEmailInput.trim()) handleAddCcEmail(); }}
-              className="text-sm placeholder-text-secondary outline-none flex-1 min-w-[150px] py-1" />
-          </div>
+              className="min-w-[160px] flex-1 bg-transparent py-0.5 text-sm text-text-primary outline-none placeholder:text-text-secondary"
+            />
+          </label>
+        </div>
         </div>
       </div>
 
       {/* Right: Live Preview */}
-      {/* Right: Live Preview (40%) */}
-      <div className="w-[40%] shrink-0 overflow-y-auto" style={{ ["--invoice-accent" as any]: invoiceSettings?.accentColor || "#194BFA" }}>
+      {showPreview && (
+      <div className="w-[42%] shrink-0 overflow-y-auto" style={{ ["--invoice-accent" as any]: invoiceSettings?.accentColor || "#194BFA" }}>
       <InvoicePreview
         logo={invoiceSettings?.logo}
         invoiceNumber={createdInvoice?.invoiceNumber || formData.invoiceNumber || ""}
@@ -570,17 +774,10 @@ const CreateClientInvoice = () => {
         amountDue={total}
         currency={formData.currency || "USD"}
         status={createdInvoice?.status || "DRAFT"}
+        onDownload={handleDownloadInvoice}
       />
       </div>
-
-      {/* Bottom bar */}
-      <div className="fixed bottom-0 left-0 right-0 backdrop-blur-md bg-white/70 border-t border-primary-divider flex items-center justify-end px-10 py-4 z-10">
-        <PrimaryButton
-          text={isLoading ? "Sending..." : "Send Invoice"}
-          onClick={handleSendInvoice}
-          containerClassName="w-36"
-          disabled={isLoading}
-        />
+      )}
       </div>
     </div>
   );

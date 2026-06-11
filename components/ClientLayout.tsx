@@ -1,7 +1,9 @@
 "use client";
 
 import { ReactNode, useMemo } from "react";
-import toast, { ToastBar, Toaster } from "react-hot-toast";
+import { ToastBar, Toaster } from "react-hot-toast";
+import { CircleNotch } from "@phosphor-icons/react";
+import { ToastIcon } from "./Common/qashToast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Sidebar } from "./Sidebar/Sidebar";
 import { Title } from "./Common/Title";
@@ -44,7 +46,6 @@ const fullscreenPages = new Set([
   "/onboarding",
   "/payment/",
   "/invoice-review",
-  "/invoice/create",
   "/team-invite",
 ]);
 
@@ -71,48 +72,34 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
             <Toaster
               position="top-right"
               toastOptions={{
+                duration: 4000,
                 style: {
-                  padding: "6px",
-                  background: "var(--toast-background) !important",
-                  border: "4px solid var(--toast-border) !important",
-                  width: "full",
-                  maxWidth: "900px",
-                  borderRadius: "9999px",
+                  background: "#1a1a1a",
+                  color: "#ffffff",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  borderRadius: "14px",
+                  padding: "8px 14px",
+                  maxWidth: "440px",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  boxShadow: "0 14px 38px -12px rgba(0,0,0,0.55)",
                 },
-                success: {
-                  icon: <img src="/toast/success.svg" alt="success" />,
-                },
-                error: {
-                  icon: <img src="/toast/error.svg" alt="error" />,
-                },
-                loading: {
-                  icon: <img src="/toast/loading.gif" alt="loading" className="w-10.5" />,
-                },
+                success: { icon: <ToastIcon type="success" /> },
+                error: { icon: <ToastIcon type="error" /> },
+                loading: { icon: <CircleNotch size={18} weight="bold" className="animate-spin text-white" /> },
               }}
-              children={t => (
-                <ToastBar
-                  toast={t}
-                  style={{
-                    ...t.style,
-                  }}
-                >
+            >
+              {t => (
+                <ToastBar toast={t} style={{ ...t.style }}>
                   {({ icon, message }) => (
-                    <div className="flex items-center justify-between gap-8 pr-3">
-                      <div className="flex items-center">
-                        {icon}
-                        <span className="text-toast-text leading-none">{message}</span>
-                      </div>
-                      <img
-                        src="/toast/close-icon.svg"
-                        alt="close"
-                        className="w-5 cursor-pointer"
-                        onClick={() => toast.dismiss(t.id)}
-                      />
+                    <div className="flex items-center gap-2.5">
+                      {icon}
+                      <span className="py-0.5 leading-snug text-white">{message}</span>
                     </div>
                   )}
                 </ToastBar>
               )}
-            />
+            </Toaster>
             <MockAuthProvider>
               <ProtectedContent>
               <MockSocketProvider>

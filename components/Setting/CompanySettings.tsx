@@ -315,7 +315,7 @@ export default function CompanySettings() {
               text="Delete Company"
               variant="red"
               onClick={handleDeleteCompany}
-              buttonClassName="w-fit px-4"
+              buttonClassName="w-fit whitespace-nowrap"
             />
           </div>
         </div>

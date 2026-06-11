@@ -73,7 +73,7 @@ export async function mintTokensViaClient(
       console.warn("[mint] Could not inject faucet secret key:", keyErr);
     }
   } else {
-    console.warn("[mint] NEXT_PUBLIC_FAUCET_SECRET_KEY not set — mint will only work for the faucet deployer");
+    console.warn("[mint] NEXT_PUBLIC_FAUCET_SECRET_KEY not set, mint will only work for the faucet deployer");
   }
 
   await client.syncState();

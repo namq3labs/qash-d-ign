@@ -416,8 +416,10 @@ export interface EditEmployeeContactModalProps extends BaseModalProps {
     address: string;
     email?: string;
     group: string;
+    groupIds?: number[];
     token?: TokenDto;
     network?: NetworkDto;
+    avatar?: string;
   };
 }
 

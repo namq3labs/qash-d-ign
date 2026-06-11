@@ -13,6 +13,8 @@ import { getB2BInvoiceByUUID, downloadB2BInvoicePdf, cancelB2BInvoice } from "@/
 import { InvoiceStatusEnum } from "@qash/types/enums";
 import { CategoryBadge } from "../ContactBook/ContactBookContainer";
 import { useGetAllEmployeeGroups } from "@/services/api/employee";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
 
 const ClientInvoiceDetailContainer = () => {
   const router = useRouter();
@@ -22,6 +24,28 @@ const ClientInvoiceDetailContainer = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [invoice, setInvoice] = useState<any>(null);
   const { data: groups } = useGetAllEmployeeGroups();
+  const { setTitle, setShowBackArrow } = useTitle();
+
+  // Breadcrumb: Receive › Invoice › <invoice number>
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <span className="text-text-secondary">Receive</span>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <button
+          type="button"
+          onClick={() => router.push("/invoice")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Invoice
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">{invoice?.invoiceNumber || "Invoice detail"}</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invoice?.invoiceNumber]);
 
   // Action handlers for invoice menu
   const handleCopyInvoiceLink = async () => {
@@ -129,7 +153,7 @@ const ClientInvoiceDetailContainer = () => {
   const statusBadge = getStatusBadge(invoice.status);
 
   return (
-    <div className="flex flex-col w-full h-full px-10 py-5 gap-6 bg-background">
+    <div className="flex flex-col w-full h-full px-6 py-6 gap-6 bg-background overflow-y-auto">
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-col gap-2">
           <span className="text-[14px] leading-none text-text-secondary">
@@ -145,7 +169,7 @@ const ClientInvoiceDetailContainer = () => {
           <SecondaryButton
             text="View invoice PDF"
             variant="light"
-            buttonClassName="w-[160px]"
+            buttonClassName="w-fit whitespace-nowrap"
             icon="/misc/eye-icon.svg"
             iconPosition="left"
             onClick={() => {
@@ -246,18 +270,18 @@ const ClientInvoiceDetailContainer = () => {
         />
       }
 
-      <div className="w-full h-full flex flex-row gap-10">
-        <div className="flex-1 flex-col w-full h-full">
+      <div className="w-full flex flex-row gap-10">
+        <div className="flex-1 flex flex-col gap-6 w-full">
           {/* Invoice Details Cards */}
           <div className="flex flex-row gap-3 w-full">
             {/* First Card - Invoice Details */}
             <div className="flex-1 bg-white border border-gray-200 rounded-2xl p-4 flex gap-8">
-              <div className="flex flex-col gap-4 w-24">
-                <p className="text-sm text-gray-500 font-medium">Created on</p>
-                <p className="text-sm text-gray-500 font-medium">Invoice amount</p>
-                <p className="text-sm text-gray-500 font-medium">Issued date</p>
-                <p className="text-sm text-gray-500 font-medium">Due date</p>
-                <p className="text-sm text-gray-500 font-medium">Currency</p>
+              <div className="flex flex-col gap-4 w-fit">
+                <p className="text-sm text-gray-500 font-medium whitespace-nowrap">Created on</p>
+                <p className="text-sm text-gray-500 font-medium whitespace-nowrap">Invoice amount</p>
+                <p className="text-sm text-gray-500 font-medium whitespace-nowrap">Issued date</p>
+                <p className="text-sm text-gray-500 font-medium whitespace-nowrap">Due date</p>
+                <p className="text-sm text-gray-500 font-medium whitespace-nowrap">Currency</p>
               </div>
 
               <div className="flex-1 flex flex-col gap-4">
@@ -285,7 +309,7 @@ const ClientInvoiceDetailContainer = () => {
             <div className="flex-1 bg-white border border-gray-200 rounded-2xl p-4 flex flex-col gap-4">
               <div className="flex flex-row gap-5">
                 <div className="w-30">
-                  <p className="text-sm text-gray-500 font-medium">From</p>
+                  <p className="text-sm text-gray-500 font-medium whitespace-nowrap">From</p>
                 </div>
                 <div className="flex flex-col gap-0">
                   <p className="text-sm text-gray-900 font-medium">
@@ -296,7 +320,7 @@ const ClientInvoiceDetailContainer = () => {
               </div>
               <div className="flex flex-row gap-5">
                 <div className="w-30">
-                  <p className="text-sm text-gray-500 font-medium">Billed to</p>
+                  <p className="text-sm text-gray-500 font-medium whitespace-nowrap">Billed to</p>
                 </div>
                 <div className="flex flex-col gap-0">
                   <p className="text-sm text-gray-900 font-medium">
@@ -309,7 +333,7 @@ const ClientInvoiceDetailContainer = () => {
               </div>
               <div className="flex flex-row gap-5">
                 <div className="w-30">
-                  <p className="text-sm text-gray-500 font-medium">Default method</p>
+                  <p className="text-sm text-gray-500 font-medium whitespace-nowrap">Default method</p>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -328,7 +352,7 @@ const ClientInvoiceDetailContainer = () => {
               </div>
               <div className="flex flex-row gap-5">
                 <div className="w-30">
-                  <p className="text-sm text-gray-500 font-medium">Payment address</p>
+                  <p className="text-sm text-gray-500 font-medium whitespace-nowrap">Payment address</p>
                 </div>
 
                 <div className="flex items-center gap-2">

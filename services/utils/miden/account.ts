@@ -54,7 +54,7 @@ export const importAndGetAccount = async (
     } else if (/^[0-9a-fA-F]+$/.test(account)) {
       accountId = AccountId.fromHex(`0x${account}`);
     } else {
-      // bech32 format (e.g. mtst1..._...) — Address.fromBech32 handles full address with routing info
+      // bech32 format (e.g. mtst1..._...), Address.fromBech32 handles full address with routing info
       accountId = Address.fromBech32(account).accountId();
     }
 

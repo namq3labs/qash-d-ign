@@ -37,7 +37,7 @@ export const Badge: React.FC<BadgeProps> = ({ status, text = status, className }
   };
 
   return (
-    <div className={`flex justify-center items-center px-2 py-1 rounded-full border ${getStatusStyles()} ${className}`}>
+    <div className={`inline-flex w-fit justify-center items-center px-2 py-1 rounded-full border ${getStatusStyles()} ${className}`}>
       <span className={`text-xs leading-none ${getStatusStyles()} font-bold`}>{text}</span>
     </div>
   );

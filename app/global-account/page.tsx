@@ -1,8 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { Badge, BadgeStatus } from "@/components/Common/Badge";
+import { SecondaryButton } from "@/components/Common/SecondaryButton";
+import BaseModal from "@/components/Modal/BaseModal";
+import { ModalHeader } from "@/components/Common/ModalHeader";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight, Copy, Check } from "iconoir-react";
+
+const CARD_BG_STYLE = {
+  backgroundImage: "url(/card/background.svg)",
+  backgroundSize: "30%",
+  backgroundPosition: "right",
+  backgroundRepeat: "no-repeat",
+} as const;
 
 // ---- Mock Account Data -----------------------------------------------------
 
@@ -98,169 +110,224 @@ function copyToClipboard(text: string, label: string) {
   toast.success(`${label} copied`);
 }
 
-// ---- Account Card ----------------------------------------------------------
+// ---- Virtual Account Card (credit-card visual) -----------------------------
 
-function AccountCard({ account }: { account: VirtualAccount }) {
-  const [expanded, setExpanded] = useState(false);
+const CARD_GRADIENT: Record<string, string> = {
+  USD: "linear-gradient(135deg, #1b3a8f 0%, #2f6df6 100%)",
+  EUR: "linear-gradient(135deg, #4c1d95 0%, #7c3aed 100%)",
+  AED: "linear-gradient(135deg, #064e3b 0%, #0c9f6e 100%)",
+};
+
+function primaryNumber(account: VirtualAccount): string {
+  const d = account.details.find((x) => /account number|iban/i.test(x.label));
+  return d?.value ?? account.details[1]?.value ?? "";
+}
+
+function CardFace({ account, className = "" }: { account: VirtualAccount; className?: string }) {
+  const holder = account.details.find((d) => /holder/i.test(d.label))?.value ?? "Qash Inc.";
+  return (
+    <div
+      className={`relative flex h-[210px] w-[340px] flex-col justify-between overflow-hidden rounded-2xl p-5 text-left text-white shadow-sm ${className}`}
+      style={{ background: CARD_GRADIENT[account.currency] ?? CARD_GRADIENT.USD }}
+    >
+      {/* decorative shapes */}
+      <span className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/10" />
+      <span className="pointer-events-none absolute -bottom-14 -left-10 h-40 w-40 rounded-full bg-white/5" />
+
+      {/* top row */}
+      <div className="relative z-10 flex items-start justify-between">
+        <div>
+          <p className="text-[11px] font-medium uppercase tracking-wide text-white/60">{account.method}</p>
+          <p className="text-xl font-bold leading-tight">{account.currency}</p>
+        </div>
+        <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide">
+          Active
+        </span>
+      </div>
+
+      {/* chip + number */}
+      <div className="relative z-10 flex flex-col gap-2">
+        <span className="h-6 w-9 rounded-md bg-gradient-to-br from-white/70 to-white/40" />
+        <p className="num break-all text-[15px] font-medium leading-snug tracking-[0.12em]">{primaryNumber(account)}</p>
+      </div>
+
+      {/* bottom row */}
+      <div className="relative z-10 flex items-end justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[9px] font-medium uppercase tracking-wide text-white/50">Bank</p>
+          <p className="truncate text-sm font-semibold">{account.bankName}</p>
+        </div>
+        <div className="min-w-0 text-right">
+          <p className="text-[9px] font-medium uppercase tracking-wide text-white/50">Holder</p>
+          <p className="truncate text-sm font-semibold">{holder}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function VirtualCard({ account, onClick }: { account: VirtualAccount; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="shrink-0 snap-start cursor-pointer rounded-2xl opacity-95 transition-all duration-200 hover:-translate-y-0.5 hover:opacity-100 focus:outline-none"
+    >
+      <CardFace account={account} />
+    </button>
+  );
+}
+
+// ---- Account Details Modal -------------------------------------------------
+
+function AccountModal({ account, onClose }: { account: VirtualAccount; onClose: () => void }) {
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
+  const handleCopyDetail = (label: string, value: string) => {
+    copyToClipboard(value, label);
+    setCopiedKey(label);
+    window.setTimeout(() => setCopiedKey((k) => (k === label ? null : k)), 1500);
+  };
 
   return (
-    <div className="rounded-xl border border-primary-divider bg-background overflow-hidden">
-      {/* Header */}
-      <button
-        type="button"
-        className="w-full flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-app-background transition-colors"
-        onClick={() => setExpanded(!expanded)}
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-app-background border border-primary-divider flex items-center justify-center text-xs font-bold text-text-primary shrink-0">
-            {account.currency}
-          </div>
-          <div className="flex flex-col items-start gap-0.5">
-            <span className="text-sm font-semibold text-text-primary">
-              {account.currency} - {account.method}
-            </span>
-            <span className="text-xs text-text-secondary">{account.bankName}</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <Badge status={BadgeStatus.SUCCESS} text="Active" className="px-3" />
-          <img
-            src="/arrow/chevron-right.svg"
-            alt="expand"
-            className={`w-3 opacity-40 transition-transform duration-200 ${expanded ? "rotate-90" : ""}`}
-          />
-        </div>
-      </button>
+    <BaseModal isOpen onClose={onClose} zIndex={1000}>
+      <ModalHeader title="Account details" onClose={onClose} />
+      <div className="flex max-h-[80vh] w-[520px] flex-col overflow-hidden rounded-b-2xl border-2 border-primary-divider bg-background">
+        <div className="flex flex-col gap-4 overflow-y-auto p-5">
+          {/* card visual */}
+          <CardFace account={account} className="mx-auto" />
 
-      {/* Details */}
-      {expanded && (
-        <div className="border-t border-primary-divider px-5 py-4">
-          <div className="flex flex-col gap-3">
-            {account.details.map((detail) => (
-              <div
-                key={detail.label}
-                className="flex items-center justify-between py-2 border-b border-primary-divider last:border-0"
-              >
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-xs text-text-secondary">{detail.label}</span>
-                  <span className="text-sm font-medium text-text-primary font-mono">
-                    {detail.value}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  className="text-xs font-medium cursor-pointer px-3 py-1.5 rounded-lg hover:bg-app-background transition-colors"
-                  style={{ color: "var(--primary-blue)" }}
-                  onClick={() => copyToClipboard(detail.value, detail.label)}
-                >
-                  Copy
-                </button>
-              </div>
-            ))}
-          </div>
-
-          {/* Copy All */}
-          <button
-            type="button"
-            className="mt-4 w-full py-2 rounded-lg border border-primary-divider text-sm font-medium text-text-secondary hover:bg-app-background transition-colors cursor-pointer"
+          {/* copy all */}
+          <SecondaryButton
+            variant="light"
+            buttonClassName="w-fit self-center whitespace-nowrap"
             onClick={() => {
-              const allDetails = account.details
-                .map((d) => `${d.label}: ${d.value}`)
-                .join("\n");
+              const allDetails = account.details.map((d) => `${d.label}: ${d.value}`).join("\n");
               copyToClipboard(allDetails, "All account details");
             }}
-          >
-            Copy all details
-          </button>
+            text={
+              <span className="flex items-center gap-2">
+                <Copy width={14} height={14} strokeWidth={2} />
+                Copy all details
+              </span>
+            }
+          />
+
+          {/* detail rows */}
+          <div className="flex flex-col rounded-xl border border-primary-divider px-4">
+            {account.details.map((detail) => {
+              const copied = copiedKey === detail.label;
+              return (
+                <div
+                  key={detail.label}
+                  className="flex items-center justify-between gap-4 border-b border-primary-divider py-3 last:border-0"
+                >
+                  <div className="flex min-w-0 flex-col gap-1">
+                    <span className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+                      {detail.label}
+                    </span>
+                    <span className="num break-all text-sm font-medium text-text-primary">{detail.value}</span>
+                  </div>
+                  <SecondaryButton
+                    variant="light"
+                    buttonClassName="w-fit shrink-0 whitespace-nowrap"
+                    onClick={() => handleCopyDetail(detail.label, detail.value)}
+                    text={
+                      <span className={`flex items-center gap-1.5 ${copied ? "text-text-primary" : ""}`}>
+                        {copied ? <Check width={14} height={14} strokeWidth={2} /> : <Copy width={14} height={14} strokeWidth={2} />}
+                        {copied ? "Copied" : "Copy"}
+                      </span>
+                    }
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
-      )}
-    </div>
+      </div>
+    </BaseModal>
   );
 }
 
 // ---- Main Page -------------------------------------------------------------
 
 export default function GlobalAccountPage() {
+  const { setTitle, setShowBackArrow } = useTitle();
+  const [modalAccount, setModalAccount] = useState<VirtualAccount | null>(null);
+
+  // Breadcrumb in the top title bar: Receive › Global Account
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <span className="text-text-secondary">Receive</span>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Global Account</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <div className="flex flex-col w-full h-full p-5 gap-5 overflow-y-auto">
-      {/* Header */}
-      <div className="flex flex-col w-full px-5 gap-5">
-        <div className="flex flex-row items-center justify-between w-full">
-          <div className="flex flex-row items-center justify-start gap-3">
-            <img src="/sidebar/global-account.svg" alt="Global Account" className="w-6 h-6" />
-            <span className="text-2xl font-bold">Global Account</span>
-          </div>
-        </div>
-
-        {/* Info Banner */}
-        <div className="bg-app-background rounded-[12px] border-b border-primary-divider p-3 flex items-start gap-2">
-          <img src="/misc/info-icon.svg" alt="info" className="w-4 h-4 mt-0.5 shrink-0 opacity-40" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-          <div className="flex flex-col gap-1">
-            <p className="text-xs font-semibold text-text-primary">
-              Receive fiat deposits from anywhere in the world
-            </p>
-            <p className="text-xs text-text-secondary leading-relaxed">
-              Your dedicated virtual bank accounts accept deposits in USD (ACH, Wire, SWIFT), EUR (SEPA), and AED (UAEFTS).
-              Incoming funds are automatically converted and routed to your Qash wallet. Accounts are permanent and reusable.
-            </p>
-          </div>
-        </div>
-
-        {/* Stat Cards */}
-        <div className="flex flex-row w-full gap-2">
-          <div
-            className="relative w-full rounded-xl border border-primary-divider p-4 flex flex-col overflow-hidden gap-3"
-            style={{
-              backgroundImage: "url(/card/background.svg)",
-              backgroundSize: "30%",
-              backgroundPosition: "right",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
-            <span className="text-text-secondary text-sm leading-none">Active Accounts</span>
-            <span className="text-text-primary text-2xl font-bold leading-none">4</span>
-          </div>
-          <div
-            className="relative w-full rounded-xl border border-primary-divider p-4 flex flex-col overflow-hidden gap-3"
-            style={{
-              backgroundImage: "url(/card/background.svg)",
-              backgroundSize: "30%",
-              backgroundPosition: "right",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
-            <span className="text-text-secondary text-sm leading-none">Supported Currencies</span>
-            <span className="text-text-primary text-2xl font-bold leading-none">USD, EUR, AED</span>
-          </div>
-          <div
-            className="relative w-full rounded-xl border border-primary-divider p-4 flex flex-col overflow-hidden gap-3"
-            style={{
-              backgroundImage: "url(/card/background.svg)",
-              backgroundSize: "30%",
-              backgroundPosition: "right",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
-            <span className="text-text-secondary text-sm leading-none">Total Received (30d)</span>
-            <span className="text-2xl font-bold leading-none" style={{ color: "var(--badge-success-text)" }}>
-              $296,100.00
-            </span>
-          </div>
+    <div className="flex w-full h-full flex-col overflow-y-auto">
+      {/* Page header (same concept as the Dashboard / Invoice / Bills pages) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Global Account</h1>
+          <p className="text-[14px] text-text-secondary">Receive fiat deposits from anywhere in the world.</p>
         </div>
       </div>
 
-      {/* Account Cards */}
-      <div className="flex flex-col px-5 gap-3">
-        <span className="text-lg font-medium text-text-primary">Your Virtual Accounts</span>
-        {VIRTUAL_ACCOUNTS.map((account) => (
-          <AccountCard key={account.id} account={account} />
-        ))}
+      {/* Info banner */}
+      <div className="px-6 pb-3">
+        <div className="flex items-start gap-2 rounded-xl border border-primary-divider bg-app-background p-3">
+          <img
+            src="/misc/info-icon.svg"
+            alt="info"
+            className="mt-0.5 h-4 w-4 shrink-0 opacity-40"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = "none";
+            }}
+          />
+          <p className="text-xs leading-relaxed text-text-secondary">
+            Your dedicated virtual bank accounts accept deposits in USD (ACH, Wire, SWIFT), EUR (SEPA), and AED (UAEFTS).
+            Incoming funds are automatically converted and routed to your Qash wallet. Accounts are permanent and reusable.
+          </p>
+        </div>
+      </div>
+
+      {/* Stat cards */}
+      <div className="flex w-full flex-row gap-2 px-6 pb-2">
+        <div className="relative flex w-full flex-col gap-3 overflow-hidden rounded-xl border border-primary-divider p-4" style={CARD_BG_STYLE}>
+          <span className="text-sm leading-none text-text-secondary">Active Accounts</span>
+          <span className="num text-2xl leading-none text-text-primary">{VIRTUAL_ACCOUNTS.length}</span>
+        </div>
+        <div className="relative flex w-full flex-col gap-3 overflow-hidden rounded-xl border border-primary-divider p-4" style={CARD_BG_STYLE}>
+          <span className="text-sm leading-none text-text-secondary">Supported Currencies</span>
+          <span className="text-2xl font-semibold leading-none text-text-primary">USD, EUR, AED</span>
+        </div>
+        <div className="relative flex w-full flex-col gap-3 overflow-hidden rounded-xl border border-primary-divider p-4" style={CARD_BG_STYLE}>
+          <span className="text-sm leading-none text-text-secondary">Total Received (30d)</span>
+          <span className="num text-2xl leading-none" style={{ color: "var(--badge-success-text)" }}>
+            $296,100.00
+          </span>
+        </div>
+      </div>
+
+      {/* Your Virtual Accounts (horizontal card carousel; click a card for details) */}
+      <div className="flex flex-col gap-1 px-6 pb-2 pt-3">
+        <span className="text-lg font-semibold text-text-primary">Your Virtual Accounts</span>
+        <div className="-mx-1 flex snap-x gap-4 overflow-x-auto px-1 pb-3 pt-2">
+          {VIRTUAL_ACCOUNTS.map((account) => (
+            <VirtualCard key={account.id} account={account} onClick={() => setModalAccount(account)} />
+          ))}
+        </div>
       </div>
 
       {/* Recent Deposits */}
-      <div className="flex flex-col px-5 gap-3">
-        <span className="text-lg font-medium text-text-primary">Recent Deposits</span>
-        <div className="rounded-xl border border-primary-divider bg-background overflow-hidden">
+      <div className="flex flex-col gap-3 px-6 pb-6 pt-3">
+        <span className="text-lg font-semibold text-text-primary">Recent Deposits</span>
+        <div className="overflow-hidden rounded-2xl border border-primary-divider bg-background">
           <table className="w-full">
             <thead>
               <tr className="border-b border-primary-divider bg-app-background">
@@ -285,7 +352,7 @@ export default function GlobalAccountPage() {
                       year: "numeric",
                     })}
                   </td>
-                  <td className="px-5 py-3.5 text-sm font-semibold text-text-primary text-right">
+                  <td className="num px-5 py-3.5 text-sm font-semibold text-text-primary text-right">
                     {fmtCurrency(deposit.amount, deposit.currency)}
                   </td>
                   <td className="px-5 py-3.5 text-center">
@@ -299,6 +366,8 @@ export default function GlobalAccountPage() {
           </table>
         </div>
       </div>
+
+      {modalAccount && <AccountModal account={modalAccount} onClose={() => setModalAccount(null)} />}
     </div>
   );
 }

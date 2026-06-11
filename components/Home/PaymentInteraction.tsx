@@ -184,7 +184,7 @@ export const PaymentInteraction = () => {
                     }
                   }}
                   disabled={receivePaymentCheckedRows.length === 0}
-                  buttonClassName="flex-1 px-8 rounded-full"
+                  buttonClassName="flex-1 rounded-full whitespace-nowrap"
                 />
               </div>
             </>

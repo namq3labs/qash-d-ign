@@ -3,6 +3,8 @@
 import React, { useState, useMemo } from "react";
 import { useDemo } from "@/contexts/DemoProvider";
 import toast from "react-hot-toast";
+import { FrostedMenu } from "../Common/Dropdown/FrostedMenu";
+import { DateRangePicker, DateRange } from "../Common/Dropdown/DateRangePicker";
 import {
   BarChart,
   Bar,
@@ -231,6 +233,10 @@ export const ReportsSection = () => {
   const { data } = useDemo();
   const { openModal } = useModal();
   const [activeTab, setActiveTab] = useState<string>("income");
+  const [dateRange, setDateRange] = useState<DateRange>(() => ({
+    start: new Date(2026, 0, 1),
+    end: new Date(2026, 2, 31),
+  }));
 
   const transactions = data?.transactions ?? [];
   const monthlyFinancials = data?.monthlyFinancials ?? [];
@@ -406,7 +412,7 @@ export const ReportsSection = () => {
         ),
         Category: <Badge status={BadgeStatus.NEUTRAL} text={tx.category} />,
         Amount: (
-          <span className={`font-medium ${isIncome ? "text-badge-success-text" : "text-badge-fail-text"}`}>
+          <span className={`num font-medium ${isIncome ? "text-badge-success-text" : "text-badge-fail-text"}`}>
             {isIncome ? "+" : "-"}
             {formatCurrency(tx.amount)}
           </span>
@@ -419,7 +425,7 @@ export const ReportsSection = () => {
   if (!data) return null;
 
   return (
-    <div className="flex flex-col w-full gap-6 px-5">
+    <div className="flex flex-col w-full gap-4">
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -427,58 +433,24 @@ export const ReportsSection = () => {
           <p className="text-sm text-text-secondary mt-1">Financial overview and transaction reports</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-background border border-primary-divider rounded-xl px-4 py-2.5">
-            <svg
-              className="w-4 h-4 text-text-secondary"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"
-              />
-            </svg>
-            <span className="text-sm text-text-primary">Jan 1, 2026</span>
-            <span className="text-text-secondary">-</span>
-            <span className="text-sm text-text-primary">Mar 31, 2026</span>
-          </div>
-          <SecondaryButton
-            text="Export CSV"
-            variant="light"
-            onClick={() => handleExport("CSV")}
-            buttonClassName="w-auto px-4"
+          <DateRangePicker value={dateRange} onChange={setDateRange} />
+          <FrostedMenu
+            label={tabs.find(t => t.id === activeTab)?.label ?? "Income"}
+            items={tabs.map(t => ({ key: t.id, label: t.label }))}
+            activeKey={activeTab}
+            onSelect={setActiveTab}
+            width={180}
           />
-          <SecondaryButton
-            text="Export PDF"
-            variant="light"
-            onClick={() => handleExport("PDF")}
-            buttonClassName="w-auto px-4"
+          <FrostedMenu
+            label="Export"
+            items={[
+              { key: "CSV", label: "Export as CSV" },
+              { key: "PDF", label: "Export as PDF" },
+            ]}
+            onSelect={key => handleExport(key as "CSV" | "PDF")}
+            align="right"
+            width={180}
           />
-          <div className="relative">
-            <select
-              value={activeTab}
-              onChange={e => setActiveTab(e.target.value)}
-              className="appearance-none bg-background border border-primary-divider rounded-xl px-4 py-2.5 pr-10 text-sm text-text-primary font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-            >
-              {tabs.map(tab => (
-                <option key={tab.id} value={tab.id}>
-                  {tab.label}
-                </option>
-              ))}
-            </select>
-            <svg
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary pointer-events-none"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-            </svg>
-          </div>
         </div>
       </div>
 
@@ -615,7 +587,7 @@ export const ReportsSection = () => {
                 text={simEmployees.length > 0 ? `Simulation (${simEmployees.length} hires)` : "Simulate"}
                 variant={simEmployees.length > 0 ? "dark" : "light"}
                 onClick={openSimulation}
-                buttonClassName="w-auto px-4"
+                buttonClassName="w-auto"
               />
             }
           >
@@ -699,23 +671,23 @@ export const ReportsSection = () => {
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-text-secondary">Taxable Income</span>
-                    <span className="text-base font-semibold text-text-primary">
+                    <span className="num text-base text-text-primary">
                       {formatCurrency(netFlow > 0 ? netFlow : 0)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-text-secondary">Corporate Tax Rate</span>
-                    <span className="text-base font-semibold text-text-primary">{jurisdiction.corpTaxRate}%</span>
+                    <span className="num text-base text-text-primary">{jurisdiction.corpTaxRate}%</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-text-secondary">Estimated Tax Owed</span>
-                    <span className="text-base font-semibold text-badge-fail-text">
+                    <span className="num text-base text-badge-fail-text">
                       {formatCurrency(estimatedTax > 0 ? estimatedTax : 0)}
                     </span>
                   </div>
                   <div className="border-t border-primary-divider pt-4 flex items-center justify-between">
                     <span className="text-sm text-text-secondary">Effective Tax Rate</span>
-                    <span className="text-base font-semibold text-text-primary">
+                    <span className="num text-base text-text-primary">
                       {totalIncome > 0 ? ((Math.max(estimatedTax, 0) / totalIncome) * 100).toFixed(1) : "0.0"}%
                     </span>
                   </div>

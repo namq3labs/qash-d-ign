@@ -2,13 +2,16 @@ import React from "react";
 import { Tooltip } from "react-tooltip";
 
 const Card = ({ title, amount, info }: { title: string; amount: string; info?: string }) => {
+  // Unique per-instance id so each card's tooltip targets its OWN anchor
+  // (a shared id made the tooltip render on the adjacent card).
+  const tooltipId = `card-tip-${React.useId().replace(/:/g, "")}`;
   return (
     <div className="relative w-full h-full rounded-xl border border-primary-divider p-5 flex flex-col overflow-hidden">
       <div className="flex flex-row gap-2 items-center">
         <span className="text-text-secondary text-sm">{title}</span>
-        {info && <img src="/misc/gray-info-icon.svg" alt="info" className="w-3" data-tooltip-id="info-tooltip" />}
+        {info && <img src="/misc/gray-info-icon.svg" alt="info" className="w-3" data-tooltip-id={tooltipId} />}
       </div>
-      <span className="text-text-primary font-semibold text-2xl">{amount}</span>
+      <span className="num text-text-primary text-3xl">{amount}</span>
 
       <img
         src="/card/background.svg"
@@ -17,26 +20,26 @@ const Card = ({ title, amount, info }: { title: string; amount: string; info?: s
         aria-hidden="true"
       />
 
-      <Tooltip
-        id="info-tooltip"
-        clickable
-        style={{
-          zIndex: 20,
-          borderRadius: "16px",
-          padding: "0",
-        }}
-        place="bottom"
-        noArrow
-        border="none"
-        opacity={1}
-        render={() => {
-          return (
+      {info && (
+        <Tooltip
+          id={tooltipId}
+          clickable
+          style={{
+            zIndex: 20,
+            borderRadius: "16px",
+            padding: "0",
+          }}
+          place="bottom"
+          noArrow
+          border="none"
+          opacity={1}
+          render={() => (
             <div className="bg-[#444444] p-2 rounded-lg shadow-lg max-w-xs">
               <p className="text-sm text-white ">{info}</p>
             </div>
-          );
-        }}
-      />
+          )}
+        />
+      )}
     </div>
   );
 };

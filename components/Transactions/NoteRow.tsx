@@ -31,12 +31,12 @@ function isQashBech32Address(bech32: string): boolean {
 }
 
 // Helper to check if a faucet matches the QASH token by any identifier
-function isQashToken(faucetBech32: string, faucetHex: string, symbol: string): boolean {
+export function isQashToken(faucetBech32: string, faucetHex: string, symbol: string): boolean {
   return isQashHexAddress(faucetHex) || isQashBech32Address(faucetBech32) || symbol.toUpperCase() === "USDT";
 }
 
 // Helper to get a token logo path by bech32 faucet ID, hex faucet ID, or symbol
-function getTokenLogo(faucetBech32: string, faucetHex: string, symbol: string): string {
+export function getTokenLogo(faucetBech32: string, faucetHex: string, symbol: string): string {
   // Match QASH token
   if (isQashToken(faucetBech32, faucetHex, symbol)) {
     return "/token/usdt.svg";
@@ -54,7 +54,7 @@ function getTokenLogo(faucetBech32: string, faucetHex: string, symbol: string): 
 }
 
 // Format amount with given decimals
-function formatAmount(amount: number | string, decimals: number): string {
+export function formatAmount(amount: number | string, decimals: number): string {
   try {
     const bigIntAmount = BigInt(Math.round(Number(amount)));
     return formatUnits(bigIntAmount, decimals);
@@ -64,14 +64,14 @@ function formatAmount(amount: number | string, decimals: number): string {
 }
 
 // Helper function to parse note_type (e.g., "Some(Public)" -> "Public")
-function parseNoteType(noteType: string): string {
+export function parseNoteType(noteType: string): string {
   if (!noteType) return "";
   const match = noteType.match(/Some\((\w+)\)/);
   return match ? match[1] : noteType;
 }
 
 // Helper function to get note type color
-function getNoteTypeBadgeColor(noteType: string): string {
+export function getNoteTypeBadgeColor(noteType: string): string {
   const type = parseNoteType(noteType).toLowerCase();
   if (type.includes("public")) return "bg-purple-50 border-purple-200 text-purple-700";
   if (type.includes("private")) return "bg-blue-50 border-blue-200 text-blue-700";
@@ -159,7 +159,7 @@ export function NoteRow({
           onClick={handleClaimClick}
           loading={isLoading}
           disabled={isInProposal || isLoading || isViewer}
-          buttonClassName="px-3"
+          buttonClassName="w-fit whitespace-nowrap"
         />
       </div>
     </div>

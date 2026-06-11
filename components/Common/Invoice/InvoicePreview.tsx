@@ -1,179 +1,211 @@
-import React from "react";
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import { Download } from "iconoir-react";
 import { InvoiceData } from "../../InvoiceReview/EmployeeInvoiceReviewContainer";
+import { EmployeeAvatar } from "../EmployeeAvatar";
 
-const PreviewCard = ({
-  name,
-  email,
-  company,
-  address,
-  isFrom,
-}: {
-  name: string;
-  email: string;
-  company: string;
-  address: string;
-  isFrom: boolean;
-}) => {
+/**
+ * Renders one line of text whose font size is computed to fill the container width:
+ * short text grows, long text shrinks. Measured against a hidden reference-size span.
+ */
+const FitText = ({ text }: { text: string }) => {
+  const REF_SIZE = 100; // reference font size used only for measuring the natural width
+  const SIDE_PADDING = 48; // matches px-6 (24px) on each side
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLSpanElement>(null);
+  const [fontSize, setFontSize] = useState(72);
+
+  useEffect(() => {
+    const fit = () => {
+      const avail = (wrapRef.current?.clientWidth ?? 0) - SIDE_PADDING;
+      const measured = measureRef.current?.scrollWidth ?? 0;
+      if (avail > 0 && measured > 0) {
+        setFontSize(Math.max(28, Math.min(150, (REF_SIZE * avail) / measured)));
+      }
+    };
+    fit();
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(fit) : null;
+    if (ro && wrapRef.current) ro.observe(wrapRef.current);
+    return () => ro?.disconnect();
+  }, [text]);
+
   return (
-    <div className="flex-1 border border-primary-divider rounded-2xl p-5 flex flex-col gap-4">
-      <p className="font-medium text-text-secondary">{isFrom ? "FROM" : "BILL TO"}</p>
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <p className="text-2xl font-semibold text-text-primary">{name}</p>
-          <p className="text-xs font-normal text-text-secondary">{email}</p>
-        </div>
-      </div>
-      <div className="flex flex-col gap-1">
-        <p className="text-xs font-medium text-primary-blue">{company}</p>
-        <p className="text-xs font-medium text-text-secondary">{address}</p>
-      </div>
+    <div ref={wrapRef} className="relative flex w-full justify-center overflow-hidden px-6 pb-3 pt-1">
+      {/* hidden measurer at a fixed reference size */}
+      <span
+        ref={measureRef}
+        aria-hidden
+        className="pointer-events-none invisible absolute left-[-9999px] top-0 whitespace-nowrap font-extrabold tracking-[-0.04em]"
+        style={{ fontSize: REF_SIZE, lineHeight: 1 }}
+      >
+        {text}
+      </span>
+      <span
+        className="whitespace-nowrap font-extrabold leading-[0.95] tracking-[-0.04em] text-[#111] opacity-50"
+        style={{ fontSize }}
+      >
+        {text}
+      </span>
     </div>
   );
 };
 
-const InvoicePreview = (invoiceData: InvoiceData) => {
+const fmtNum = (v: number | string | undefined): string => {
+  const n = typeof v === "string" ? parseFloat(v) : v ?? 0;
+  return (isNaN(n as number) ? 0 : (n as number)).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+};
+
+const fmtDate = (d: string | undefined): string => {
+  if (!d) return "-";
+  const dt = new Date(d);
+  if (isNaN(dt.getTime())) return d;
+  const p = (x: number) => String(x).padStart(2, "0");
+  return `${p(dt.getDate())}.${p(dt.getMonth() + 1)}.${dt.getFullYear()}`;
+};
+
+const shortAddr = (a: string | undefined): string =>
+  !a ? "-" : a.length > 16 ? `${a.slice(0, 8)}…${a.slice(-6)}` : a;
+
+const InvoicePreview = (invoiceData: InvoiceData & { onDownload?: () => void }) => {
+  const token = (invoiceData.currency || invoiceData.from?.token || "USDC").toString().toUpperCase();
+  const issuer = invoiceData.from?.name || "-";
+  const onDownload = invoiceData.onDownload;
+
   return (
-    <div
-      className=" w-full p-15 m-4 relative h-[1000px] flex justify-between items-center flex-col"
-      style={{
-        backgroundColor: "var(--invoice-accent, #194BFA)",
-        borderRadius: "20px",
-      }}
-    >
-      <img src="/login/half-circle-login-background-1.svg" alt="Logo" className="w-110 absolute top-0 right-0" />
-      <img src="/login/half-circle-login-background-2.svg" alt="Logo" className="w-100 absolute bottom-0 left-0" />
+    <div className="w-full overflow-hidden rounded-2xl border border-neutral-200 bg-white font-mono text-[#161616]">
+      {/* Browser chrome */}
+      <div className="flex items-center gap-3 border-b border-neutral-200 px-4 py-3">
+        <div className="flex shrink-0 gap-1.5">
+          <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
+          <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
+          <span className="h-3 w-3 rounded-full bg-[#28c840]" />
+        </div>
+        <div className="mx-auto max-w-[60%] truncate whitespace-nowrap rounded-md bg-neutral-100 px-3 py-1 text-[12px] text-neutral-500">
+          app.qash.finance/invoice/{invoiceData.invoiceNumber}
+        </div>
+        {onDownload && (
+          <button
+            type="button"
+            onClick={onDownload}
+            title="Download invoice"
+            aria-label="Download invoice"
+            className="flex shrink-0 items-center justify-center rounded-md bg-neutral-100 p-1.5 text-neutral-500 transition-colors hover:bg-neutral-200 hover:text-neutral-700"
+          >
+            <Download width={14} height={14} strokeWidth={2} />
+          </button>
+        )}
+      </div>
 
-      <div className="flex flex-col gap-4 relative z-1 bg-background rounded-t-xl w-full h-full">
-        {/* Invoice Header Meta */}
-        <div className="flex flex-row gap-10 border-b border-primary-divider pb-5 px-10 py-5 justify-between">
-          <div className="flex items-center gap-4">
-            {invoiceData.logo && (
-              <img src={invoiceData.logo} alt="Company logo" className="w-10 h-10 rounded-lg object-contain" />
-            )}
-            <div className="flex flex-col gap-1">
-              <p className="text-sm font-medium text-text-secondary">Invoice No</p>
-              <p className="text-sm font-medium text-text-primary">{invoiceData.invoiceNumber}</p>
+      <div className="px-10 pt-10">
+        {/* Header: issuer / network / mail */}
+        <div className="grid grid-cols-[1.4fr_1fr_1fr] gap-4 text-[12px] leading-[1.7]">
+          <div className="flex items-start gap-2.5">
+            <EmployeeAvatar
+              src={invoiceData.logo || undefined}
+              seed={invoiceData.from?.email || issuer}
+              name={issuer}
+              className="mt-0.5 h-7 w-7"
+            />
+            <div className="uppercase">
+              <p className="font-bold tracking-wide">{issuer}</p>
+              {invoiceData.from?.company && <p className="text-neutral-500">{invoiceData.from.company}</p>}
+              {invoiceData.from?.address && <p className="text-neutral-500">{invoiceData.from.address}</p>}
             </div>
           </div>
-          <div className="flex flex-row gap-20">
-            <div className="flex flex-col gap-1">
-              <p className="text-sm font-medium text-text-secondary">Issue date</p>
-              <p className="text-sm font-medium text-text-primary">{invoiceData.date}</p>
-            </div>
-            <div className="flex flex-col gap-1">
-              <p className="text-sm font-medium text-text-secondary">Due date</p>
-              <p className="text-sm font-medium text-text-primary">{invoiceData.dueDate}</p>
-            </div>
+          <div className="uppercase text-neutral-500">
+            <p className="text-[#161616]">{invoiceData.from?.network || "Miden"} Network</p>
+            <p>
+              <span className="text-neutral-400">(Token)</span> {token}
+            </p>
+            <p>
+              <span className="text-neutral-400">(Wallet)</span> {shortAddr(invoiceData.from?.walletAddress)}
+            </p>
+          </div>
+          <div className="text-right uppercase text-neutral-500">
+            {invoiceData.from?.email && (
+              <p>
+                <span className="text-neutral-400">(Mail)</span> {invoiceData.from.email}
+              </p>
+            )}
+            <p>
+              <span className="text-neutral-400">(Web)</span> qash.finance
+            </p>
           </div>
         </div>
 
-        {/* Invoice Preview Image */}
-        <div className="flex flex-col gap-6 px-10 py-3">
-          {/* From and Bill To Section */}
-          <div className="flex flex-row gap-3">
-            <PreviewCard
-              name={invoiceData.from.name}
-              email={invoiceData.from.email}
-              company={invoiceData.from.company}
-              address={invoiceData.from.address}
-              isFrom={true}
-            />
-
-            <PreviewCard
-              name={invoiceData.billTo.company}
-              email={invoiceData.billTo.email}
-              company={invoiceData.billTo.company}
-              address={invoiceData.billTo.address}
-              isFrom={false}
-            />
+        {/* Billed to + meta */}
+        <div className="mt-11 grid grid-cols-2 gap-4 text-[12px] leading-[1.7]">
+          <div className="uppercase">
+            <p className="mb-1 text-neutral-400">Billed To</p>
+            <p className="font-bold">{invoiceData.billTo?.company || invoiceData.billTo?.name || "-"}</p>
+            {invoiceData.billTo?.email && <p className="text-neutral-500">{invoiceData.billTo.email}</p>}
+            {invoiceData.billTo?.address && <p className="text-neutral-500">{invoiceData.billTo.address}</p>}
           </div>
-
-          {/* Items Table */}
-          <div className="flex flex-col gap-0">
-            {/* Table Header */}
-            <div className="grid grid-cols-[1fr_80px_80px_120px] border-b border-primary-divider pb-2 mb-2">
-              <p className="text-xs font-medium text-text-secondary">Item</p>
-              <p className="text-xs font-medium text-text-secondary">Price</p>
-              <p className="text-xs font-medium text-text-secondary text-center">Qty</p>
-              <p className="text-xs font-medium text-text-secondary text-right">Amount</p>
-            </div>
-
-            {/* Table Rows */}
-            {invoiceData.items.map((item, idx) => (
-              <div key={idx} className="grid grid-cols-[1fr_80px_80px_120px] border-b border-primary-divider py-2">
-                <p className="text-xs font-medium text-text-primary">{item.description}</p>
-                <p className="text-xs font-medium text-text-primary">{item.price.toFixed(2)}</p>
-                <p className="text-xs font-medium text-text-primary text-center">{item.qty}</p>
-                <p className="text-xs font-medium text-text-primary text-right">{item.amount.toFixed(2)}</p>
-              </div>
-            ))}
-
-            <div className="grid grid-cols-[1fr_80px_80px_120px] py-3">
-              {invoiceData.note ? <p className="text-xs font-semibold text-text-secondary">Note</p> : <div></div>}
-              <p className="text-xs font-semibold text-text-secondary text-left">SUBTOTAL</p>
-              <div></div>
-              <p className="text-xs font-semibold text-text-primary text-right">{invoiceData.subtotal.toFixed(2)}</p>
-            </div>
-
-            {/* Totals Rows - Part of Table */}
-            {invoiceData.note && (
-              <div className="grid grid-cols-[1fr_80px_80px_120px] flex-wrap break-words">
-                <p className="text-xs font-medium text-text-primary w-60">{invoiceData.note}</p>
-                <div></div>
-                <div></div>
-                <div></div>
-              </div>
-            )}
-
-            <div className="grid grid-cols-[1fr_80px_80px_120px]">
-              <div></div>
-              <div className="text-left border-t border-primary-divider pt-2">
-                <p className="text-base font-semibold text-text-secondary">TOTAL</p>
-              </div>
-              <div className="border-t border-primary-divider pt-2"></div>
-              <div className="text-right border-t border-primary-divider pt-2">
-                <p className="text-base font-semibold text-text-primary">
-                  {invoiceData.total.toFixed(2)} {invoiceData.from.token.toUpperCase()}
-                </p>
-              </div>
-            </div>
+          <div className="text-right uppercase text-neutral-500">
+            <p>
+              <span className="text-neutral-400">(Invoice Date)</span> {fmtDate(invoiceData.date)}
+            </p>
+            <p>
+              <span className="text-neutral-400">(Invoice No)</span> {invoiceData.invoiceNumber}
+            </p>
+            <p>
+              <span className="text-neutral-400">(Due Date)</span> {fmtDate(invoiceData.dueDate)}
+            </p>
           </div>
+        </div>
 
-          {/* Payment Method Card */}
-          <div className="border border-slate-200 rounded-2xl p-4 flex flex-col gap-3 w-75">
-            <p className="text-xs font-semibold text-text-secondary">Payment method</p>
-            <div className="flex flex-row gap-2 items-center">
-              {invoiceData.from.token.toLowerCase() === "qash" ? (
-                <img src="/logo/qash-icon.svg" alt="Qash" className="w-6" />
-              ) : (
-                <img
-                  src={`/token/${invoiceData.from.token.toLowerCase()}.svg`}
-                  alt={invoiceData.from.token}
-                  className="w-6"
-                />
-              )}
-              <div className="flex flex-col">
-                <p className="text-sm font-semibold text-text-primary">{invoiceData.from.token}</p>
-                <p className="text-xs font-medium text-text-secondary">{invoiceData.from.network}</p>
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <p className="text-xs font-semibold text-text-secondary">Wallet address</p>
-              <p className="text-xs font-semibold text-text-primary break-all">{invoiceData.from.walletAddress}</p>
-            </div>
+        {/* Line items */}
+        <div className="mt-11 text-[12px] uppercase">
+          <div className="grid grid-cols-[2.6fr_0.6fr_0.9fr_1fr_1fr] gap-2 border-b border-neutral-200 pb-2 text-neutral-400">
+            <span>Subject</span>
+            <span className="text-center">Qty</span>
+            <span>Unit</span>
+            <span className="text-right">Price</span>
+            <span className="text-right">Amount</span>
           </div>
+          {invoiceData.items?.map((item, idx) => (
+            <div
+              key={idx}
+              className="grid grid-cols-[2.6fr_0.6fr_0.9fr_1fr_1fr] items-center gap-2 border-b border-neutral-100 py-4"
+            >
+              <span className="font-medium">{item.description}</span>
+              <span className="text-center text-neutral-600">{item.qty}</span>
+              <span className="text-neutral-500">Month</span>
+              <span className="text-right text-neutral-600">$ {fmtNum(item.price)}</span>
+              <span className="text-right">$ {fmtNum(item.amount)}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Totals */}
+        <div className="mt-7 flex flex-col items-end gap-2.5 text-[12px] uppercase">
+          <div className="flex w-[55%] justify-between text-neutral-500">
+            <span className="text-neutral-400">Subtotal</span>
+            <span>{fmtNum(invoiceData.subtotal)}</span>
+          </div>
+          <div className="flex w-[55%] justify-between text-neutral-500">
+            <span className="text-neutral-400">Tax (0%)</span>
+            <span>0.00</span>
+          </div>
+          <div className="flex w-[55%] justify-between border-t border-neutral-200 pt-2 font-bold">
+            <span className="text-neutral-400">Total</span>
+            <span>
+              {fmtNum(invoiceData.total)} {token}
+            </span>
+          </div>
+        </div>
+
+        {/* Regards */}
+        <div className="mt-9 text-center text-[12px] uppercase text-neutral-500">
+          <p>With best regards,</p>
         </div>
       </div>
-      {/* Footer */}
-      <div className="flex flex-row justify-between items-center border-t border-primary-divider px-10 py-5 bg-background w-full rounded-b-xl">
-        <p className="text-xs font-bold text-text-secondary">
-          This is a computer generated invoice, doesn't required any signature.
-        </p>
-        <div className="flex flex-row items-center">
-          <img src="/logo/qash-icon.svg" alt="Qash" className="w-4" />
-          <img src="/logo/ash-text-icon.svg" alt="Qash" className="w-7" />
-        </div>
-      </div>
+
+      {/* Oversized recipient (employee) name — scaled to fit the full text, 50% opacity */}
+      <FitText text={issuer} />
     </div>
   );
 };

@@ -176,12 +176,13 @@ export const getB2BInvoiceStats = async () => {
     const seeds = readSeedInvoices();
     const seenUuids = new Set(Object.keys(stored));
     const invoices = [...Object.values(stored), ...seeds.filter(s => !seenUuids.has(s.uuid))] as any[];
-    const sent = invoices.filter(i => i.status === "SENT" || i.status === "PENDING").length;
+    const sent = invoices.filter(i => i.status === "SENT" || i.status === "PENDING" || i.status === "CONFIRMED").length;
     const paid = invoices.filter(i => i.status === "PAID").length;
+    const draft = invoices.filter(i => i.status === "DRAFT").length;
     const totalAmount = invoices.reduce((sum, i) => sum + (i.total || 0), 0);
-    return { total: invoices.length, sent, paid, totalAmount };
+    return { total: invoices.length, sent, paid, draft, totalAmount };
   } catch {
-    return { total: 0, sent: 0, paid: 0, totalAmount: 0 };
+    return { total: 0, sent: 0, paid: 0, draft: 0, totalAmount: 0 };
   }
 };
 export const getB2BInvoiceByUUID = async (_uuid: string) => {

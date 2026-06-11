@@ -239,6 +239,16 @@
       "companyId": 3,
       "createdAt": "2025-04-01T08:00:00.000Z",
       "updatedAt": "2025-04-01T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "Engineering",
+      "shape": "CIRCLE",
+      "color": "#7D52F4",
+      "order": 2,
+      "companyId": 3,
+      "createdAt": "2025-04-01T08:00:00.000Z",
+      "updatedAt": "2025-04-01T08:00:00.000Z"
     }
   ],
   "employees": [
@@ -272,6 +282,7 @@
       "walletAddress": "mtst1hyn2z0sdcyw0t2ivlh7fxjw5mkugv04_vxyxxfcvxun",
       "email": "emanuel@pods.finance",
       "groupId": 1,
+      "groupIds": [1, 2],
       "companyId": 3,
       "paymentMethod": "crypto",
       "token": {

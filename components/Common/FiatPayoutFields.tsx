@@ -1,7 +1,9 @@
 "use client";
 import React, { useState, useRef, useEffect, useMemo } from "react";
+import { NavArrowDown } from "iconoir-react";
 import { FIAT_COUNTRIES, FiatCountry, getRailLabel } from "@/data/fiat-payout";
 import { BankDropdown } from "./Dropdown/BankDropdown";
+import FieldInput from "./Input/FieldInput";
 
 interface FormInputProps {
   label: string;
@@ -13,22 +15,14 @@ interface FormInputProps {
 }
 
 const FiatInput = ({ label, placeholder, value, onChange, disabled, required }: FormInputProps) => (
-  <div className="bg-app-background rounded-xl border-b-2 border-primary-divider">
-    <div className="flex flex-col gap-1 px-4 py-2">
-      <label className="text-text-secondary text-sm font-medium">
-        {label} {!required && <span className="text-text-secondary">(Optional)</span>}
-      </label>
-      <input
-        type="text"
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-        disabled={disabled}
-        autoComplete="off"
-      />
-    </div>
-  </div>
+  <FieldInput
+    label={required ? label : `${label} (Optional)`}
+    value={value}
+    onChange={e => onChange(e.target.value)}
+    placeholder={placeholder}
+    disabled={disabled}
+    autoComplete="off"
+  />
 );
 
 export interface FiatPayoutData {
@@ -71,6 +65,8 @@ export const FiatPayoutFields = ({ data, onChange, disabled = false }: FiatPayou
     [selectedCountry],
   );
 
+  const hasBank = !!selectedCountry && selectedCountry.rail === "local" && selectedCountry.banks.length > 0;
+
   const handleCountrySelect = (country: FiatCountry) => {
     onChange({
       ...data,
@@ -89,71 +85,74 @@ export const FiatPayoutFields = ({ data, onChange, disabled = false }: FiatPayou
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Country Selection */}
-      <div className="relative" ref={countryRef}>
-        <button
-          type="button"
-          onClick={() => !disabled && setCountryOpen(!countryOpen)}
-          className="flex items-center gap-2 px-4 py-2 w-full text-left cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed justify-between bg-app-background border-b-2 border-primary-divider rounded-xl h-[64px]"
-          disabled={disabled}
-        >
-          <div className="flex flex-row items-center gap-2">
-            {selectedCountry && (
-              <img src={selectedCountry.icon} alt={selectedCountry.name} className="w-6 h-6 flex-shrink-0" />
-            )}
-            <div className="flex flex-col justify-center">
-              <span className="text-text-secondary text-[14px]">Recipient country</span>
+      {/* Recipient country (+ bank when the country uses local rails), aligned side by side */}
+      <div className={hasBank ? "grid grid-cols-2 gap-3" : ""}>
+        <div className="relative" ref={countryRef}>
+          <button
+            type="button"
+            onClick={() => !disabled && setCountryOpen(!countryOpen)}
+            className="flex h-[64px] w-full items-center justify-between gap-2 rounded-xl border border-primary-divider bg-background px-4 text-left transition-colors cursor-pointer hover:bg-app-background disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={disabled}
+          >
+            <div className="flex min-w-0 flex-row items-center gap-2">
               {selectedCountry && (
-                <p className="text-text-primary font-semibold text-[16px]">{selectedCountry.name}</p>
+                <img src={selectedCountry.icon} alt={selectedCountry.name} className="w-6 h-6 flex-shrink-0" />
               )}
+              <div className="flex min-w-0 flex-col justify-center">
+                <span className="text-text-secondary text-[13px]">Recipient country</span>
+                {selectedCountry && (
+                  <p className="truncate text-text-primary font-semibold text-[15px]">{selectedCountry.name}</p>
+                )}
+              </div>
             </div>
-          </div>
-          <img
-            src="/arrow/chevron-down.svg"
-            alt="dropdown"
-            className={`w-6 h-6 transition-transform flex-shrink-0 ${countryOpen ? "rotate-180" : ""}`}
-          />
-        </button>
+            <NavArrowDown
+              width={18}
+              height={18}
+              strokeWidth={2}
+              className={`flex-shrink-0 text-text-secondary transition-transform ${countryOpen ? "rotate-180" : ""}`}
+            />
+          </button>
 
-        {countryOpen && (
-          <div className="absolute top-full left-0 right-0 mb-5 shadow-lg bg-background border-2 border-primary-divider rounded-xl z-50 overflow-hidden p-2 max-h-[280px] overflow-y-auto">
-            <div className="px-2 py-1">
-              <p className="text-text-secondary text-xs">Select recipient country</p>
+          {countryOpen && (
+            <div className="absolute top-full left-0 right-0 mt-2 z-[120] max-h-[280px] overflow-y-auto rounded-2xl border border-white/10 bg-[#26262b]/90 p-1.5 shadow-[0_24px_60px_-14px_rgba(0,0,0,0.6)] backdrop-blur-2xl">
+              <div className="px-2 py-1.5">
+                <p className="text-white/50 text-xs">Select recipient country</p>
+              </div>
+              <div className="flex flex-col gap-0.5">
+                {FIAT_COUNTRIES.map(country => (
+                  <button
+                    key={country.code}
+                    type="button"
+                    onClick={() => handleCountrySelect(country)}
+                    className={`flex w-full items-center gap-2 rounded-lg p-2 transition-colors cursor-pointer hover:bg-white/[0.08] ${
+                      data.countryCode === country.code ? "bg-white/[0.10]" : ""
+                    }`}
+                  >
+                    <img src={country.icon} alt={country.name} className="w-5 h-5" />
+                    <span className="text-[14px] font-medium text-white/90">{country.name}</span>
+                    <span className="ml-auto text-sm text-white/50">{country.currencyCode}</span>
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="flex flex-col">
-              {FIAT_COUNTRIES.map(country => (
-                <button
-                  key={country.code}
-                  type="button"
-                  onClick={() => handleCountrySelect(country)}
-                  className={`w-full flex items-center gap-2 p-2 rounded-lg hover:bg-app-background transition-colors cursor-pointer ${
-                    data.countryCode === country.code ? "bg-app-background" : ""
-                  }`}
-                >
-                  <img src={country.icon} alt={country.name} className="w-5 h-5" />
-                  <span className="text-text-primary font-semibold">{country.name}</span>
-                  <span className="text-text-secondary text-sm ml-auto">{country.currencyCode}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+          )}
+        </div>
+
+        {/* Bank dropdown for countries with local rails */}
+        {hasBank && (
+          <BankDropdown
+            banks={selectedCountry!.banks}
+            selectedBank={data.bankName}
+            onBankSelect={name => update("bankName", name)}
+            disabled={disabled}
+            variant="filled"
+          />
         )}
       </div>
 
       {/* Conditional fields based on selected country */}
       {selectedCountry && (
         <>
-          {/* Bank dropdown for countries with local rails */}
-          {selectedCountry.rail === "local" && selectedCountry.banks.length > 0 && (
-            <BankDropdown
-              banks={selectedCountry.banks}
-              selectedBank={data.bankName}
-              onBankSelect={name => update("bankName", name)}
-              disabled={disabled}
-              variant="filled"
-            />
-          )}
-
           {/* Rail-specific fields */}
           {selectedCountry.rail === "ach" && (
             <div className="flex gap-3">

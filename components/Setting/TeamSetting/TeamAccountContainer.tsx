@@ -86,7 +86,7 @@ const ThresholdControlSection = ({
             iconPosition="left"
             onClick={() => setIsEditing(true)}
             variant="light"
-            buttonClassName="py-1 w-fit px-3"
+            buttonClassName="w-fit whitespace-nowrap"
           />
         </div>
 
@@ -120,7 +120,7 @@ const ThresholdControlSection = ({
             <SecondaryButton
               text="Configure"
               onClick={() => setIsEditing(true)}
-              buttonClassName="py-1 w-fit px-4"
+              buttonClassName="w-fit whitespace-nowrap"
             />
           </div>
         )}
@@ -138,12 +138,12 @@ const ThresholdControlSection = ({
             text="Cancel"
             onClick={handleCancel}
             variant="light"
-            buttonClassName="py-1 w-fit px-3"
+            buttonClassName="w-fit whitespace-nowrap"
           />
           <SecondaryButton
             text="Save"
             onClick={handleSave}
-            buttonClassName="py-1 w-fit px-3"
+            buttonClassName="w-fit whitespace-nowrap"
           />
         </div>
       </div>

@@ -16,12 +16,12 @@ export const FloatingAction = ({
   if (selectedCount === 0) return null;
 
   return (
-    <div className="absolute bottom-1/9 left-1/2 transform -translate-x-1/2 z-50">
-      <div className="backdrop-blur-[15px] bg-primary-blue flex items-center justify-between px-2 py-2 rounded-full  w-160">
+    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-50">
+      <div className="backdrop-blur-[15px] bg-[#1b1b1b] flex w-fit items-center gap-4 px-2 py-2 rounded-2xl">
         {/* Deselect all button */}
         <button
           onClick={onDeselectAll}
-          className="bg-background rounded-full px-4 py-2 flex items-center gap-2 cursor-pointer"
+          className="bg-background rounded-xl px-4 py-2 flex items-center gap-2 cursor-pointer"
           style={{
             backgroundColor: "var(--bg-surface-white, #ffffff)",
             borderColor: "var(--stroke-sub-700, rgba(153,160,174,0.24))",
@@ -40,7 +40,7 @@ export const FloatingAction = ({
         </button>
 
         {/* Total count */}
-        <div className="text-xl text-white">Total ({selectedCount} transactions)</div>
+        <div className="text-sm font-medium text-white">Total ({selectedCount} transactions)</div>
 
         {/* Action buttons */}
         <div className="flex gap-2 items-center">{actionButtons}</div>

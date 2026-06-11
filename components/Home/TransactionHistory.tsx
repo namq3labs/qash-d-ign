@@ -323,7 +323,7 @@ export const TransactionHistory = ({
                 onClick={() => {}}
                 variant="light"
                 iconPosition="left"
-                buttonClassName="px-2"
+                buttonClassName="w-fit whitespace-nowrap"
                 disabled={true}
               />
             </div>

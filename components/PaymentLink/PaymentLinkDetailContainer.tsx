@@ -14,6 +14,7 @@ import { ViewOnExplorerTooltip } from "./ViewOnExplorerTooltip";
 import { Tooltip } from "react-tooltip";
 import { useTitle } from "@/contexts/TitleProvider";
 import { getAppUrl } from "@/services/utils/getAppUrl";
+import { NavArrowRight } from "iconoir-react";
 
 const Card = ({ title, text }: { title: string; text: React.ReactNode }) => {
   return (
@@ -42,23 +43,24 @@ const PaymentLinkDetailContainer = () => {
 
   const goToPaymentLinks = () => { window.location.href = "/payment-link"; };
 
-  // Set breadcrumb title when payment link data is loaded
+  // Breadcrumb in the top title bar: Payment Link › {title}
   useEffect(() => {
     if (paymentLink) {
       setTitle(
-        <div className="flex items-center gap-2">
-          <span
-            className="text-text-secondary hover:text-text-primary cursor-pointer"
-            onClick={() => { window.location.href = "/payment-link"; }}
+        <div className="flex items-center gap-1.5 text-[14px]">
+          <button
+            type="button"
+            onClick={() => router.push("/payment-link")}
+            className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
           >
-            Payment Links
-          </span>
-          <span className="text-text-secondary">/</span>
-          <span className="text-text-primary">{paymentLink.title}</span>
+            Payment Link
+          </button>
+          <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+          <span className="font-medium text-text-primary">{paymentLink.title}</span>
         </div>,
       );
-      setShowBackArrow(true);
-      setOnBackClick(() => () => { window.location.href = "/payment-link"; });
+      setShowBackArrow(false);
+      setOnBackClick(undefined);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paymentLink]);
@@ -214,32 +216,35 @@ const PaymentLinkDetailContainer = () => {
     );
   }
   return (
-    <div className="flex flex-col w-full h-full p-4 items-center justify-start gap-5">
-      {/* Header */}
-      <div className="w-full flex flex-row items-center justify-between px-7 mb-2">
-        <div className="flex flex-col items-start gap-2">
-          <h1 className="text-2xl font-bold leading-none">{paymentLink.title}</h1>
-          <h1 className="text-sm text-text-secondary leading-none">{paymentLink.description}</h1>
+    <div className="flex w-full h-full flex-col overflow-y-auto">
+      {/* Page header (same concept as the Invoice / Bills detail pages) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">{paymentLink.title}</h1>
+          {paymentLink.description && <p className="text-[14px] text-text-secondary">{paymentLink.description}</p>}
         </div>
-        <div className="flex gap-2 w-[250px]">
+        <div className="flex shrink-0 gap-2">
           <SecondaryButton
             text="Edit link"
             icon="/misc/edit-icon.svg"
             iconPosition="left"
             onClick={() => router.push(`/payment-link/edit?code=${paymentLink.code}`)}
             variant="light"
-            buttonClassName="flex-1"
+            buttonClassName="w-fit whitespace-nowrap"
           />
           <PrimaryButton
             text="Copy link"
             icon="/misc/thin-copy-icon.svg"
             iconPosition="left"
             onClick={handleCopyLink}
-            containerClassName="flex-1"
+            containerClassName="w-[150px]"
+            buttonClassName="whitespace-nowrap"
           />
         </div>
       </div>
-      <div className="w-full flex flex-row gap-2 px-7">
+
+      {/* Stat cards */}
+      <div className="flex w-full flex-row gap-2 px-6 pb-2">
         <Card
           title="Link"
           text={
@@ -260,7 +265,7 @@ const PaymentLinkDetailContainer = () => {
                   className="w-5 h-5"
                 />
               )}
-              <span className="text-text-primary font-semibold">
+              <span className="num text-text-primary font-semibold">
                 {paymentLink.records?.length
                   ? (paymentLink.records.length * parseFloat(paymentLink.amount || "0")).toFixed(2)
                   : "0"}
@@ -280,18 +285,17 @@ const PaymentLinkDetailContainer = () => {
         />
         <Card
           title="Created on"
-          text={
-            <span className="text-text-primary leading-none">{new Date(paymentLink.createdAt).toLocaleString()}</span>
-          }
+          text={<span className="num text-text-primary leading-none">{new Date(paymentLink.createdAt).toLocaleString()}</span>}
         />
       </div>
 
-      <div className="w-full flex flex-col gap-5 h-full bg-app-background rounded-3xl p-5">
-        <div className="flex flex-col gap-3">
-          <span className="text-xl font-semibold text-text-primary leading-none">
+      {/* Payments collected */}
+      <div className="flex w-full flex-col gap-3 px-6 pb-6 pt-3">
+        <div className="flex flex-col gap-0.5">
+          <span className="text-lg font-semibold text-text-primary">
             {paymentLink.records?.length || 0} Payments Collected
           </span>
-          <span className="text-sm text-text-secondary leading-none">See who’s sent you money through your links.</span>
+          <span className="text-sm text-text-secondary">See who’s sent you money through your links.</span>
         </div>
 
         <Table

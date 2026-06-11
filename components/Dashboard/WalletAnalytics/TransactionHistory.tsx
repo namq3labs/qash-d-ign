@@ -90,7 +90,7 @@ const TransactionHistory = ({
         Amount: (
           <div className="flex items-center justify-center gap-1.5">
             <img src="/token/usdt.svg" alt="usdc" className="w-4 h-4" />
-            <span className={`text-sm font-medium ${isIncome ? "text-badge-success-text" : "text-badge-fail-text"}`}>
+            <span className={`num text-sm font-medium ${isIncome ? "text-badge-success-text" : "text-badge-fail-text"}`}>
               {isIncome ? "+" : "-"}{formatCurrency(tx.amount)}
             </span>
           </div>
@@ -133,7 +133,7 @@ const TransactionHistory = ({
             text="Export CSV"
             variant="light"
             onClick={() => {}}
-            buttonClassName="w-auto px-4"
+            buttonClassName="w-auto"
           />
         </div>
       </div>
