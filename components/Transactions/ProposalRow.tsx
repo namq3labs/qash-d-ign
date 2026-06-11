@@ -26,7 +26,7 @@ interface ProposalRowProps {
   onProposalClick?: (e: any) => void;
 }
 
-const categoryConfig: Record<string, { label: string; icon: string }> = {
+export const categoryConfig: Record<string, { label: string; icon: string }> = {
   paying_reimbursement: { label: "Paying Reimbursement", icon: "/transaction/pay-icon.svg" },
   paying_payroll: { label: "Paying Payroll", icon: "/transaction/pay-icon.svg" },
   paying_bill: { label: "Paying Bill", icon: "/transaction/pay-icon.svg" },
@@ -37,7 +37,7 @@ const categoryConfig: Record<string, { label: string; icon: string }> = {
   update_threshold: { label: "Update Threshold", icon: "/sidebar/setting.svg" },
 };
 
-const statusConfig: Record<string, { label: string; bgColor: string; borderColor: string; textColor: string }> = {
+export const statusConfig: Record<string, { label: string; bgColor: string; borderColor: string; textColor: string }> = {
   [MultisigProposalStatusEnum.PENDING]: {
     label: "Pending",
     bgColor: "bg-yellow-50",
@@ -70,7 +70,7 @@ const statusConfig: Record<string, { label: string; bgColor: string; borderColor
   },
 };
 
-function formatDate(date: string | Date): string {
+export function formatDate(date: string | Date): string {
   const d = typeof date === "string" ? new Date(date) : date;
   return d.toLocaleDateString("en-US", {
     year: "numeric",
@@ -273,7 +273,7 @@ export function ProposalRow({
             <SecondaryButton
               text="Cancel"
               variant="dark"
-              buttonClassName="px-4"
+              buttonClassName="w-fit whitespace-nowrap"
               onClick={(e: any) => {
                 e.stopPropagation();
                 onCancel?.(proposal.uuid);
@@ -283,7 +283,7 @@ export function ProposalRow({
             />
             <PrimaryButton
               text={hasUserSigned ? "Signed" : "Sign"}
-              buttonClassName="px-6"
+              buttonClassName="w-fit whitespace-nowrap"
               onClick={(e: any) => {
                 e.stopPropagation();
                 onSign?.(proposal.id);
@@ -296,7 +296,7 @@ export function ProposalRow({
         {isReady && (
           <PrimaryButton
             text="Execute"
-            buttonClassName="px-4"
+            buttonClassName="w-fit whitespace-nowrap"
             onClick={(e: any) => {
               e.stopPropagation();
               onExecute?.(proposal.id);

@@ -1,15 +1,15 @@
 "use client";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { PageHeader } from "@/components/Common/PageHeader";
+import { NavArrowRight } from "iconoir-react";
 import { PrimaryButton } from "@/components/Common/PrimaryButton";
 import { SecondaryButton } from "@/components/Common/SecondaryButton";
-import { BaseContainer } from "@/components/Common/BaseContainer";
 import { Table } from "@/components/Common/Table";
 import { Badge, BadgeStatus } from "@/components/Common/Badge";
 import { ModalHeader } from "@/components/Common/ModalHeader";
 import BaseModal from "@/components/Modal/BaseModal";
 import { useModal } from "@/contexts/ModalManagerProvider";
+import { useTitle } from "@/contexts/TitleProvider";
 import { MODAL_IDS } from "@/types/modal";
 import toast from "react-hot-toast";
 
@@ -205,7 +205,7 @@ function ReimbursementSidebar({
                 <p className="text-sm font-medium text-text-primary">Drop receipt here</p>
                 <p className="text-xs text-text-secondary">JPG, PNG, PDF supported</p>
               </div>
-              <SecondaryButton text="Choose File" onClick={() => inputRef.current?.click()} buttonClassName="w-fit px-5" variant="light" />
+              <SecondaryButton text="Choose File" onClick={() => inputRef.current?.click()} buttonClassName="w-fit" variant="light" />
             </div>
           ) : (
             <div className="flex flex-col gap-3">
@@ -436,15 +436,48 @@ function ReceiptPreviewModal({
 }
 
 
+// ---- Stat card ----
+
+const Card = ({ title, text }: { title: string; text: React.ReactNode }) => {
+  return (
+    <div
+      className="relative w-full h-full rounded-xl border border-primary-divider p-4 flex flex-col overflow-hidden gap-3"
+      style={{
+        backgroundImage: `url(/card/background.svg)`,
+        backgroundSize: "30%",
+        backgroundPosition: "right",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <span className="text-text-secondary text-sm leading-none">{title}</span>
+      {text}
+    </div>
+  );
+};
+
 // ---- Main Page ----
 
 const ReimbursementPage = () => {
   const router = useRouter();
+  const { setTitle, setShowBackArrow } = useTitle();
   const [reimbursements, setReimbursements] = useState<Reimbursement[]>(MOCK_REIMBURSEMENTS);
   const [showSidebar, setShowSidebar] = useState(false);
   const [previewItem, setPreviewItem] = useState<Reimbursement | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Breadcrumb in the top title bar: Expenses › Reimbursement
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <span className="text-text-secondary">Expenses</span>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Reimbursement</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const pending = reimbursements.filter((r) => r.status === "pending" || r.status === "approved");
   const pendingTotal = pending.reduce((sum, r) => sum + r.amount, 0);
@@ -521,76 +554,85 @@ const ReimbursementPage = () => {
     setPreviewItem(reimbursements[index]);
   };
 
-  return (
-    <div className="w-full h-full p-5 flex flex-col items-start gap-4">
-      <PageHeader
-        icon="/sidebar/bill.svg"
-        label="Reimbursement"
-        button={
-          <div className="flex items-center gap-2">
-            <SecondaryButton
-              text="New Reimbursement"
-              variant="light"
-              onClick={() => setShowSidebar(true)}
-              buttonClassName="px-5"
-            />
-            <PrimaryButton
-              text={`Pay All (${pending.length})`}
-              onClick={handlePayAll}
-              containerClassName="w-fit"
-              buttonClassName="px-5"
-              disabled={pending.length === 0}
-            />
-          </div>
-        }
-      />
+  const paidThisMonthTotal = reimbursements
+    .filter((r) => r.status === "paid")
+    .reduce((s, r) => s + r.amount, 0);
 
-      {/* Stat cards */}
-      <div className="flex gap-3 w-full">
-        <div className="flex-1 border border-primary-divider rounded-2xl px-5 py-4 flex flex-col gap-1">
-          <span className="text-text-secondary text-sm">Pending Requests</span>
-          <span className="text-text-primary text-xl font-bold">{pending.length}</span>
+  return (
+    <div className="flex w-full h-full flex-col">
+      {/* Page header (same concept as the Bills / Invoice pages) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Reimbursement</h1>
+          <p className="text-[14px] text-text-secondary">
+            Review employee expense claims, scan receipts and pay everyone in one batch.
+          </p>
         </div>
-        <div className="flex-1 border border-primary-divider rounded-2xl px-5 py-4 flex flex-col gap-1">
-          <span className="text-text-secondary text-sm">Pending Amount</span>
-          <span className="text-text-primary text-xl font-bold">${pendingTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-        </div>
-        <div className="flex-1 border border-primary-divider rounded-2xl px-5 py-4 flex flex-col gap-1">
-          <span className="text-text-secondary text-sm">Total This Month</span>
-          <span className="text-text-primary text-xl font-bold">{reimbursements.length}</span>
-        </div>
-        <div className="flex-1 border border-primary-divider rounded-2xl px-5 py-4 flex flex-col gap-1">
-          <span className="text-text-secondary text-sm">Paid This Month</span>
-          <span className="text-text-primary text-xl font-bold">
-            ${reimbursements.filter((r) => r.status === "paid").reduce((s, r) => s + r.amount, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-          </span>
+        <div className="flex shrink-0 items-center gap-2">
+          <SecondaryButton
+            text="New Reimbursement"
+            variant="light"
+            onClick={() => setShowSidebar(true)}
+            buttonClassName="w-fit whitespace-nowrap"
+          />
+          <PrimaryButton
+            text={`Pay All (${pending.length})`}
+            onClick={handlePayAll}
+            containerClassName="w-fit"
+            buttonClassName="whitespace-nowrap"
+            disabled={pending.length === 0}
+          />
         </div>
       </div>
 
+      {/* Stat cards */}
+      <div className="flex w-full flex-row gap-2 px-6 pb-2">
+        <Card
+          title="Pending requests"
+          text={<span className="num text-text-primary text-2xl leading-none">{pending.length}</span>}
+        />
+        <Card
+          title="Pending amount"
+          text={
+            <span className="num text-text-primary text-2xl leading-none">
+              ${pendingTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            </span>
+          }
+        />
+        <Card
+          title="Total this month"
+          text={<span className="num text-text-primary text-2xl leading-none">{reimbursements.length}</span>}
+        />
+        <Card
+          title="Paid this month"
+          text={
+            <span className="num text-text-primary text-2xl leading-none">
+              ${paidThisMonthTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            </span>
+          }
+        />
+      </div>
+
+      {/* Table header row + count */}
+      <div className="mt-2 flex w-full items-center justify-between gap-2 border-b border-primary-divider px-6 pb-3">
+        <span className="text-text-primary font-medium">Reimbursements</span>
+        <span className="text-sm text-text-secondary">{reimbursements.length} requests</span>
+      </div>
+
       {/* Reimbursements table */}
-      <BaseContainer
-        header={
-          <div className="w-full flex items-center justify-between px-6 py-4">
-            <span className="text-text-primary font-medium">Reimbursements</span>
-            <span className="text-text-secondary text-sm">{reimbursements.length} requests</span>
-          </div>
-        }
-        containerClassName="w-full"
-      >
-        <div className="w-full p-5">
-          <Table
-            data={tableData}
-            headers={tableHeaders}
-            showFooter={false}
-            showPagination={true}
-            currentPage={currentPage}
-            rowsPerPage={rowsPerPage}
-            onPageChange={setCurrentPage}
-            onRowsPerPageChange={setRowsPerPage}
-            onRowClick={handleRowClick}
-          />
-        </div>
-      </BaseContainer>
+      <div className="w-full p-5">
+        <Table
+          data={tableData}
+          headers={tableHeaders}
+          showFooter={false}
+          showPagination={true}
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          onPageChange={setCurrentPage}
+          onRowsPerPageChange={setRowsPerPage}
+          onRowClick={handleRowClick}
+        />
+      </div>
 
       {/* Right sidebar for new reimbursement */}
       <ReimbursementSidebar

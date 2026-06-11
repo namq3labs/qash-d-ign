@@ -80,8 +80,8 @@ export function TransactionRow({ transaction, onApprove, onDeny }: TransactionRo
 
       {/* Actions */}
       <div className="flex-shrink-0 flex items-center justify-center gap-2">
-        <SecondaryButton text="Deny" variant="dark" buttonClassName="px-7" onClick={() => onDeny?.(transaction.id)} />
-        <PrimaryButton text="Approve" buttonClassName="px-4" onClick={() => onApprove?.(transaction.id)} />
+        <SecondaryButton text="Deny" variant="dark" buttonClassName="w-fit whitespace-nowrap" onClick={() => onDeny?.(transaction.id)} />
+        <PrimaryButton text="Approve" buttonClassName="w-fit whitespace-nowrap" onClick={() => onApprove?.(transaction.id)} />
       </div>
     </div>
   );

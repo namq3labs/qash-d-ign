@@ -125,8 +125,8 @@ export default function NotificationSettings() {
                   autoFocus
                 />
                 <div className="flex justify-end gap-2">
-                  <SecondaryButton text="Cancel" onClick={handleCancelEdit} variant="light" buttonClassName="px-4" />
-                  <SecondaryButton text="Update" onClick={handleUpdateEmail} buttonClassName="px-4" />
+                  <SecondaryButton text="Cancel" onClick={handleCancelEdit} variant="light" buttonClassName="w-fit whitespace-nowrap" />
+                  <SecondaryButton text="Update" onClick={handleUpdateEmail} buttonClassName="w-fit whitespace-nowrap" />
                 </div>
               </div>
             )}
@@ -143,7 +143,7 @@ export default function NotificationSettings() {
                   placeholder="Enter new email"
                 />
                 <div className="flex justify-end">
-                  <SecondaryButton text="Update" onClick={handleAddEmail} buttonClassName="px-4" />
+                  <SecondaryButton text="Update" onClick={handleAddEmail} buttonClassName="w-fit whitespace-nowrap" />
                 </div>
               </div>
             )}

@@ -509,21 +509,21 @@ const TransactionDetailContainer = () => {
                           <SecondaryButton
                             text="View Receipt"
                             variant="light"
-                            buttonClassName="px-4"
+                            buttonClassName="w-fit whitespace-nowrap"
                             onClick={() => setReceiptPreview(bill.receiptDetails)}
                           />
                         ) : bill.invoiceUuid ? (
                           <SecondaryButton
                             text="View Invoice"
                             variant="light"
-                            buttonClassName="px-4"
+                            buttonClassName="w-fit whitespace-nowrap"
                             onClick={() => handleViewInvoice(bill.invoiceUuid)}
                           />
                         ) : (
                           <SecondaryButton
                             text="View Details"
                             variant="light"
-                            buttonClassName="px-4"
+                            buttonClassName="w-fit whitespace-nowrap"
                             onClick={() => {
                               const tokenName = n(bill.paymentToken?.symbol || bill.paymentToken?.name) || sendTokenSymbol;
                               openModal<InvoiceModalProps>("INVOICE_MODAL", {

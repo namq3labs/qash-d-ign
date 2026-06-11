@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
 import AccountSettings from "./AccountSettings";
 import CompanySettings from "./CompanySettings";
 import NotificationSettings from "./NotificationSettings";
@@ -34,7 +36,19 @@ const integrationSettingTabs: SettingTab[] = [
   { id: "stripe", icon: "/misc/integration-icon.svg", label: "Stripe" },
 ];
 
+const tabLabels: Record<TabType, string> = {
+  account: "Account",
+  notifications: "Notifications",
+  company: "Company",
+  invoice: "Invoice",
+  team: "My team",
+  integrations: "Slack",
+  "google-sheets": "Google Sheets",
+  stripe: "Stripe",
+};
+
 export default function SettingContainer() {
+  const { setTitle, setShowBackArrow } = useTitle();
   const [activeTab, setActiveTab] = useState<TabType>("account");
   const searchParams = useSearchParams();
   const teamAccountParam = searchParams.get("team-account");
@@ -44,6 +58,19 @@ export default function SettingContainer() {
       setActiveTab("team");
     }
   }, [teamAccountParam]);
+
+  // Breadcrumb in the top title bar: Setting › {active tab}
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <span className="text-text-secondary">Setting</span>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">{tabLabels[activeTab]}</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
 
   return (
     <div className="flex flex-row w-full h-full bg-app-background gap-2">

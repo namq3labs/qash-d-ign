@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useDemo } from "@/contexts/DemoProvider";
-import { PageHeader } from "@/components/Common/PageHeader";
+import { useTitle } from "@/contexts/TitleProvider";
 import { PrimaryButton } from "@/components/Common/PrimaryButton";
 import { Badge, BadgeStatus } from "@/components/Common/Badge";
-import { BaseContainer } from "@/components/Common/BaseContainer";
 import toast from "react-hot-toast";
 
 const FIAT_OPTIONS = [
@@ -32,13 +31,14 @@ const StatCard = ({ label, value, sub }: { label: string; value: string; sub?: s
     style={{ backgroundImage: "url(/card/background.svg)", backgroundSize: "30%", backgroundPosition: "right", backgroundRepeat: "no-repeat" }}
   >
     <span className="text-text-secondary text-sm leading-none">{label}</span>
-    <span className="text-text-primary text-2xl font-bold leading-none">{value}</span>
+    <span className="num text-text-primary text-2xl leading-none">{value}</span>
     {sub && <span className="text-text-secondary text-xs">{sub}</span>}
   </div>
 );
 
 export default function CashoutPage() {
   const { data, addRampTransaction } = useDemo();
+  const { setTitle, setShowBackArrow } = useTitle();
   const [loading, setLoading] = useState(true);
   const [amount, setAmount] = useState("");
   const [fiat, setFiat] = useState("SGD");
@@ -47,9 +47,15 @@ export default function CashoutPage() {
 
   useEffect(() => { const t = setTimeout(() => setLoading(false), 600); return () => clearTimeout(t); }, []);
 
+  // Breadcrumb in the top title bar: Cashout is a top-level sidebar item, so a single bold segment.
+  useEffect(() => {
+    setTitle(<span className="text-[14px] font-medium text-text-primary">Cashout</span>);
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const parsedAmount = parseFloat(amount) || 0;
   const rate = RATES[fiat] ?? 1;
-  const fiatAmount = parsedAmount * rate;
   const fee = parsedAmount * FEE_RATE;
   const netReceive = (parsedAmount - fee) * rate;
   const selectedFiat = FIAT_OPTIONS.find(f => f.code === fiat)!;
@@ -83,9 +89,9 @@ export default function CashoutPage() {
 
   if (loading || !data) {
     return (
-      <div className="w-full h-full p-5 flex flex-col gap-4">
+      <div className="flex w-full h-full flex-col gap-4 px-6 pt-6 pb-5">
         <div className="h-8 w-48 bg-primary-divider rounded animate-pulse" />
-        <div className="flex gap-3">
+        <div className="flex gap-2">
           {[1, 2, 3].map(i => <div key={i} className="flex-1 h-24 bg-primary-divider rounded-xl animate-pulse" />)}
         </div>
         <div className="flex-1 bg-primary-divider rounded-2xl animate-pulse" />
@@ -94,20 +100,26 @@ export default function CashoutPage() {
   }
 
   return (
-    <div className="w-full h-full p-5 flex flex-col gap-4 items-start">
-      <div className="w-full px-5">
-        <PageHeader icon="/sidebar/payroll.svg" label="Cashout" button={null} />
+    <div className="flex w-full h-full flex-col">
+      {/* Page header (same concept as the Dashboard / Employee / Invoice pages) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Cashout</h1>
+          <p className="text-[14px] text-text-secondary">
+            Convert USDT from your treasury and withdraw it to your business bank account.
+          </p>
+        </div>
       </div>
 
       {/* Stat cards */}
-      <div className="flex flex-row gap-3 w-full px-5">
+      <div className="flex w-full flex-row gap-2 px-6 pb-2">
         <StatCard label="Treasury Balance" value={`$${fmt(data.totalBalance)}`} sub="Available across all wallets" />
         <StatCard label="Total Cashed Out" value={`$${fmt(totalCashedOut)}`} sub={`${rampHistory.filter(h => h.type === "OFF_RAMP").length} withdrawals`} />
         <StatCard label="Total Deposited" value={`$${fmt(totalDeposited)}`} sub={`${rampHistory.filter(h => h.type === "ON_RAMP").length} deposits`} />
       </div>
 
       {/* Main content */}
-      <div className="flex flex-row gap-4 w-full px-5 flex-1 min-h-0">
+      <div className="flex flex-row gap-4 w-full px-6 pb-5 flex-1 min-h-0">
         {/* Cashout form */}
         <div className="w-[420px] flex flex-col gap-4">
           <div className="bg-background rounded-2xl border border-primary-divider p-6 flex flex-col gap-5">
@@ -219,16 +231,12 @@ export default function CashoutPage() {
         </div>
 
         {/* Transaction history */}
-        <div className="flex-1 flex flex-col min-h-0">
-          <BaseContainer
-            header={
-              <div className="flex items-center justify-between w-full p-5">
-                <span className="text-lg font-semibold text-text-primary">Withdrawal History</span>
-                <span className="text-sm text-text-secondary">{rampHistory.length} transactions</span>
-              </div>
-            }
-            childrenClassName="p-0 overflow-auto"
-          >
+        <div className="flex-1 flex flex-col min-h-0 rounded-2xl border border-primary-divider overflow-hidden">
+          <div className="flex items-center justify-between w-full p-5 border-b border-primary-divider">
+            <span className="text-lg font-semibold text-text-primary">Withdrawal History</span>
+            <span className="text-sm text-text-secondary">{rampHistory.length} transactions</span>
+          </div>
+          <div className="overflow-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-primary-divider">
@@ -267,7 +275,7 @@ export default function CashoutPage() {
                         </td>
                         <td className="px-5 py-3.5 text-sm text-text-secondary">{entry.bankAccount}</td>
                         <td className="px-5 py-3.5 text-center">
-                          <Badge text={entry.status} status={BadgeStatus.Success} className="px-3" />
+                          <Badge text={entry.status} status={BadgeStatus.SUCCESS} className="px-3" />
                         </td>
                       </tr>
                     );
@@ -275,7 +283,7 @@ export default function CashoutPage() {
                 )}
               </tbody>
             </table>
-          </BaseContainer>
+          </div>
         </div>
       </div>
     </div>

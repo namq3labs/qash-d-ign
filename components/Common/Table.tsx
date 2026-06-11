@@ -478,7 +478,12 @@ export function Table({
           />
           <tbody className={tableBodyStyle}>
             {paginatedData.length === 0 ? (
-              <EmptyRow headers={headers} actionColumn={actionColumn} draggable={draggable} />
+              <EmptyRow
+                headers={headers}
+                actionColumn={actionColumn}
+                draggable={draggable}
+                noDataMessage={noDataMessage}
+              />
             ) : (
               paginatedData.map((rowData, index) => {
                 const row = createTableRow(rowData, headers, actionRenderer, index);

@@ -2,11 +2,10 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { useDemo } from "@/contexts/DemoProvider";
-import { PageHeader } from "@/components/Common/PageHeader";
+import { useTitle } from "@/contexts/TitleProvider";
 import { PrimaryButton } from "@/components/Common/PrimaryButton";
 import { SecondaryButton } from "@/components/Common/SecondaryButton";
 import { Badge, BadgeStatus } from "@/components/Common/Badge";
-import { BaseContainer } from "@/components/Common/BaseContainer";
 import { TabContainer } from "@/components/Common/TabContainer";
 import { Table } from "@/components/Common/Table";
 import { ModalHeader } from "@/components/Common/ModalHeader";
@@ -361,6 +360,7 @@ function WithdrawModal({
 
 export default function EarnPage() {
   const { data } = useDemo();
+  const { setTitle, setShowBackArrow } = useTitle();
   const [loading, setLoading] = useState(true);
   const [showDepositModal, setShowDepositModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
@@ -369,6 +369,13 @@ export default function EarnPage() {
   const [activityTab, setActivityTab] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Breadcrumb in the top title bar: Earn (top-level, single bold segment)
+  useEffect(() => {
+    setTitle(<span className="text-[14px] font-medium text-text-primary">Earn</span>);
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 800);
@@ -438,36 +445,31 @@ export default function EarnPage() {
   // Loading skeleton
   if (loading || !data) {
     return (
-      <div className="flex flex-col w-full h-full p-5 gap-5">
-        <div className="flex flex-row items-center gap-3 px-5">
-          <div className="w-6 h-6 rounded bg-gray-200 animate-pulse" />
-          <div className="w-48 h-7 rounded bg-gray-200 animate-pulse" />
-        </div>
-        <div className="grid grid-cols-4 gap-3 px-5">
+      <div className="flex w-full h-full flex-col gap-5 px-6 pt-6">
+        <div className="w-48 h-8 rounded bg-gray-200 animate-pulse" />
+        <div className="grid grid-cols-4 gap-2">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="h-20 rounded-xl bg-gray-200 animate-pulse" />
           ))}
         </div>
-        <div className="grid grid-cols-2 gap-3 px-5">
+        <div className="grid grid-cols-2 gap-4">
           {[1, 2].map((i) => (
             <div key={i} className="h-56 rounded-xl bg-gray-200 animate-pulse" />
           ))}
         </div>
-        <div className="h-[300px] rounded-xl bg-gray-200 animate-pulse mx-5" />
+        <div className="h-[300px] rounded-xl bg-gray-200 animate-pulse" />
       </div>
     );
   }
 
   return (
     <>
-      <div className="flex flex-col w-full h-full p-5 gap-5 overflow-y-auto">
-        {/* Header + Stats */}
-        <div className="flex flex-col w-full px-5 gap-5">
-          {/* Custom header with info icon */}
-          <div className="flex flex-row items-center justify-between w-full">
-            <div className="flex flex-row items-center justify-start gap-3">
-              <img src="/sidebar/earn.svg" alt="Earn" className="w-6 h-6" />
-              <span className="text-2xl font-bold">Earn</span>
+      <div className="flex w-full h-full flex-col overflow-y-auto">
+        {/* Page header (same concept as the Dashboard / Bills / Invoice pages) */}
+        <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+          <div className="flex flex-col gap-0.5">
+            <div className="flex items-center gap-2">
+              <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Earn</h1>
               <button
                 onClick={() => setShowInfoModal(true)}
                 className="w-5 h-5 rounded-full border border-primary-divider flex items-center justify-center cursor-pointer hover:bg-app-background transition-colors"
@@ -475,63 +477,66 @@ export default function EarnPage() {
                 <span className="text-xs text-text-secondary font-medium leading-none">i</span>
               </button>
             </div>
-            <div className="flex gap-2">
-              <SecondaryButton
-                text="Withdraw"
-                variant="light"
-                onClick={() => setShowWithdrawModal(true)}
-                buttonClassName="px-4"
-              />
-              <PrimaryButton
-                text="Deposit"
-                icon="/misc/plus-icon.svg"
-                iconPosition="left"
-                onClick={() => setShowDepositModal(true)}
-                containerClassName="w-fit"
-                buttonClassName="px-4"
-              />
-            </div>
+            <p className="text-[14px] text-text-secondary">
+              Put idle treasury funds to work in T-Bill backed yield, earning daily and withdrawable anytime.
+            </p>
           </div>
-
-          {/* Stat Cards */}
-          <div className="flex flex-row w-full gap-2">
-            <StatCard
-              title="Current APY"
-              text={
-                <span className="text-2xl font-bold leading-none" style={{ color: "var(--badge-success-text)" }}>
-                  {EARN_APY}%
-                </span>
-              }
+          <div className="flex shrink-0 gap-2">
+            <SecondaryButton
+              text="Withdraw"
+              variant="light"
+              onClick={() => setShowWithdrawModal(true)}
+              buttonClassName="w-fit whitespace-nowrap"
             />
-            <StatCard
-              title="Total Deposited"
-              text={
-                <span className="text-text-primary text-2xl font-bold leading-none">
-                  {fmtUsd(TOTAL_DEPOSITED)}
-                </span>
-              }
-            />
-            <StatCard
-              title="Available to Withdraw"
-              text={
-                <span className="text-text-primary text-2xl font-bold leading-none">
-                  {fmtUsd(AVAILABLE_TO_WITHDRAW)}
-                </span>
-              }
-            />
-            <StatCard
-              title="Total Earned"
-              text={
-                <span className="text-2xl font-bold leading-none" style={{ color: "var(--badge-success-text)" }}>
-                  +{fmtUsd(TOTAL_EARNED)}
-                </span>
-              }
+            <PrimaryButton
+              text="Deposit"
+              icon="/misc/plus-icon.svg"
+              iconPosition="left"
+              onClick={() => setShowDepositModal(true)}
+              containerClassName="w-fit"
+              buttonClassName="w-fit whitespace-nowrap"
             />
           </div>
         </div>
 
+        {/* Stat Cards */}
+        <div className="flex w-full flex-row gap-2 px-6 pb-2">
+          <StatCard
+            title="Current APY"
+            text={
+              <span className="num text-2xl leading-none" style={{ color: "var(--badge-success-text)" }}>
+                {EARN_APY}%
+              </span>
+            }
+          />
+          <StatCard
+            title="Total Deposited"
+            text={
+              <span className="num text-text-primary text-2xl leading-none">
+                {fmtUsd(TOTAL_DEPOSITED)}
+              </span>
+            }
+          />
+          <StatCard
+            title="Available to Withdraw"
+            text={
+              <span className="num text-text-primary text-2xl leading-none">
+                {fmtUsd(AVAILABLE_TO_WITHDRAW)}
+              </span>
+            }
+          />
+          <StatCard
+            title="Total Earned"
+            text={
+              <span className="num text-2xl leading-none" style={{ color: "var(--badge-success-text)" }}>
+                +{fmtUsd(TOTAL_EARNED)}
+              </span>
+            }
+          />
+        </div>
+
         {/* Middle Row: Yield Line Chart + Earnings Summary */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 px-5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 px-6 pt-3">
           {/* Yield Line Chart */}
           <div className="rounded-xl border border-primary-divider bg-background p-5">
             <div className="flex items-center justify-between mb-5">
@@ -615,34 +620,32 @@ export default function EarnPage() {
           </div>
         </div>
 
-        {/* Activity Table */}
-        <BaseContainer
-          header={
-            <div className="flex w-full justify-between items-center py-3 px-5">
-              <TabContainer
-                tabs={[
-                  { id: "all", label: "All" },
-                  { id: "deposit", label: "Deposits" },
-                  { id: "yield", label: "Yield" },
-                  { id: "withdraw", label: "Withdrawals" },
-                ]}
-                activeTab={activityTab}
-                setActiveTab={setActivityTab}
-              />
-            </div>
-          }
-          childrenClassName="p-5 gap-5"
-          containerClassName="w-full mx-5"
-        >
-          <div className="flex w-full justify-between items-center">
-            <div className="flex flex-col gap-2">
-              <span className="text-text-primary text-2xl font-medium leading-none">Activity</span>
-              <span className="text-text-secondary text-[14px] font-medium leading-none">
-                All deposit, withdrawal, and yield transactions
-              </span>
-            </div>
+        {/* Activity heading */}
+        <div className="flex w-full items-start justify-between gap-4 px-6 pt-6">
+          <div className="flex flex-col gap-0.5">
+            <h2 className="text-[20px] font-bold leading-tight tracking-tight text-text-primary">Activity</h2>
+            <p className="text-[14px] text-text-secondary">All deposit, withdrawal, and yield transactions</p>
           </div>
+        </div>
 
+        {/* Tab bar + count */}
+        <div className="mt-2 flex w-full items-center justify-between gap-2 border-b border-primary-divider px-6 pb-3">
+          <TabContainer
+            tabs={[
+              { id: "all", label: "All" },
+              { id: "deposit", label: "Deposits" },
+              { id: "yield", label: "Yield" },
+              { id: "withdraw", label: "Withdrawals" },
+            ]}
+            activeTab={activityTab}
+            setActiveTab={setActivityTab}
+            textSize="sm"
+          />
+          <span className="text-sm text-text-secondary">{filteredActivity.length} transactions</span>
+        </div>
+
+        {/* Activity table */}
+        <div className="w-full p-5">
           <Table
             headers={["Type", "Date", "Wallet", "Amount", "Status"]}
             data={tableData}
@@ -656,7 +659,7 @@ export default function EarnPage() {
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={setRowsPerPage}
           />
-        </BaseContainer>
+        </div>
       </div>
 
       {/* Modals */}

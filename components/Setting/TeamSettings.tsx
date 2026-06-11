@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/services/auth/context";
 import { PrimaryButton } from "../Common/PrimaryButton";
+import { TabContainer } from "../Common/TabContainer";
 import Card from "../Common/Card";
 import AccountTab, { Account } from "./TeamSetting/AccountTab";
 import MemberTab from "./TeamSetting/MemberTab";
@@ -61,13 +62,17 @@ const TeamSettings = () => {
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      {/* Header Section */}
-      <div className="flex items-center justify-between w-full">
-        <div className="flex gap-3 items-center">
+      {/* Header (concept: title + subtitle + action right) */}
+      <div className="flex w-full items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
           <CompanyAvatar logo={myCompany?.logo} companyName={myCompany?.companyName} size="w-12" />
-          <div className="flex flex-col gap-1">
-            <h1 className="text-2xl font-semibold text-text-primary leading-none">{myCompany?.companyName}</h1>
-            <p className="text-xs font-medium text-text-secondary leading-none">{teamStats?.total} members</p>
+          <div className="flex flex-col gap-0.5">
+            <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">
+              {myCompany?.companyName}
+            </h1>
+            <p className="text-[14px] text-text-secondary">
+              Manage multi-owner accounts, company members, and invoice settings.
+            </p>
           </div>
         </div>
         {isAdmin && (
@@ -76,66 +81,37 @@ const TeamSettings = () => {
             icon="/misc/plus-icon.svg"
             iconPosition="left"
             onClick={() => openModal("INVITE_TEAM_MEMBER")}
-            containerClassName="w-[160px]"
+            containerClassName="w-[180px] shrink-0"
+            buttonClassName="whitespace-nowrap"
           />
         )}
       </div>
 
-      {/* Stats Cards */}
-      <div className="flex gap-4 w-full">
-        {/* Account Stats Card */}
+      {/* Stat cards (concept) */}
+      <div className="flex w-full flex-row gap-2">
         <Card title="Accounts" amount={accounts.length.toString()} info="Admins can submit proposals and cast votes." />
-
-        {/* Member Stats Card */}
-        <Card title="Members" amount={teamStats?.total.toString() || "0"} />
+        <Card title="Members" amount={teamStats?.total?.toString() || "0"} />
       </div>
 
-      {/* Tabs */}
-      {/** Employee or Client tab */}
-      <div className="w-full flex flex-row border-b border-primary-divider relative">
-        <div
-          className="flex items-center justify-center px-10 py-3 w-[250px] cursor-pointer group transition-colors duration-300"
-          onClick={() => setActiveTab("account")}
-        >
-          <p
-            className={`font-medium text-base leading-6 transition-colors duration-300 ${
-              activeTab === "account" ? "text-text-strong-950" : "text-text-soft-400 group-hover:text-text-soft-500"
-            }`}
-          >
-            Multi-Owner Accounts
-          </p>
-        </div>
-        <div
-          className="flex items-center justify-center px-10 py-3 w-[250px] cursor-pointer transition-colors duration-300"
-          onClick={() => setActiveTab("member")}
-        >
-          <p
-            className={`font-medium text-base leading-6 transition-colors duration-300 ${
-              activeTab === "member" ? "text-text-strong-950" : "text-text-soft-400"
-            }`}
-          >
-            Company Member
-          </p>
-        </div>
-        <div
-          className="flex items-center justify-center px-10 py-3 w-[250px] cursor-pointer transition-colors duration-300"
-          onClick={() => setActiveTab("invoice")}
-        >
-          <p
-            className={`font-medium text-base leading-6 transition-colors duration-300 ${
-              activeTab === "invoice" ? "text-text-strong-950" : "text-text-soft-400"
-            }`}
-          >
-            Invoice Settings
-          </p>
-        </div>
-        <div
-          className="absolute bottom-0 h-[3px] bg-primary-blue transition-all duration-300"
-          style={{
-            width: "250px",
-            left: activeTab === "account" ? "0px" : activeTab === "member" ? "250px" : "500px",
-          }}
+      {/* Tab bar (concept: TabContainer + contextual count) */}
+      <div className="flex w-full items-center justify-between gap-2 border-b border-primary-divider pb-3">
+        <TabContainer
+          tabs={[
+            { id: "account", label: "Multi-Owner Accounts" },
+            { id: "member", label: "Company Member" },
+            { id: "invoice", label: "Invoice Settings" },
+          ]}
+          activeTab={activeTab}
+          setActiveTab={tab => setActiveTab(tab as "account" | "member" | "invoice")}
+          textSize="sm"
         />
+        {activeTab !== "invoice" && (
+          <span className="text-sm text-text-secondary">
+            {activeTab === "account"
+              ? `${accounts.length} ${accounts.length === 1 ? "account" : "accounts"}`
+              : `${teamStats?.total ?? 0} ${(teamStats?.total ?? 0) === 1 ? "member" : "members"}`}
+          </span>
+        )}
       </div>
 
       {renderTabContent()}

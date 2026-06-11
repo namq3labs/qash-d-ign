@@ -1,8 +1,17 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import { BaseContainer } from "../Common/BaseContainer";
-import { ProposalRow } from "./ProposalRow";
-import { NoteRow } from "./NoteRow";
+import { TabContainer } from "../Common/TabContainer";
+import { Table } from "../Common/Table";
+import { PrimaryButton } from "../Common/PrimaryButton";
+import { SecondaryButton } from "../Common/SecondaryButton";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
+import { TransactionFilter } from "./TransactionFilter";
+import { ProposalAmountCell } from "./ProposalAmountCell";
+import { categoryConfig, statusConfig, formatDate } from "./ProposalRow";
+import { isQashToken, getTokenLogo, formatAmount, parseNoteType, getNoteTypeBadgeColor } from "./NoteRow";
+import { formatAddress } from "@/services/utils/miden/address";
+import { QASH_TOKEN_SYMBOL, QASH_TOKEN_DECIMALS } from "@/services/utils/constant";
 import { useGetMyCompany } from "@/services/api/company";
 import {
   useListAccountsByCompany,
@@ -22,7 +31,6 @@ import { usePSMProvider } from "@/contexts/PSMProvider";
 import { getFaucetMetadata } from "@/services/utils/miden/faucet";
 import { supportedTokens } from "@/services/utils/supportedToken";
 import { useRouter } from "next/navigation";
-import { PageHeader } from "../Common/PageHeader";
 import { useAuth } from "@/services/auth/context";
 import { trackEvent } from "@/services/analytics/posthog";
 import { PostHogEvent } from "@/types/posthog";
@@ -39,8 +47,11 @@ const subTabs: { id: SubTabType; label: string }[] = [
 
 export function TransactionsContainer() {
   const router = useRouter();
+  const { setTitle, setShowBackArrow } = useTitle();
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [activeSubTab, setActiveSubTab] = useState<SubTabType>("pending");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
   const [actionType, setActionType] = useState<"sign" | "execute" | "cancel" | null>(null);
   const [selectedNoteIds, setSelectedNoteIds] = useState<string[]>([]);
@@ -50,6 +61,26 @@ export function TransactionsContainer() {
   const { user } = useAuth();
 
   const isViewer = user?.teamMembership?.role === TeamMemberRoleEnum.VIEWER;
+
+  // Breadcrumb in the top title bar: Transactions › {active sub-tab}
+  const subTabLabel = subTabs.find(t => t.id === activeSubTab)?.label ?? "Pending Transactions";
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <button
+          type="button"
+          onClick={() => setActiveSubTab("pending")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Transactions
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">{subTabLabel}</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeSubTab]);
 
   const { openModal, closeModal } = useModal();
   const { client: midenClient } = useMidenProvider();
@@ -86,9 +117,6 @@ export function TransactionsContainer() {
   const executeProposalMutation = useExecuteProposal();
   const cancelProposalMutation = useCancelProposal();
   const createConsumeProposalMutation = useCreateConsumeProposal();
-
-  // Get current selected account
-  const currentAccount = multisigAccounts.find(a => a.accountId === activeTab);
 
   // Calculate pending proposal count for each account
   const pendingCountByAccount = useMemo(() => {
@@ -392,137 +420,248 @@ export function TransactionsContainer() {
     }
   };
 
-  // Render the appropriate sub-tab content based on activeSubTab
-  const renderSubtab = () => {
-    switch (activeSubTab) {
-      case "receive":
-        return (
-          <>
-            {notesLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-blue" />
-              </div>
-            ) : consumableNotesData.notes.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-text-secondary">
-                <img src="/misc/hexagon-magnifer-icon.svg" alt="No Proposals" className="w-25" />
-                <p className="text-lg font-medium">No consumable notes</p>
-                <p className="text-sm">No notes available to consume on this account</p>
-              </div>
-            ) : (
-              <>
-                {consumableNotesData.notes.map(note => {
-                  const isNoteInProposal = allProposals.some(
-                    proposal =>
-                      proposal.proposalType === "CONSUME" &&
-                      proposal.noteIds?.includes(note.note_id) &&
-                      // Exclude cancelled, failed, and rejected proposals
-                      proposal.status !== "CANCELLED" &&
-                      proposal.status !== "FAILED" &&
-                      proposal.status !== "REJECTED",
-                  );
-
-                  return (
-                    <NoteRow
-                      key={note.note_id}
-                      note={note}
-                      selected={selectedNoteIds.includes(note.note_id)}
-                      onSelect={handleNoteSelection}
-                      onClaimNote={handleClaimNote}
-                      isLoading={isCreatingProposal}
-                      isInProposal={isNoteInProposal}
-                      isViewer={isViewer}
-                    />
-                  );
-                })}
-              </>
-            )}
-          </>
-        );
-
-      case "pending": {
-        return (
-          <>
-            {syncWarning && (
-              <div className="flex items-center gap-2 px-4 py-3 mb-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-sm">
-                <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-                </svg>
-                <p>A previous transaction is being finalized on-chain. New transactions cannot be submitted until this completes. This usually takes a few seconds.</p>
-              </div>
-            )}
-            {proposalsLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-blue" />
-              </div>
-            ) : pendingProposals.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-text-secondary">
-                <img src="/misc/hexagon-magnifer-icon.svg" alt="No Proposals" className="w-25" />
-                <p className="text-lg font-medium">No pending transactions</p>
-                <p className="text-sm">Create a proposal from the Bills page to get started</p>
-              </div>
-            ) : (
-              pendingProposals.map(proposal => (
-                <ProposalRow
-                  key={proposal.uuid}
-                  proposal={proposal}
-                  onSign={handleSign}
-                  onExecute={handleExecute}
-                  onCancel={handleCancel}
-                  isSignLoading={actionLoadingId === proposal.uuid && actionType === "sign"}
-                  isExecuteLoading={actionLoadingId === proposal.uuid && actionType === "execute"}
-                  isCancelLoading={actionLoadingId === proposal.uuid && actionType === "cancel"}
-                  userPublicKey={signerCommitment ?? undefined}
-                  isViewer={isViewer}
-                  onProposalClick={() => router.push(`/transactions/detail?proposalId=${proposal.id}`)}
-                />
-              ))
-            )}
-          </>
-        );
-      }
-
-      case "history": {
-        return (
-          <>
-            {proposalsLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-blue" />
-              </div>
-            ) : historyProposals.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-text-secondary">
-                <img src="/misc/hexagon-magnifer-icon.svg" alt="No Proposals" className="w-25" />
-                <p className="text-lg font-medium">No transaction history</p>
-                <p className="text-sm">Executed, failed, and cancelled proposals will appear here</p>
-              </div>
-            ) : (
-              historyProposals.map(proposal => (
-                <ProposalRow
-                  key={proposal.uuid}
-                  proposal={proposal}
-                  onSign={handleSign}
-                  onExecute={handleExecute}
-                  onCancel={handleCancel}
-                  isSignLoading={actionLoadingId === proposal.uuid && actionType === "sign"}
-                  isExecuteLoading={actionLoadingId === proposal.uuid && actionType === "execute"}
-                  isCancelLoading={actionLoadingId === proposal.uuid && actionType === "cancel"}
-                  userPublicKey={signerCommitment ?? undefined}
-                  isViewer={isViewer}
-                  onProposalClick={() => router.push(`/transactions/detail?proposalId=${proposal.id}`)}
-                />
-              ))
-            )}
-          </>
-        );
-      }
-
-      default:
-        return null;
-    }
+  // Switch multisig account (top-level tabs). Resets the view + pagination.
+  const changeAccount = (accountId: string) => {
+    setActiveTab(accountId);
+    setActiveSubTab("pending");
+    setSelectedNoteIds([]);
+    setCurrentPage(1);
   };
 
+  // Switch the view filter (Pending / History / Receive). Resets pagination.
+  const changeSubTab = (tab: SubTabType) => {
+    setActiveSubTab(tab);
+    setSelectedNoteIds([]);
+    setCurrentPage(1);
+  };
+
+  // Proposals shown for the active filter (pending+ready, or history)
+  const activeProposals = activeSubTab === "history" ? historyProposals : pendingProposals;
+
+  // Build table rows for proposals (Pending Transactions / History views)
+  const proposalRows = activeProposals.map(proposal => {
+    const status = proposal.status as MultisigProposalStatusEnum;
+    const isHistory =
+      status === MultisigProposalStatusEnum.EXECUTED ||
+      status === MultisigProposalStatusEnum.FAILED ||
+      status === MultisigProposalStatusEnum.CANCELLED;
+    const cfg = statusConfig[status] || statusConfig[MultisigProposalStatusEnum.PENDING];
+    const cat = (proposal as any).proposalCategory;
+    const catConfig = cat ? categoryConfig[cat] : undefined;
+    const icon =
+      catConfig?.icon ||
+      (proposal.proposalType === "SEND" ? "/transaction/pay-icon.svg" : "/transaction/consume-icon.svg");
+    const label = catConfig?.label || (proposal.proposalType === "SEND" ? "Pay" : "Receive");
+
+    return {
+      __proposal: proposal,
+      Transaction: (
+        <div className="flex items-center gap-3">
+          <img src={icon} alt={label} className="w-6 h-6" />
+          <span className="text-sm font-medium text-text-primary whitespace-nowrap">{label}</span>
+        </div>
+      ),
+      Description: (
+        <span className="block max-w-[280px] truncate text-sm font-medium text-text-primary">
+          {proposal.description}
+        </span>
+      ),
+      Amount: <ProposalAmountCell proposal={proposal} />,
+      Status: (
+        <div className="flex justify-center">
+          <div
+            className={`inline-flex items-center justify-center px-4 py-1 rounded-full border ${cfg.borderColor} ${cfg.bgColor}`}
+          >
+            <span className={`text-sm font-semibold ${cfg.textColor} whitespace-nowrap`}>
+              {isHistory
+                ? cfg.label
+                : `${proposal.signaturesCount ?? proposal.signatures?.length ?? 0} of ${proposal.threshold ?? (proposal as any).requiredSignatures ?? "?"}`}
+            </span>
+          </div>
+        </div>
+      ),
+      Date: (
+        <span className="text-sm font-medium text-text-secondary whitespace-nowrap">
+          {formatDate(proposal.createdAt)}
+        </span>
+      ),
+    };
+  });
+
+  // Action column for proposal rows (Sign / Execute / Cancel)
+  const proposalActionRenderer = (rowData: Record<string, any>) => {
+    const proposal = rowData.__proposal;
+    if (!proposal) return null;
+    const status = proposal.status as MultisigProposalStatusEnum;
+    const isPending = status === MultisigProposalStatusEnum.PENDING;
+    const isReady = status === MultisigProposalStatusEnum.READY;
+    if (!isPending && !isReady) return null;
+
+    const hasUserSigned = signerCommitment
+      ? proposal.signatures?.some(
+          (sig: any) =>
+            sig.approverPublicKey.toLowerCase().replace(/^0x/, "") ===
+            signerCommitment.toLowerCase().replace(/^0x/, ""),
+        )
+      : false;
+    const isSignLoading = actionLoadingId === proposal.uuid && actionType === "sign";
+    const isExecuteLoading = actionLoadingId === proposal.uuid && actionType === "execute";
+    const isCancelLoading = actionLoadingId === proposal.uuid && actionType === "cancel";
+
+    return (
+      <div className="flex items-center justify-center gap-2" onClick={e => e.stopPropagation()}>
+        {isPending && (
+          <>
+            <SecondaryButton
+              text="Cancel"
+              variant="dark"
+              buttonClassName="w-fit whitespace-nowrap"
+              onClick={(e: any) => {
+                e.stopPropagation();
+                handleCancel(proposal.uuid);
+              }}
+              loading={isCancelLoading}
+              disabled={isCancelLoading || isSignLoading || isViewer}
+            />
+            <PrimaryButton
+              text={hasUserSigned ? "Signed" : "Sign"}
+              buttonClassName="w-fit whitespace-nowrap"
+              onClick={(e: any) => {
+                e.stopPropagation();
+                handleSign(proposal.id);
+              }}
+              loading={isSignLoading}
+              disabled={hasUserSigned || isSignLoading || isCancelLoading || isViewer}
+            />
+          </>
+        )}
+        {isReady && (
+          <PrimaryButton
+            text="Execute"
+            buttonClassName="w-fit whitespace-nowrap"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              handleExecute(proposal.id);
+            }}
+            loading={isExecuteLoading}
+            disabled={isExecuteLoading || isViewer}
+          />
+        )}
+      </div>
+    );
+  };
+
+  // Build table rows for consumable notes (Receive view)
+  const noteRows = consumableNotesData.notes.map(note => {
+    const firstAsset = note.assets?.[0];
+    const faucetBech32 = firstAsset?.faucet_bech32 || "";
+    const faucetHex = firstAsset?.faucet_id || "";
+    const isQash = isQashToken(faucetBech32, faucetHex, firstAsset?.symbol || "");
+    const symbol = isQash ? QASH_TOKEN_SYMBOL : firstAsset?.symbol || "";
+    const decimals = isQash ? QASH_TOKEN_DECIMALS : firstAsset?.decimals ?? 8;
+    const displayAmount = firstAsset ? formatAmount(firstAsset.amount, decimals) : "0";
+    const tokenLabel = symbol || (faucetBech32 ? formatAddress(faucetBech32) : formatAddress(faucetHex));
+    const tokenLogo = firstAsset ? getTokenLogo(faucetBech32, faucetHex, symbol) : "/token/any-token.svg";
+    const noteTypeFormatted = parseNoteType(note.note_type);
+    const noteTypeBadgeColor = getNoteTypeBadgeColor(note.note_type);
+    const isInProposal = allProposals.some(
+      proposal =>
+        proposal.proposalType === "CONSUME" &&
+        proposal.noteIds?.includes(note.note_id) &&
+        proposal.status !== "CANCELLED" &&
+        proposal.status !== "FAILED" &&
+        proposal.status !== "REJECTED",
+    );
+
+    return {
+      __note: note,
+      __isInProposal: isInProposal,
+      Note: (
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-text-secondary">ID</span>
+          <span className="text-sm font-medium text-text-strong-950">
+            {note.note_id.slice(0, 5)}...{note.note_id.slice(-6)}
+          </span>
+        </div>
+      ),
+      From: (
+        <span className="text-sm font-medium text-text-strong-950">
+          {note.sender ? formatAddress(note.sender) : symbol ? `${symbol} Faucet` : "Unknown"}
+        </span>
+      ),
+      Amount: (
+        <div className="flex items-center justify-center gap-2">
+          <img
+            src={tokenLogo}
+            alt={tokenLabel}
+            className="w-6 h-6"
+            onError={e => {
+              (e.target as HTMLImageElement).src = "/token/any-token.svg";
+            }}
+          />
+          <span className="text-sm font-medium text-text-strong-950 whitespace-nowrap">
+            {displayAmount} {tokenLabel}
+          </span>
+        </div>
+      ),
+      Type: (
+        <div className="flex justify-center">
+          <div
+            className={`inline-flex items-center px-3 py-1 rounded-full border ${
+              noteTypeFormatted ? noteTypeBadgeColor : "bg-gray-50 border-gray-200 text-gray-500"
+            }`}
+          >
+            <span className="text-sm font-semibold">{noteTypeFormatted || "Note"}</span>
+          </div>
+        </div>
+      ),
+    };
+  });
+
+  // Action column for note rows (Claim)
+  const noteActionRenderer = (rowData: Record<string, any>) => {
+    const note = rowData.__note;
+    if (!note) return null;
+    return (
+      <div className="flex items-center justify-center" onClick={e => e.stopPropagation()}>
+        <PrimaryButton
+          text={rowData.__isInProposal ? "In Proposal" : "Claim"}
+          onClick={() => handleClaimNote(note.note_id)}
+          loading={isCreatingProposal}
+          disabled={rowData.__isInProposal || isCreatingProposal || isViewer}
+          buttonClassName="w-fit whitespace-nowrap"
+        />
+      </div>
+    );
+  };
+
+  // Contextual count + filter options for the view selector
+  const subTabCount =
+    activeSubTab === "receive"
+      ? consumableNotesData.notes.length
+      : activeSubTab === "history"
+        ? historyProposals.length
+        : pendingProposals.length;
+  const subTabCountLabel =
+    activeSubTab === "receive" ? "notes" : activeSubTab === "history" ? "records" : "transactions";
+
+  const filterOptions = subTabs.map(tab => ({
+    value: tab.id,
+    label: tab.label,
+    badge: tab.id === "receive" ? consumableNotesData.notes.length : undefined,
+  }));
+
   return (
-    <div className="flex flex-col w-full gap-3 p-4 items-start h-full">
-      <PageHeader icon="/sidebar/transactions.svg" label="Transactions" button={null} />
+    <div className="flex w-full h-full flex-col">
+      {/* Page header (same concept as the Dashboard / Invoice / Bills pages) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Transactions</h1>
+          <p className="text-[14px] text-text-secondary">
+            Sign, execute and track multisig proposals across your accounts.
+          </p>
+        </div>
+      </div>
 
       {/* Main Tabs - Based on Multisig Accounts */}
       {accountsLoading ? (
@@ -535,72 +674,112 @@ export function TransactionsContainer() {
         </div>
       ) : (
         <>
-          <div className="w-full flex flex-row border-b border-primary-divider">
-            {multisigAccounts.map(account => {
-              const pendingCount = pendingCountByAccount.get(account.accountId) || 0;
-              return (
-                <button
-                  key={account.accountId}
-                  onClick={() => {
-                    setActiveTab(account.accountId);
-                    setActiveSubTab("pending");
-                    setSelectedNoteIds([]);
-                  }}
-                  className={`flex items-center justify-center gap-2 px-6 py-3 cursor-pointer group transition-colors duration-300 border-b-[3px] ${
-                    activeTab === account.accountId
-                      ? "border-primary-blue text-text-strong-950"
-                      : "border-transparent text-text-soft-400 hover:text-text-soft-500"
-                  }`}
-                >
-                  <p className="font-medium text-base leading-6 transition-colors duration-300">{account.name}</p>
-                  {pendingCount > 0 && (
-                    <span className="inline-flex items-center justify-center min-w-6 px-2 py-0.5 rounded-full text-xs font-semibold bg-red-600 text-white">
-                      {pendingCount}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
+          {/* Tab bar: account selector (default tab design) + view filter + count */}
+          <div className="mt-2 flex w-full items-center justify-between gap-2 border-b border-primary-divider px-6 pb-3">
+            <TabContainer
+              tabs={multisigAccounts.map(account => {
+                const pendingCount = pendingCountByAccount.get(account.accountId) || 0;
+                return {
+                  id: account.accountId,
+                  label:
+                    pendingCount > 0 ? (
+                      <span className="flex items-center gap-2">
+                        {account.name}
+                        <span className="inline-flex items-center justify-center min-w-5 px-1.5 py-0.5 rounded-full text-xs font-semibold bg-red-600 text-white">
+                          {pendingCount}
+                        </span>
+                      </span>
+                    ) : (
+                      account.name
+                    ),
+                };
+              })}
+              activeTab={activeTab ?? ""}
+              setActiveTab={changeAccount}
+              textSize="sm"
+            />
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-text-secondary whitespace-nowrap">
+                {subTabCount} {subTabCountLabel}
+              </span>
+              <TransactionFilter
+                options={filterOptions}
+                value={activeSubTab}
+                onChange={value => changeSubTab(value as SubTabType)}
+              />
+            </div>
           </div>
 
-          <BaseContainer
-            header={
-              <div className="flex w-full justify-center items-start py-4 flex-col">
-                <span className="text-2xl">{currentAccount?.name || "Account"}</span>
-                <p className="text-xs font-medium text-text-secondary max-w-2xl"></p>
-              </div>
-            }
-            childrenClassName="!bg-background"
-            containerClassName="w-full h-full !px-8 !pb-6 !bg-app-background"
-          >
-            {/* Sub Tabs */}
-            <div className="px-6 flex border-b border-primary-divider relative">
-              {subTabs.map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => {
-                    setActiveSubTab(tab.id);
-                    setSelectedNoteIds([]);
-                  }}
-                  className={`py-4 text-base px-6 font-medium cursor-pointer transition-colors border-b-[3px] flex items-center gap-2 ${
-                    activeSubTab === tab.id
-                      ? "border-primary-blue text-text-primary"
-                      : "border-transparent text-text-secondary hover:text-text-primary"
-                  }`}
-                >
-                  {tab.label}
-                  {tab.id === "receive" && consumableNotesData.notes.length > 0 && (
-                    <span className="inline-flex items-center justify-center min-w-6 px-2 py-0.5 rounded-full text-xs font-semibold bg-red-600 text-white">
-                      {consumableNotesData.notes.length}
-                    </span>
-                  )}
-                </button>
-              ))}
+          {/* Sync warning (pending view only) */}
+          {activeSubTab === "pending" && syncWarning && (
+            <div className="mx-6 mt-3 flex items-center gap-2 px-4 py-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-sm">
+              <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+              </svg>
+              <p>
+                A previous transaction is being finalized on-chain. New transactions cannot be submitted until this
+                completes. This usually takes a few seconds.
+              </p>
             </div>
+          )}
 
-            {/* Transactions List */}
-            <div className="p-4 flex flex-col w-full h-full overflow-y-auto">{renderSubtab()}</div>
-          </BaseContainer>
+          {/* Content table */}
+          <div className="w-full p-5">
+            {activeSubTab === "receive" ? (
+              notesLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-blue" />
+                </div>
+              ) : (
+                <Table
+                  headers={["Note", "From", "Amount", "Type"]}
+                  data={noteRows}
+                  className="w-full"
+                  rowClassName="py-4"
+                  headerClassName="py-3"
+                  showFooter={false}
+                  showPagination={true}
+                  actionColumn={true}
+                  actionRenderer={noteActionRenderer}
+                  currentPage={currentPage}
+                  onPageChange={setCurrentPage}
+                  rowsPerPage={rowsPerPage}
+                  onRowsPerPageChange={setRowsPerPage}
+                  noDataMessage="No consumable notes on this account"
+                />
+              )
+            ) : proposalsLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-blue" />
+              </div>
+            ) : (
+              <Table
+                headers={["Transaction", "Description", "Amount", "Status", "Date"]}
+                data={proposalRows}
+                className="w-full"
+                rowClassName="py-4"
+                headerClassName="py-3"
+                columnWidths={{ "0": "170px", "2": "150px", "3": "130px", "4": "180px" }}
+                showFooter={false}
+                showPagination={true}
+                actionColumn={true}
+                actionRenderer={proposalActionRenderer}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={setRowsPerPage}
+                onRowClick={rowData => {
+                  const proposal = (rowData as any).__proposal;
+                  if (proposal) router.push(`/transactions/detail?proposalId=${proposal.id}`);
+                }}
+                noDataMessage={
+                  activeSubTab === "history"
+                    ? "Executed, failed, and cancelled proposals will appear here"
+                    : "No pending transactions yet. Create a proposal from the Bills page to get started."
+                }
+              />
+            )}
+          </div>
         </>
       )}
     </div>

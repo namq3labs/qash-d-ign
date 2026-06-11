@@ -85,7 +85,7 @@ const AccountTab: React.FC<AccountTabProps> = ({ onCreateNewAccount, onMenuClick
             icon="/misc/plus-icon.svg"
             iconPosition="left"
             onClick={onCreateNewAccount}
-            buttonClassName="w-fit px-3"
+            buttonClassName="w-fit whitespace-nowrap"
           />
         )}
       </div>

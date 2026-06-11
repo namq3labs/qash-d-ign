@@ -188,11 +188,11 @@ export default function AccountSettings() {
                 </div>
                 <div className="flex justify-end">
                   <div className="flex gap-2">
-                    <SecondaryButton onClick={handleCancelEdit} text="Cancel" variant="light" buttonClassName="px-4" />
+                    <SecondaryButton onClick={handleCancelEdit} text="Cancel" variant="light" buttonClassName="w-fit whitespace-nowrap" />
                     <SecondaryButton
                       onClick={handleUpdateName}
                       text={updateMutation.isPending ? "Updating..." : "Update"}
-                      buttonClassName="px-4"
+                      buttonClassName="w-fit whitespace-nowrap"
                       disabled={updateMutation.isPending}
                     />
                   </div>
