@@ -64,7 +64,7 @@ export function EditClientContactModal({
   const updateClient = useUpdateClient();
   const [selectedCompanyType, setSelectedCompanyType] = useState<string>(clientData?.companyType || "");
   const [selectedCountry, setSelectedCountry] = useState<string>(clientData?.country || "");
-  const { closeModal } = useModal();
+  const { closeModal, openModal } = useModal();
 
   const {
     register,
@@ -236,7 +236,7 @@ export function EditClientContactModal({
           </div>
 
           <div className="flex gap-2 w-full">
-            <SecondaryButton variant="light" text="Cancel" onClick={handleCancel} />
+            <SecondaryButton variant="light" text="Cancel" onClick={() => openModal(MODAL_IDS.DISCARD_CHANGES, { onConfirm: handleCancel })} />
             <PrimaryButton text="Save changes" onClick={handleSubmit(onSubmit)} />
           </div>
         </form>

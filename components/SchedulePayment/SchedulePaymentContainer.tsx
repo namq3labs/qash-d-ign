@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SchedulePaymentItem, SchedulePaymentItemProps } from "./SchedulePaymentItem";
 import { useGetSchedulePayments } from "@/services/api/schedule-payment";
 import { SchedulePaymentStatus, SchedulePayment } from "@/types/schedule-payment";
@@ -10,6 +10,9 @@ import { turnBechToHex } from "@/services/utils/turnBechToHex";
 import { useMidenSdkStore } from "@/contexts/MidenSdkProvider";
 import { ConsumableNote, TransactionStatus } from "@/types/transaction";
 import { QASH_TOKEN_ADDRESS } from "@/services/utils/constant";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
+import { useRouter } from "next/navigation";
 
 const UpcomingPaymentHeader = ({ schedulePayments }: { schedulePayments: any[] | undefined }) => {
   // Find the next upcoming payment
@@ -116,35 +119,12 @@ const UpcomingPaymentHeader = ({ schedulePayments }: { schedulePayments: any[] |
   if (!nextPayment) {
     return (
       <div className="flex flex-col justify-center items-center flex-1 h-fit">
-        <article
-          className="relative flex-1 text-white rounded-xl bg-[#1E1E1E] min-w-60 w-full"
-          style={{
-            backgroundImage: "url('/schedule-payment/upcoming-payment-background.svg')",
-            backgroundSize: "cover",
-            backgroundPosition: "0px -10px",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          <div
-            className="flex text-lg font-normal font-['Barlow'] rounded-tl-xl w-[45%] justify-center items-center"
-            style={{
-              backgroundImage: "url('/schedule-payment/header-container.svg')",
-              backgroundSize: "100%",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
-            <span className="text-black font-normal">Next upcoming payment</span>
+        <article className="relative flex-1 text-text-primary rounded-2xl border border-primary-divider bg-background min-w-60 w-full">
+          <div className="flex text-lg font-normal font-['Barlow'] rounded-tl-2xl w-[45%] justify-center items-center px-4 py-2">
+            <span className="text-text-secondary font-normal">Next upcoming payment</span>
           </div>
-          <div
-            className="rounded-[10px] flex justify-center items-center h-[90px] m-2 bg-black"
-            style={{
-              backgroundImage: "url('/schedule-payment/header-inner-background.svg')",
-              backgroundSize: "contain",
-              backgroundPosition: "left",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
-            <div className="text-center text-gray-400">
+          <div className="rounded-[10px] flex justify-center items-center h-[90px] m-2 bg-app-background border border-primary-divider">
+            <div className="text-center text-text-secondary">
               <span className="font-['Barlow'] text-sm">No upcoming payments</span>
             </div>
           </div>
@@ -183,34 +163,11 @@ const UpcomingPaymentHeader = ({ schedulePayments }: { schedulePayments: any[] |
 
   return (
     <div className="flex flex-col justify-center items-center flex-1 h-fit">
-      <article
-        className="relative flex-1 text-white rounded-xl bg-[#1E1E1E] min-w-60 w-full"
-        style={{
-          backgroundImage: "url('/schedule-payment/upcoming-payment-background.svg')",
-          backgroundSize: "cover",
-          backgroundPosition: "0px -10px",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        <div
-          className="flex text-lg font-normal font-['Barlow'] rounded-tl-xl w-[45%] justify-center items-center"
-          style={{
-            backgroundImage: "url('/schedule-payment/header-container.svg')",
-            backgroundSize: "100%",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          <span className="text-black font-normal">Next upcoming payment</span>
+      <article className="relative flex-1 text-text-primary rounded-2xl border border-primary-divider bg-background min-w-60 w-full">
+        <div className="flex text-lg font-normal font-['Barlow'] rounded-tl-2xl w-[45%] justify-center items-center px-4 py-2">
+          <span className="text-text-secondary font-normal">Next upcoming payment</span>
         </div>
-        <div
-          className="rounded-[10px] flex justify-center items-center h-[90px] m-2 bg-black"
-          style={{
-            backgroundImage: "url('/schedule-payment/header-inner-background.svg')",
-            backgroundSize: "contain",
-            backgroundPosition: "left",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
+        <div className="rounded-[10px] flex justify-center items-center h-[90px] m-2 bg-app-background border border-primary-divider">
           {/* Scheduled Payment Card */}
           <div className="flex items-center justify-between overflow-hidden px-4 rounded-[10px] h-full w-full relative">
             {/* Recipient Section */}
@@ -228,8 +185,8 @@ const UpcomingPaymentHeader = ({ schedulePayments }: { schedulePayments: any[] |
 
               {/* Recipient Info */}
               <div className="flex flex-col gap-1 text-sm">
-                <span className="font-['Barlow'] text-[#989898] leading-5">Recipient</span>
-                <span className="font-['Barlow'] font-medium text-white leading-5">{recipientAddress}</span>
+                <span className="font-['Barlow'] text-text-secondary leading-5">Recipient</span>
+                <span className="font-['Barlow'] font-medium text-text-primary leading-5">{recipientAddress}</span>
               </div>
             </div>
 
@@ -250,7 +207,7 @@ const UpcomingPaymentHeader = ({ schedulePayments }: { schedulePayments: any[] |
                     (e.target as HTMLImageElement).src = "/token/any-token.svg";
                   }}
                 />
-                <span className="font-repetition-scrolling text-white text-2xl tracking-[2.16px]">
+                <span className="font-repetition-scrolling text-text-primary text-2xl tracking-[2.16px]">
                   {isNaN(amount)
                     ? "0.00"
                     : amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -258,8 +215,8 @@ const UpcomingPaymentHeader = ({ schedulePayments }: { schedulePayments: any[] |
               </div>
 
               {/* Date Badge */}
-              <div className="bg-[#06ffb4] flex items-center px-3 py-0.5 rounded shadow-[1px_1px_0px_0px_#ffffff]">
-                <span className="font-['Barlow'] font-medium text-[#292929] text-xs leading-[18px]">
+              <div className="bg-primary-blue flex items-center px-3 py-0.5 rounded">
+                <span className="font-['Barlow'] font-medium text-white text-xs leading-[18px]">
                   {formattedDate}, {formattedTime}
                 </span>
               </div>
@@ -294,35 +251,12 @@ const LockedAmountHeader = ({ schedulePayments }: { schedulePayments: any[] | un
 
   return (
     <div className="flex flex-col justify-center items-center flex-1 h-fit">
-      <article
-        className="relative flex-1 text-white rounded-xl bg-[#1E1E1E] min-w-60 w-full"
-        style={{
-          backgroundImage: "url('/schedule-payment/locked-amount-background.svg')",
-          backgroundSize: "cover",
-          backgroundPosition: "0px -10px",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        <div
-          className="flex text-Grey-50 text-lg font-normal font-['Barlow'] rounded-tl-xl w-[40%] justify-center items-center h-fit"
-          style={{
-            backgroundImage: "url('/schedule-payment/header-container.svg')",
-            backgroundSize: "100%",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          <span className="text-black text-lg font-normal">Locked Amount</span>
+      <article className="relative flex-1 text-text-primary rounded-2xl border border-primary-divider bg-background min-w-60 w-full">
+        <div className="flex text-lg font-normal font-['Barlow'] rounded-tl-2xl w-[40%] justify-center items-center h-fit px-4 py-2">
+          <span className="text-text-secondary text-lg font-normal">Locked Amount</span>
         </div>
-        <div
-          className="rounded-[10px]  flex justify-center items-center h-[90px] m-2 bg-black"
-          style={{
-            backgroundImage: "url('/schedule-payment/header-inner-background.svg')",
-            backgroundSize: "contain",
-            backgroundPosition: "left",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          <span className="font-repetition-scrolling text-white text-4xl tracking-[2.16px] flex items-center justify-center gap-2">
+        <div className="rounded-[10px] flex justify-center items-center h-[90px] m-2 bg-app-background border border-primary-divider">
+          <span className="font-repetition-scrolling text-text-primary text-4xl tracking-[2.16px] flex items-center justify-center gap-2">
             <img alt="USDT" className="w-8 h-8" src="/token/usdt.svg" />
             {lockedAmount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
@@ -333,6 +267,8 @@ const LockedAmountHeader = ({ schedulePayments }: { schedulePayments: any[] | un
 };
 
 export const SchedulePaymentContainer = () => {
+  const router = useRouter();
+  const { setTitle, setShowBackArrow } = useTitle();
   const { accountId } = useAccountContext();
   const { data: schedulePayments } = useGetSchedulePayments({
     payer: accountId,
@@ -341,6 +277,25 @@ export const SchedulePaymentContainer = () => {
   const blockNum = useMidenSdkStore(state => state.blockNum);
 
   console.log("schedulePayments", schedulePayments);
+
+  // Breadcrumb in the top title bar: Dashboard › Schedule payment
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <button
+          type="button"
+          onClick={() => router.push("/")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Dashboard
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Schedule payment</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -552,24 +507,36 @@ export const SchedulePaymentContainer = () => {
   };
 
   return (
-    <div className="flex flex-col justify-start gap-2 p-2 w-full h-full overflow-hidden overflow-y-auto">
-      <div className="flex flex-row gap-2">
-        <UpcomingPaymentHeader schedulePayments={schedulePayments} />
-        <LockedAmountHeader schedulePayments={schedulePayments} />
-      </div>
-
-      <div className="flex w-full">
-        <span className="text-white">All Recurring Transfers ({schedulePayments?.length || 0})</span>
-      </div>
-
-      {schedulePayments && schedulePayments.length > 0 ? (
-        <>{renderSchedulePaymentItem()}</>
-      ) : (
-        <div className="flex flex-col items-center justify-center h-full gap-4">
-          <img src="/schedule-payment/empty-schedule-payment-icon.svg" alt="Empty State" className="scale-100" />
-          <span className="text-white">You haven’t created any transactions yet.</span>
+    <div className="flex w-full h-full flex-col bg-background overflow-hidden overflow-y-auto">
+      {/* Page header (concept) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Schedule payment</h1>
+          <p className="text-[14px] text-text-secondary">
+            Track your recurring transfers, upcoming payments and locked balances.
+          </p>
         </div>
-      )}
+      </div>
+
+      <div className="flex flex-col justify-start gap-2 px-6 pb-6">
+        <div className="flex flex-row gap-2">
+          <UpcomingPaymentHeader schedulePayments={schedulePayments} />
+          <LockedAmountHeader schedulePayments={schedulePayments} />
+        </div>
+
+        <div className="flex w-full">
+          <span className="text-text-primary">All Recurring Transfers ({schedulePayments?.length || 0})</span>
+        </div>
+
+        {schedulePayments && schedulePayments.length > 0 ? (
+          <>{renderSchedulePaymentItem()}</>
+        ) : (
+          <div className="flex flex-col items-center justify-center h-full gap-4 py-16">
+            <img src="/schedule-payment/empty-schedule-payment-icon.svg" alt="Empty State" className="scale-100" />
+            <span className="text-text-secondary">You haven’t created any transactions yet.</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { BonusAmountModalProps } from "@/types/modal";
-import { ModalProp } from "@/contexts/ModalManagerProvider";
+import { BonusAmountModalProps, MODAL_IDS } from "@/types/modal";
+import { ModalProp, useModal } from "@/contexts/ModalManagerProvider";
 import BaseModal from "../BaseModal";
 import { ModalHeader } from "@/components/Common/ModalHeader";
 import { SecondaryButton } from "@/components/Common/SecondaryButton";
@@ -21,6 +21,7 @@ export function BonusAmountModal({
   selectedTokenSymbol,
 }: ModalProp<BonusAmountModalProps>) {
   const [localAmounts, setLocalAmounts] = useState<{ [key: string]: string }>({});
+  const { openModal } = useModal();
 
   useEffect(() => {
     if (isOpen) {
@@ -95,7 +96,7 @@ export function BonusAmountModal({
           </div>
 
           <div className="flex flex-row gap-2 w-full items-center pt-4">
-            <SecondaryButton text="Cancel" onClick={handleCancel} variant="light" />
+            <SecondaryButton text="Cancel" onClick={() => openModal(MODAL_IDS.DISCARD_CHANGES, { onConfirm: handleCancel })} variant="light" />
             <PrimaryButton text="Confirm" onClick={handleConfirm} />
           </div>
         </div>

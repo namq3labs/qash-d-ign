@@ -853,7 +853,7 @@ export function EditTransactionModal({
 
         {/* Action Buttons */}
         <div className="flex gap-3">
-          <SecondaryButton text="Cancel" onClick={onClose} buttonClassName="flex-1" variant="light" />
+          <SecondaryButton text="Cancel" onClick={() => openModal(MODAL_IDS.DISCARD_CHANGES, { onConfirm: onClose })} buttonClassName="flex-1" variant="light" />
           <PrimaryButton
             text="Save changes"
             onClick={handleSaveChanges}

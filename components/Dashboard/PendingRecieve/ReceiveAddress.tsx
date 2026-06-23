@@ -44,7 +44,7 @@ export const ReceiveAddress: React.FC<ReceiveAddressProps> = ({
     },
     dotsOptions: {
       type: "extra-rounded",
-      color: "white",
+      color: "#161616",
     },
     backgroundOptions: {
       color: "transparent",
@@ -152,11 +152,11 @@ export const ReceiveAddress: React.FC<ReceiveAddressProps> = ({
   };
 
   return (
-    <main className="receive-address mx-auto rounded-2xl bg-neutral-700 w-full max-w-[380px] p-4 flex flex-col gap-4 h-full max-h-[800px]">
+    <main className="receive-address mx-auto rounded-2xl border border-primary-divider bg-background w-full max-w-[380px] p-4 flex flex-col gap-4 h-full max-h-[800px]">
       {/* Header */}
       <header className="flex-col gap-2">
-        <h1 className="text-lg font-medium leading-5 text-white">Receive Address</h1>
-        <p className="text-sm tracking-tight leading-5 text-neutral-500">
+        <h1 className="text-lg font-medium leading-5 text-text-primary">Receive Address</h1>
+        <p className="text-sm tracking-tight leading-5 text-text-secondary">
           Use link or QR code below to receive tokens on Miden.
         </p>
       </header>
@@ -183,10 +183,10 @@ export const ReceiveAddress: React.FC<ReceiveAddressProps> = ({
               >
                 {savedQRs.length === 0 ? (
                   <div className="flex flex-col items-center justify-center w-full h-full">
-                    <div className="flex justify-center items-center rounded-3xl border-white border-solid bg-neutral-950 border-[1.52px] h-28 w-28 transform cursor-pointer mb-2">
+                    <div className="flex justify-center items-center rounded-3xl border-primary-divider border-solid bg-app-background border-[1.52px] h-28 w-28 transform cursor-pointer mb-2">
                       <img src="/q3x-qr-icon.svg" alt="No QR codes yet" className="w-16 h-16 opacity-50" />
                     </div>
-                    <span className="text-white text-sm opacity-50">No saved QR codes</span>
+                    <span className="text-text-secondary text-sm">No saved QR codes</span>
                   </div>
                 ) : (
                   savedQRs.map(qr => (
@@ -194,7 +194,7 @@ export const ReceiveAddress: React.FC<ReceiveAddressProps> = ({
                       <div className="relative">
                         <div
                           ref={el => setQRRef(qr.id, el)}
-                          className="h-28 w-28 rounded-3xl overflow-hidden border-white border-solid border-[1.52px] bg-neutral-950 cursor-pointer hover:border-blue-500 transition-colors"
+                          className="h-28 w-28 rounded-3xl overflow-hidden border-primary-divider border-solid border-[1.52px] bg-app-background cursor-pointer hover:border-primary-blue transition-colors"
                           style={{
                             display: "flex",
                             alignItems: "center",
@@ -205,7 +205,7 @@ export const ReceiveAddress: React.FC<ReceiveAddressProps> = ({
                         />
                       </div>
                       <div className="flex items-center gap-1 mt-1">
-                        <span className="text-white text-xs truncate max-w-[70px]" title={qr.name}>
+                        <span className="text-text-primary text-xs truncate max-w-[70px]" title={qr.name}>
                           {qr.name}
                         </span>
                       </div>
@@ -227,13 +227,13 @@ export const ReceiveAddress: React.FC<ReceiveAddressProps> = ({
                       refreshSavedQRs();
                     }}
                   >
-                    <div className="absolute bottom-0 right-20 flex justify-center items-center rounded-lg border-white border-solid bg-neutral-950 border-[1.52px] h-10 w-10 transform -rotate-3 z-[1] cursor-pointer">
+                    <div className="absolute bottom-0 right-20 flex justify-center items-center rounded-lg border-primary-divider border-solid bg-app-background border-[1.52px] h-10 w-10 transform -rotate-3 z-[1] cursor-pointer">
                       <img src="/q3x-qr-icon.svg" alt="Decorative QR code icon" className="w-10 h-10" />
                     </div>
-                    <div className="absolute bottom-0 right-16 flex justify-center items-center rounded-lg border-white border-solid bg-neutral-950 border-[1.52px] h-10 w-10 transform rotate-6 z-[2] cursor-pointer">
+                    <div className="absolute bottom-0 right-16 flex justify-center items-center rounded-lg border-primary-divider border-solid bg-app-background border-[1.52px] h-10 w-10 transform rotate-6 z-[2] cursor-pointer">
                       <img src="/q3x-qr-icon.svg" alt="Decorative QR code icon" className="w-10 h-10" />
                     </div>
-                    <div className="absolute bottom-0 right-12 flex justify-center items-center rounded-lg border-white border-solid bg-neutral-950 border-[1.52px] h-10 w-10 transform -rotate-3 z-[3] cursor-pointer">
+                    <div className="absolute bottom-0 right-12 flex justify-center items-center rounded-lg border-primary-divider border-solid bg-app-background border-[1.52px] h-10 w-10 transform -rotate-3 z-[3] cursor-pointer">
                       <img src="/q3x-qr-icon.svg" alt="Decorative QR code icon" className="w-10 h-10" />
                     </div>
                   </div>
@@ -248,8 +248,8 @@ export const ReceiveAddress: React.FC<ReceiveAddressProps> = ({
 
           {/* Notice Section */}
           <section className="flex flex-col gap-2 mt-auto">
-            <h3 className="text-base font-medium leading-5 text-white">Notice:</h3>
-            <div className="text-md leading-4 text-neutral-400">
+            <h3 className="text-base font-medium leading-5 text-text-primary">Notice:</h3>
+            <div className="text-md leading-4 text-text-secondary">
               <ul className="flex flex-col gap-4 list-none">
                 <li>
                   • This is the address of your Account. Deposit funds by scanning the QR code or copying the address.
@@ -304,14 +304,14 @@ export const ReceiveAddress: React.FC<ReceiveAddressProps> = ({
               />
             </div>
 
-            <span className="text-xl tracking-tight leading-5 text-white text-center">
+            <span className="text-xl tracking-tight leading-5 text-text-primary text-center">
               You'll see the QR code to your address after connect your wallet
             </span>
 
-            <span className="text-sm tracking-tight leading-5 text-neutral-500 text-center">
+            <span className="text-sm tracking-tight leading-5 text-text-secondary text-center">
               Don't have the wallet?{" "}
               <span
-                className="text-white underline cursor-pointer"
+                className="text-primary-blue underline cursor-pointer"
                 onClick={() => {
                   window.open(
                     "https://chromewebstore.google.com/detail/ablmompanofnodfdkgchkpmphailefpb?utm_source=item-share-cb",

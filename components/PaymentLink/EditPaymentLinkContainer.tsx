@@ -20,6 +20,8 @@ import { PaymentLinkPreview } from "./PaymentLinkPreview";
 import { useAuth } from "@/services/auth/context";
 import { useListAccountsByCompany } from "@/services/api/multisig";
 import { useGetMyCompany } from "@/services/api/company";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
 
 interface CreatePaymentLinkFormData {
   title: string;
@@ -122,6 +124,7 @@ const NetworkBadge = ({ networkId }: { networkId: string }) => {
 
 const EditPaymentLinkContainer = () => {
   const router = useRouter();
+  const { setTitle, setShowBackArrow } = useTitle();
   const { user } = useAuth();
   const searchParams = useSearchParams();
   const paymentLinkCode = searchParams.get("code");
@@ -155,6 +158,25 @@ const EditPaymentLinkContainer = () => {
       walletAddress: "",
     },
   });
+
+  // Breadcrumb in the top title bar: Payment Link › Edit
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <button
+          type="button"
+          onClick={() => router.push("/payment-link")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Payment Link
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Edit</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Populate form when payment link data is loaded
   useEffect(() => {
@@ -254,14 +276,19 @@ const EditPaymentLinkContainer = () => {
   };
 
   return (
-    <div className="flex flex-col w-full h-full p-4 items-center justify-start gap-10">
-      {/* Header */}
-      <div className="w-full flex flex-row gap-2 px-7">
-        <img src="/misc/star-icon.svg" alt="Payment Link" />
-        <h1 className="text-2xl font-bold">Edit Payment Link</h1>
+    <div className="flex w-full h-full flex-col bg-background">
+      {/* Page header (concept) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Edit payment link</h1>
+          <p className="text-[14px] text-text-secondary">
+            Update the details, receiving account and accepted token for this payment link.
+          </p>
+        </div>
       </div>
 
-      <div className="w-full h-full flex flex-row justify-between items-start gap-5 p-1 bg-[#E7E7E7] rounded-4xl">
+      <div className="w-full flex-1 min-h-0 px-6 pb-6">
+        <div className="w-full h-full flex flex-row justify-between items-start gap-5 p-1 bg-[#E7E7E7] rounded-4xl">
         <div className="flex flex-col gap-4 w-[40%] rounded-4xl bg-app-background h-full border-t-2 border-background p-4 items-center justify-between">
           <div className="flex flex-col gap-4 w-full">
             <span className="text-text-primary text-lg font-semibold leading-none">Informations</span>
@@ -408,6 +435,7 @@ const EditPaymentLinkContainer = () => {
             <span className="text-text-primary text-2xl font-semibold">Preview</span>
           </div>
           <PaymentLinkPreview
+            chrome
             recipient={myCompany?.companyName || "Your Company"}
             recipientAvatar={myCompany?.logo}
             paymentWalletAddress={watch("walletAddress") || ""}
@@ -416,6 +444,7 @@ const EditPaymentLinkContainer = () => {
             description={watch("description") || ""}
             selectedToken={selectedToken || null}
           />
+        </div>
         </div>
       </div>
     </div>

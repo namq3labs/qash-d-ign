@@ -593,7 +593,7 @@ export function CreateEmployeeContactModal({ isOpen, onClose, zIndex }: ModalPro
               <div className="sticky bottom-0 z-10 -mx-4 -mb-4 mt-1 flex flex-row gap-3 border-t border-primary-divider bg-background px-4 py-3">
                 <SecondaryButton
                   text="Cancel"
-                  onClick={handleCancel}
+                  onClick={() => openModal(MODAL_IDS.DISCARD_CHANGES, { onConfirm: handleCancel })}
                   buttonClassName="flex-1"
                   disabled={createEmployee.isPending}
                   variant="light"

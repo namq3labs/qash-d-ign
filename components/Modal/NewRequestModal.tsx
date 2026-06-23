@@ -321,7 +321,7 @@ export function NewRequestModal({ isOpen, onClose, zIndex, recipient }: ModalPro
           </div>
 
           <div className="flex flex-row w-full gap-2 mt-2">
-            <ActionButton text="Cancel" onClick={onClose} type="neutral" className="flex-1" loading={isLoading} />
+            <ActionButton text="Cancel" onClick={() => openModal(MODAL_IDS.DISCARD_CHANGES, { onConfirm: onClose })} type="neutral" className="flex-1" loading={isLoading} />
             {isConnected ? (
               <ActionButton
                 text="Send Request"

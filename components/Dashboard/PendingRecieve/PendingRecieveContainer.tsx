@@ -1,5 +1,8 @@
 "use client";
 import React, { useState, useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
 import ReceiveAddress from "./ReceiveAddress";
 import { ActionButton } from "@/components/Common/ActionButton";
 import { ToggleSwitch } from "@/components/Common/ToggleSwitch";
@@ -40,14 +43,14 @@ const TableHeader = ({
 }) => {
   return (
     <thead>
-      <tr className="bg-[#181818] ">
-        <th className=" text-center text-sm font-medium text-neutral-400 rounded-tl-lg py-2">
+      <tr className="bg-app-background ">
+        <th className=" text-center text-sm font-medium text-text-secondary rounded-tl-lg py-2">
           <CustomCheckbox checked={allChecked} onChange={onCheckAll} />
         </th>
         {columns.map((column, index) => (
           <th
             key={column}
-            className={` text-center font-medium text-neutral-400 border-r border-[#292929] py-2 ${
+            className={` text-center font-medium text-text-secondary border-r border-primary-divider py-2 ${
               index === 0 ? "rounded-tl-lg" : ""
             } ${index === columns.length - 1 ? "rounded-tr-lg border-r-0" : ""} ${index === 1 ? "min-w-[300px]" : ""}`}
           >
@@ -79,11 +82,11 @@ const TableRow = ({
   disabled: boolean;
 }) => {
   return (
-    <tr className="bg-[#1E1E1E] border-b border-zinc-800 last:border-b-0 hover:bg-[#292929]">
-      <td className="px-2 py-2 border-r border-zinc-800 text-center">
+    <tr className="bg-background border-b border-primary-divider last:border-b-0 hover:bg-app-background">
+      <td className="px-2 py-2 border-r border-primary-divider text-center">
         <CustomCheckbox checked={checked} onChange={onCheck} />
       </td>
-      <td className="px-2 py-2 border-r border-zinc-800 min-w-[300px]">
+      <td className="px-2 py-2 border-r border-primary-divider min-w-[300px]">
         <div className="flex justify-center items-center gap-2">
           {assets.map((asset, index) => (
             <div key={index} className="flex items-center gap-1 relative group">
@@ -92,7 +95,7 @@ const TableRow = ({
                 alt={asset.metadata?.symbol || "Token"}
                 className="w-4 h-4 flex-shrink-0 rounded-full"
               />
-              <p className="text-stone-300 truncate">
+              <p className="text-text-primary truncate">
                 {formatNumberWithCommas(
                   formatUnits(BigInt(Math.round(Number(asset.amount))), asset.metadata?.decimals),
                 )}
@@ -106,9 +109,9 @@ const TableRow = ({
           ))}
         </div>
       </td>
-      <td className="px-2 py-2 border-r border-zinc-800 text-center">
-        <div className="inline-flex items-center justify-center bg-[#363636] rounded-full px-3 py-1">
-          <span className="text-white font-medium">
+      <td className="px-2 py-2 border-r border-primary-divider text-center">
+        <div className="inline-flex items-center justify-center bg-app-background rounded-full px-3 py-1">
+          <span className="text-text-primary font-medium">
             {from.slice(0, 6)}...{from.slice(-4)}
           </span>
         </div>
@@ -127,6 +130,27 @@ export const PendingRecieveContainer: React.FC = () => {
   // **************** Custom Hooks *******************
   const { walletAddress, isConnected } = useWalletConnect();
   const { openModal } = useModal();
+  const router = useRouter();
+  const { setTitle, setShowBackArrow } = useTitle();
+
+  // Breadcrumb in the top title bar: Dashboard › Pending receive
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <button
+          type="button"
+          onClick={() => router.push("/")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Dashboard
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Pending receive</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // **************** Server Hooks *******************
   const {
@@ -317,29 +341,27 @@ export const PendingRecieveContainer: React.FC = () => {
   };
 
   return (
-    <div className="flex w-full h-full bg-neutral-900  rounded-xl text-white p-6 space-y-6 gap-4">
-      {
-        <div className="flex-3">
-          <div>
-            {/* Pending Section */}
-            <div className=" pending-to-receive flex items-center justify-between">
-              <div>
-                <header className="flex flex-col gap-2 justify-center items-start w-full">
-                  <h2 className="text-lg font-medium leading-5 text-center text-white max-sm:text-base">
-                    Pending to receive
-                  </h2>
-                  <p className="self-stretch text-base tracking-tight leading-5 text-neutral-500 max-sm:text-sm">
-                    Payments sent to you that are ready to be added to your wallet
-                  </p>
-                </header>
-              </div>
+    <div className="flex w-full h-full flex-col bg-background">
+      {/* Page header (concept) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Pending receive</h1>
+          <p className="text-[14px] text-text-secondary">
+            Payments sent to you that are ready to be added to your wallet.
+          </p>
+        </div>
 
-              <div className="cursor-not-allowed flex items-center gap-2 bg-white rounded-lg px-3 py-1">
-                <span className="text-lg text-black">Auto Claim</span>
-                <ToggleSwitch disabled={true} enabled={autoClaim} onChange={() => setAutoClaim(!autoClaim)} />
-              </div>
-            </div>
-            {!isConnected ? (
+        <div className="cursor-not-allowed flex shrink-0 items-center gap-2 rounded-lg border border-primary-divider bg-app-background px-3 py-1">
+          <span className="text-text-primary">Auto Claim</span>
+          <ToggleSwitch disabled={true} enabled={autoClaim} onChange={() => setAutoClaim(!autoClaim)} />
+        </div>
+      </div>
+
+      <div className="flex w-full gap-4 px-6 pb-6">
+        {
+          <div className="flex-3">
+            <div>
+              {!isConnected ? (
               <div className="mt-2">
                 <Empty title="No pending receive" />
               </div>
@@ -348,7 +370,7 @@ export const PendingRecieveContainer: React.FC = () => {
             ) : (
               <div>
                 {/* Pending Table */}
-                <div className="mt-2 overflow-x-auto rounded-lg border border-zinc-800" data-tour="pending-payments">
+                <div className="mt-2 overflow-x-auto rounded-2xl border border-primary-divider bg-background" data-tour="pending-payments">
                   {consumableNotes?.length === 0 || !consumableNotes ? (
                     <Empty title="No pending receive" />
                   ) : (
@@ -388,32 +410,33 @@ export const PendingRecieveContainer: React.FC = () => {
                     <div className="mt-10">
                       <div>
                         <header className="flex flex-col gap-2 justify-center items-start w-full">
-                          <h2 className="text-lg font-medium leading-5 text-center text-white max-sm:text-base">
+                          <h2 className="text-lg font-medium leading-5 text-center text-text-primary max-sm:text-base">
                             Unverified request
                           </h2>
-                          <p className="self-stretch text-base tracking-tight leading-5 text-neutral-500 max-sm:text-sm">
+                          <p className="self-stretch text-base tracking-tight leading-5 text-text-secondary max-sm:text-sm">
                             Payments that need additional confirmation before you can receive them
                           </p>
                         </header>
                       </div>
                     </div>
-                    <div className="mt-2 overflow-x-auto rounded-xl border border-zinc-800">
+                    <div className="mt-2 overflow-x-auto rounded-2xl border border-primary-divider bg-background">
                       <Empty title="No pending receive" />
                     </div>
                   </React.Fragment>
                 )}
               </div>
             )}
+            </div>
           </div>
-        </div>
-      }
+        }
 
-      <div className="flex-1" data-tour="receive-section">
-        <ReceiveAddress
-          onEnterAmount={() => {
-            openModal(MODAL_IDS.CREATE_CUSTOM_QR);
-          }}
-        />
+        <div className="flex-1" data-tour="receive-section">
+          <ReceiveAddress
+            onEnterAmount={() => {
+              openModal(MODAL_IDS.CREATE_CUSTOM_QR);
+            }}
+          />
+        </div>
       </div>
     </div>
   );

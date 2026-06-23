@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { CreateGroupModalProps } from "@/types/modal";
-import { ModalProp } from "@/contexts/ModalManagerProvider";
+import { CreateGroupModalProps, MODAL_IDS } from "@/types/modal";
+import { ModalProp, useModal } from "@/contexts/ModalManagerProvider";
 import BaseModal from "../BaseModal";
 import { ModalHeader } from "../../Common/ModalHeader";
 import { SecondaryButton } from "../../Common/SecondaryButton";
@@ -30,6 +30,7 @@ export function CreateGroupModal({ isOpen, onClose, zIndex, onGroupCreated }: Mo
   const [selectedColor, setSelectedColor] = useState("#35ADE9");
   const { mutateAsync: createGroupAsync } = useCreateEmployeeGroup();
   const { data: groups } = useGetAllEmployeeGroups({ enabled: isAuthenticated });
+  const { openModal } = useModal();
 
   const {
     register,
@@ -149,7 +150,7 @@ export function CreateGroupModal({ isOpen, onClose, zIndex, onGroupCreated }: Mo
           <div className="flex flex-row gap-2 mt-2">
             <SecondaryButton
               text="Cancel"
-              onClick={onClose}
+              onClick={() => openModal(MODAL_IDS.DISCARD_CHANGES, { onConfirm: onClose })}
               buttonClassName="flex-1"
               disabled={isLoading}
               variant="light"

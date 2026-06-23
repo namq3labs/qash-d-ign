@@ -1,8 +1,8 @@
 "use client";
-import React, { useState } from "react";
-import { PageHeader } from "../Common/PageHeader";
+import React, { useState, useEffect } from "react";
 import { TabContainer } from "../Common/TabContainer";
 import { SecondaryButton } from "../Common/SecondaryButton";
+import { useTitle } from "@/contexts/TitleProvider";
 
 const tabs = [
   { id: "monthly", label: "Pay Monthly" },
@@ -11,16 +11,30 @@ const tabs = [
 
 const SubscriptionContainer = () => {
   // **************** Local State *******************
+  const { setTitle, setShowBackArrow } = useTitle();
   const [activeTab, setActiveTab] = useState<"monthly" | "yearly">("monthly");
 
-  return (
-    <div className="flex flex-col w-full h-full bg-background gap-2 items-center justify-start p-4">
-      <PageHeader icon="/misc/blue-lightning-icon.svg" label="Pricing" button={null} />
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <span className="font-medium text-text-primary">Subscription</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-      <div className="justify-center text-5xl font-bold">Choose your plan</div>
+  return (
+    <div className="flex w-full h-full flex-col bg-background">
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Subscription</h1>
+          <p className="text-[14px] text-text-secondary">Choose the plan that fits how your team grows.</p>
+        </div>
+      </div>
 
       {/* Tab Navigation */}
-      <div className="w-[300px] my-4">
+      <div className="w-[300px] px-6 pb-4">
         <TabContainer
           tabs={tabs}
           activeTab={activeTab}
@@ -28,7 +42,7 @@ const SubscriptionContainer = () => {
         />
       </div>
 
-      <div className="w-full h-full flex flex-row gap-5 justify-center">
+      <div className="w-full flex flex-row gap-5 justify-center px-6 pb-6">
         {/* Basic */}
         <div className="flex flex-row">
           <div

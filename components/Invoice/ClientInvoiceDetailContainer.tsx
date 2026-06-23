@@ -14,7 +14,7 @@ import { InvoiceStatusEnum } from "@qash/types/enums";
 import { CategoryBadge } from "../ContactBook/ContactBookContainer";
 import { useGetAllEmployeeGroups } from "@/services/api/employee";
 import { useTitle } from "@/contexts/TitleProvider";
-import { NavArrowRight } from "iconoir-react";
+import { Check, NavArrowRight } from "iconoir-react";
 
 const ClientInvoiceDetailContainer = () => {
   const router = useRouter();
@@ -26,12 +26,10 @@ const ClientInvoiceDetailContainer = () => {
   const { data: groups } = useGetAllEmployeeGroups();
   const { setTitle, setShowBackArrow } = useTitle();
 
-  // Breadcrumb: Receive › Invoice › <invoice number>
+  // Breadcrumb: Invoice › <invoice number>
   useEffect(() => {
     setTitle(
       <div className="flex items-center gap-1.5 text-[14px]">
-        <span className="text-text-secondary">Receive</span>
-        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
         <button
           type="button"
           onClick={() => router.push("/invoice")}
@@ -40,7 +38,7 @@ const ClientInvoiceDetailContainer = () => {
           Invoice
         </button>
         <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
-        <span className="font-medium text-text-primary">{invoice?.invoiceNumber || "Invoice detail"}</span>
+        <span className="font-medium text-text-primary">{invoice?.invoiceNumber || "Detail"}</span>
       </div>,
     );
     setShowBackArrow(false);
@@ -153,25 +151,23 @@ const ClientInvoiceDetailContainer = () => {
   const statusBadge = getStatusBadge(invoice.status);
 
   return (
-    <div className="flex flex-col w-full h-full px-6 py-6 gap-6 bg-background overflow-y-auto">
-      <div className="flex flex-row justify-between items-center">
-        <div className="flex flex-col gap-2">
-          <span className="text-[14px] leading-none text-text-secondary">
-            {invoice.invoiceNumber} {invoice.fromDetails?.name}
-          </span>
-          <div className="flex flex-row gap-5 items-center">
-            <span className="text-xl leading-none font-bold text-text-primary">Invoice {invoice.invoiceNumber}</span>
+    <div className="flex w-full h-full flex-col bg-background overflow-y-auto">
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-3">
+            <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">
+              Invoice {invoice.invoiceNumber}
+            </h1>
             <Badge text={statusBadge.text} status={statusBadge.status} />
           </div>
+          <p className="text-[14px] text-text-secondary">Invoice from {invoice.fromDetails?.name || "N/A"}</p>
         </div>
 
-        <div className="flex flex-row gap-2">
+        <div className="flex shrink-0 flex-row gap-2">
           <SecondaryButton
             text="View invoice PDF"
             variant="light"
             buttonClassName="w-fit whitespace-nowrap"
-            icon="/misc/eye-icon.svg"
-            iconPosition="left"
             onClick={() => {
               openModal<InvoiceModalProps>("INVOICE_MODAL", {
                 invoice: {
@@ -270,7 +266,7 @@ const ClientInvoiceDetailContainer = () => {
         />
       }
 
-      <div className="w-full flex flex-row gap-10">
+      <div className="w-full flex flex-row gap-10 px-6 pb-6">
         <div className="flex-1 flex flex-col gap-6 w-full">
           {/* Invoice Details Cards */}
           <div className="flex flex-row gap-3 w-full">
@@ -418,42 +414,70 @@ const ClientInvoiceDetailContainer = () => {
           </div>
         </div>
 
-        {/* Timeline Section */}
+        {/* Timeline Section (vertical stepper) */}
         <div className="w-80 flex flex-col gap-3">
-          <h2 className="text-2xl font-medium text-text-primary">Timeline</h2>
+          <h2 className="text-lg font-semibold text-text-primary">Timeline</h2>
 
-          <div className="border border-primary-divider rounded-2xl px-2 py-6 flex-1">
-            <div className="px-4 flex flex-col gap-3">
-              {/* Timeline Items */}
-              {[
-                { label: "Invoice created", date: formatDateTime(invoice.createdAt) },
-                invoice.sentAt && { label: "Invoice sent", date: formatDateTime(invoice.sentAt) },
-                invoice.reviewedAt && { label: "Invoice reviewed", date: formatDateTime(invoice.reviewedAt) },
-                invoice.confirmedAt && { label: "Invoice confirmed", date: formatDateTime(invoice.confirmedAt) },
-                invoice.paidAt && { label: "Invoice paid", date: formatDateTime(invoice.paidAt) },
-              ]
-                .filter(Boolean)
-                .map((item: any, idx, arr) => (
-                  <div className="flex gap-7 pb-6" key={idx}>
-                    {/* Timeline Marker with Polygon and Vertical Line */}
-                    <div className="flex flex-col items-center pt-1 relative">
-                      <img src="/misc/blue-polygon.svg" alt="Timeline Marker" className="w-6 h-6 z-10" />
-                      {/* Vertical Line (not for first item) */}
-                      {idx !== 0 && (
-                        <div
-                          className="absolute top-0 left-1/2 -translate-x-1/2"
-                          style={{ height: 75, width: 4, background: "#066EFF", zIndex: 0, marginTop: -50 }}
+          <div className="flex-1 rounded-2xl border border-primary-divider bg-app-background p-5">
+            <ol className="flex flex-col">
+              {(() => {
+                const items = [
+                  { label: "Invoice created", date: formatDateTime(invoice.createdAt), done: true },
+                  invoice.sentAt && { label: "Invoice sent", date: formatDateTime(invoice.sentAt), done: true },
+                  invoice.reviewedAt && { label: "Invoice reviewed", date: formatDateTime(invoice.reviewedAt), done: true },
+                  invoice.confirmedAt && { label: "Invoice confirmed", date: formatDateTime(invoice.confirmedAt), done: true },
+                  invoice.paidAt && { label: "Invoice paid", date: formatDateTime(invoice.paidAt), done: true },
+                  invoice.status !== InvoiceStatusEnum.PAID &&
+                    invoice.status !== InvoiceStatusEnum.CANCELLED && {
+                      label: "Awaiting payment",
+                      date: "In progress",
+                      done: false,
+                      pending: true,
+                    },
+                ].filter(Boolean);
+                return items.map((item: any, idx: number) => {
+                  const isLast = idx === items.length - 1;
+                  const nextPending = items[idx + 1]?.pending;
+                  return (
+                    <li key={idx} className="relative flex gap-3.5 pb-6 last:pb-0">
+                      {!isLast && (
+                        <span
+                          aria-hidden
+                          className={`absolute left-[15px] top-9 bottom-0 w-0.5 ${
+                            nextPending ? "bg-primary-divider" : "bg-primary-blue/40"
+                          }`}
                         />
                       )}
-                    </div>
-                    {/* Timeline Content */}
-                    <div className="flex flex-col gap-1.5 w-40">
-                      <p className="text-sm font-semibold text-text-primary leading-none">{item.label}</p>
-                      <p className="text-sm font-medium text-text-secondary leading-none">{item.date}</p>
-                    </div>
-                  </div>
-                ))}
-            </div>
+                      <span
+                        className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+                          item.done
+                            ? "bg-primary-blue text-white"
+                            : "border-2 border-primary-blue/40 bg-primary-blue/5"
+                        }`}
+                      >
+                        {item.done ? (
+                          <Check width={16} height={16} strokeWidth={2.5} />
+                        ) : (
+                          <span className="h-2.5 w-2.5 rounded-full bg-primary-blue animate-pulse" />
+                        )}
+                      </span>
+                      <div className="flex flex-col gap-0.5 pt-1">
+                        <p
+                          className={`text-sm font-semibold leading-tight ${
+                            item.pending ? "text-text-secondary" : "text-text-primary"
+                          }`}
+                        >
+                          {item.label}
+                        </p>
+                        {item.date && item.date !== "N/A" && (
+                          <p className="text-xs text-text-secondary leading-tight">{item.date}</p>
+                        )}
+                      </div>
+                    </li>
+                  );
+                });
+              })()}
+            </ol>
           </div>
         </div>
       </div>

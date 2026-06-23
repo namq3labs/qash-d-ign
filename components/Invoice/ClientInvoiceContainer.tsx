@@ -28,7 +28,7 @@ import { useAuth } from "@/services/auth/context";
 import { trackEvent } from "@/services/analytics/posthog";
 import { PostHogEvent } from "@/types/posthog";
 
-type Tab = "all" | "sent" | "paid";
+type Tab = "all" | "sent" | "draft" | "paid";
 
 const Card = ({ title, text }: { title: string; text: React.ReactNode }) => {
   return (
@@ -54,7 +54,8 @@ const ClientInvoiceContainer = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [checkedRows, setCheckedRows] = React.useState<number[]>([]);
 
-  const tabLabel = activeTab === "sent" ? "Sent" : activeTab === "paid" ? "Paid" : "All";
+  const tabLabel =
+    activeTab === "sent" ? "Sent" : activeTab === "draft" ? "Draft" : activeTab === "paid" ? "Paid" : "All";
   useEffect(() => {
     setTitle(
       <div className="flex items-center gap-1.5 text-[14px]">
@@ -120,7 +121,13 @@ const ClientInvoiceContainer = () => {
         limit: 1000,
         direction: "sent",
         status:
-          activeTab === "all" ? undefined : activeTab === "sent" ? InvoiceStatusEnum.SENT : InvoiceStatusEnum.PAID,
+          activeTab === "all"
+            ? undefined
+            : activeTab === "sent"
+              ? InvoiceStatusEnum.SENT
+              : activeTab === "draft"
+                ? InvoiceStatusEnum.DRAFT
+                : InvoiceStatusEnum.PAID,
       }),
   });
 
@@ -231,10 +238,8 @@ const ClientInvoiceContainer = () => {
         </div>
         <PrimaryButton
           text="Create invoice"
-          icon="/misc/plus-icon.svg"
-          iconPosition="left"
           onClick={() => router.push("/invoice/create")}
-          containerClassName="w-[170px]"
+          containerClassName="w-fit"
           buttonClassName="whitespace-nowrap"
         />
       </div>
@@ -265,6 +270,7 @@ const ClientInvoiceContainer = () => {
           tabs={[
             { id: "all", label: "All" },
             { id: "sent", label: "Sent" },
+            { id: "draft", label: "Draft" },
             { id: "paid", label: "Paid" },
           ]}
           activeTab={activeTab}

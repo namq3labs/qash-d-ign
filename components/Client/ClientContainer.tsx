@@ -34,10 +34,8 @@ const ClientContainer = () => {
         </div>
         <PrimaryButton
           text="Add client"
-          icon="/misc/plus-icon.svg"
-          iconPosition="left"
           onClick={() => openModal(MODAL_IDS.CREATE_CLIENT_CONTACT)}
-          containerClassName="w-[150px]"
+          containerClassName="w-fit"
           buttonClassName="whitespace-nowrap"
         />
       </div>

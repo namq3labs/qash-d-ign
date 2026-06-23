@@ -65,6 +65,7 @@ export function TransactionsContainer() {
   // Breadcrumb in the top title bar: Transactions › {active sub-tab}
   const subTabLabel = subTabs.find(t => t.id === activeSubTab)?.label ?? "Pending Transactions";
   useEffect(() => {
+    const activeAccountName = multisigAccounts.find((a: any) => a.accountId === activeTab)?.name;
     setTitle(
       <div className="flex items-center gap-1.5 text-[14px]">
         <button
@@ -74,13 +75,19 @@ export function TransactionsContainer() {
         >
           Transactions
         </button>
+        {activeAccountName && (
+          <>
+            <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+            <span className="text-text-secondary">{activeAccountName}</span>
+          </>
+        )}
         <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
         <span className="font-medium text-text-primary">{subTabLabel}</span>
       </div>,
     );
     setShowBackArrow(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeSubTab]);
+  }, [activeSubTab, activeTab]);
 
   const { openModal, closeModal } = useModal();
   const { client: midenClient } = useMidenProvider();
@@ -513,8 +520,8 @@ export function TransactionsContainer() {
         {isPending && (
           <>
             <SecondaryButton
-              text="Cancel"
-              variant="dark"
+              text="Deny"
+              variant="red"
               buttonClassName="w-fit whitespace-nowrap"
               onClick={(e: any) => {
                 e.stopPropagation();
@@ -524,7 +531,7 @@ export function TransactionsContainer() {
               disabled={isCancelLoading || isSignLoading || isViewer}
             />
             <PrimaryButton
-              text={hasUserSigned ? "Signed" : "Sign"}
+              text={hasUserSigned ? "Approved" : "Approve"}
               buttonClassName="w-fit whitespace-nowrap"
               onClick={(e: any) => {
                 e.stopPropagation();
@@ -770,7 +777,7 @@ export function TransactionsContainer() {
                 onRowsPerPageChange={setRowsPerPage}
                 onRowClick={rowData => {
                   const proposal = (rowData as any).__proposal;
-                  if (proposal) router.push(`/transactions/detail?proposalId=${proposal.id}`);
+                  if (proposal) openModal("TRANSACTION_DETAIL", { proposalId: proposal.id });
                 }}
                 noDataMessage={
                   activeSubTab === "history"

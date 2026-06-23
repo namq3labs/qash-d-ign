@@ -59,11 +59,17 @@ export default function SettingContainer() {
     }
   }, [teamAccountParam]);
 
-  // Breadcrumb in the top title bar: Setting › {active tab}
+  // Breadcrumb in the top title bar: Settings › {active tab}
   useEffect(() => {
     setTitle(
       <div className="flex items-center gap-1.5 text-[14px]">
-        <span className="text-text-secondary">Setting</span>
+        <button
+          type="button"
+          onClick={() => setActiveTab("account")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Settings
+        </button>
         <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
         <span className="font-medium text-text-primary">{tabLabels[activeTab]}</span>
       </div>,
@@ -73,97 +79,102 @@ export default function SettingContainer() {
   }, [activeTab]);
 
   return (
-    <div className="flex flex-row w-full h-full bg-app-background gap-2">
-      {/* Sidebar */}
-      <div className="bg-background flex flex-col items-start w-full max-w-[300px] h-full">
-        <div className="flex flex-col items-center justify-center w-full">
-          <div className="flex flex-col gap-1 items-start pb-5 pt-3 px-3 w-full">
-            {/* Header */}
-            <div className="flex gap-[10px] items-center p-4 w-full">
-              <div className="flex gap-3 items-center">
-                <img src="/sidebar/setting.svg" alt="Settings" className="w-5" />
-                <h1 className="font-semibold text-2xl text-text-primary tracking-[-0.48px] leading-none">Settings</h1>
-              </div>
-            </div>
-
-            {/* General Label */}
-            <div className="flex items-center px-4 py-0 w-full">
-              <p className="font-medium text-sm text-text-secondary tracking-[-0.56px] leading-5">General</p>
-            </div>
-
-            {/* Tabs */}
-            {generalSettingTabs.map(tab => (
-              <div
-                key={tab.id}
-                className={`flex gap-4 items-center px-5 py-3 rounded-lg w-full cursor-pointer transition-colors ${
-                  activeTab === tab.id ? "bg-app-background" : "hover:bg-app-background/50"
-                }`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                <div className="flex gap-2 items-center">
-                  <img src={tab.icon} alt={tab.label} className="w-5" />
-                  <p className="font-medium text-sm text-text-primary tracking-[-0.56px] leading-5">{tab.label}</p>
-                </div>
-              </div>
-            ))}
-
-            {/* General Label */}
-            <div className="flex items-center px-4 py-0 w-full">
-              <p className="font-medium text-sm text-text-secondary tracking-[-0.56px] leading-5">Team</p>
-            </div>
-
-            {/* Tabs */}
-            {teamSettingTabs.map(tab => (
-              <div
-                key={tab.id}
-                className={`flex gap-4 items-center px-5 py-3 rounded-lg w-full cursor-pointer transition-colors ${
-                  activeTab === tab.id ? "bg-app-background" : "hover:bg-app-background/50"
-                }`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                <div className="flex gap-2 items-center">
-                  <img src={tab.icon} alt={tab.label} className="w-5" />
-                  <p className="font-medium text-sm text-text-primary tracking-[-0.56px] leading-5">{tab.label}</p>
-                </div>
-              </div>
-            ))}
-
-            {/* Integrations Label */}
-            <div className="flex items-center px-4 py-0 w-full">
-              <p className="font-medium text-sm text-text-secondary tracking-[-0.56px] leading-5">Integrations</p>
-            </div>
-
-            {/* Integration Tabs */}
-            {integrationSettingTabs.map(tab => (
-              <div
-                key={tab.id}
-                className={`flex gap-4 items-center px-5 py-3 rounded-lg w-full cursor-pointer transition-colors ${
-                  activeTab === tab.id ? "bg-app-background" : "hover:bg-app-background/50"
-                }`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                <div className="flex gap-2 items-center">
-                  <img src={tab.icon} alt={tab.label} className="w-5" />
-                  <p className="font-medium text-sm text-text-primary tracking-[-0.56px] leading-5">{tab.label}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+    <div className="flex w-full h-full flex-col bg-background">
+      {/* Page header (concept) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Settings</h1>
+          <p className="text-[14px] text-text-secondary">
+            Manage your account, company, team and integration preferences.
+          </p>
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 p-6 bg-background flex justify-center items-start overflow-y-auto">
-        <div className="w-[900px]">
-          {/* Content based on active tab */}
-          {activeTab === "account" && <AccountSettings />}
-          {/* {activeTab === "notifications" && <NotificationSettings />} */}
-          {activeTab === "company" && <CompanySettings />}
-          {activeTab === "team" && (teamAccountParam ? <TeamAccountContainer /> : <TeamSettings />)}
-          {activeTab === "integrations" && <SlackIntegrationSettings />}
-          {activeTab === "google-sheets" && <GoogleSheetsIntegrationSettings />}
-          {activeTab === "stripe" && <StripeIntegrationSettings />}
-          {activeTab === "invoice" && <InvoiceSettingsTab />}
+      {/* Sidebar + content */}
+      <div className="flex w-full flex-1 min-h-0 flex-row gap-2 px-6 pb-6">
+        {/* Sidebar */}
+        <div className="bg-background flex flex-col items-start w-full max-w-[300px] h-full">
+          <div className="flex flex-col items-center justify-center w-full">
+            <div className="flex flex-col gap-1 items-start pb-5 pt-3 w-full">
+              {/* General Label */}
+              <div className="flex items-center px-4 py-0 w-full">
+                <p className="font-medium text-sm text-text-secondary tracking-[-0.56px] leading-5">General</p>
+              </div>
+
+              {/* Tabs */}
+              {generalSettingTabs.map(tab => (
+                <div
+                  key={tab.id}
+                  className={`flex gap-4 items-center px-5 py-3 rounded-lg w-full cursor-pointer transition-colors ${
+                    activeTab === tab.id ? "bg-app-background" : "hover:bg-app-background/50"
+                  }`}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  <div className="flex gap-2 items-center">
+                    <img src={tab.icon} alt={tab.label} className="w-5" />
+                    <p className="font-medium text-sm text-text-primary tracking-[-0.56px] leading-5">{tab.label}</p>
+                  </div>
+                </div>
+              ))}
+
+              {/* Team Label */}
+              <div className="flex items-center px-4 py-0 w-full">
+                <p className="font-medium text-sm text-text-secondary tracking-[-0.56px] leading-5">Team</p>
+              </div>
+
+              {/* Tabs */}
+              {teamSettingTabs.map(tab => (
+                <div
+                  key={tab.id}
+                  className={`flex gap-4 items-center px-5 py-3 rounded-lg w-full cursor-pointer transition-colors ${
+                    activeTab === tab.id ? "bg-app-background" : "hover:bg-app-background/50"
+                  }`}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  <div className="flex gap-2 items-center">
+                    <img src={tab.icon} alt={tab.label} className="w-5" />
+                    <p className="font-medium text-sm text-text-primary tracking-[-0.56px] leading-5">{tab.label}</p>
+                  </div>
+                </div>
+              ))}
+
+              {/* Integrations Label */}
+              <div className="flex items-center px-4 py-0 w-full">
+                <p className="font-medium text-sm text-text-secondary tracking-[-0.56px] leading-5">Integrations</p>
+              </div>
+
+              {/* Integration Tabs */}
+              {integrationSettingTabs.map(tab => (
+                <div
+                  key={tab.id}
+                  className={`flex gap-4 items-center px-5 py-3 rounded-lg w-full cursor-pointer transition-colors ${
+                    activeTab === tab.id ? "bg-app-background" : "hover:bg-app-background/50"
+                  }`}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  <div className="flex gap-2 items-center">
+                    <img src={tab.icon} alt={tab.label} className="w-5" />
+                    <p className="font-medium text-sm text-text-primary tracking-[-0.56px] leading-5">{tab.label}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content Area */}
+        <div className="flex-1 bg-background flex justify-center items-start overflow-y-auto">
+          <div className="w-[900px]">
+            {/* Content based on active tab */}
+            {activeTab === "account" && <AccountSettings />}
+            {/* {activeTab === "notifications" && <NotificationSettings />} */}
+            {activeTab === "company" && <CompanySettings />}
+            {activeTab === "team" && (teamAccountParam ? <TeamAccountContainer /> : <TeamSettings />)}
+            {activeTab === "integrations" && <SlackIntegrationSettings />}
+            {activeTab === "google-sheets" && <GoogleSheetsIntegrationSettings />}
+            {activeTab === "stripe" && <StripeIntegrationSettings />}
+            {activeTab === "invoice" && <InvoiceSettingsTab />}
+          </div>
         </div>
       </div>
     </div>

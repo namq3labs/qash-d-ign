@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { CreateCustomQRModalProps } from "@/types/modal";
+import { MODAL_IDS } from "@/types/modal";
 import { ModalProp, useModal } from "@/contexts/ModalManagerProvider";
 import { ActionButton } from "../Common/ActionButton";
 import BaseModal from "./BaseModal";
@@ -176,7 +177,7 @@ export function CreateCustomQRModal({
           </div>
 
           <div className="flex flex-row w-full gap-2 mt-2">
-            <ActionButton text="Cancel" onClick={onClose} type="neutral" className="flex-1" disabled={isGenerating} />
+            <ActionButton text="Cancel" onClick={() => openModal(MODAL_IDS.DISCARD_CHANGES, { onConfirm: onClose })} type="neutral" className="flex-1" disabled={isGenerating} />
             <ActionButton
               text={isGenerating ? "Generating..." : "Generate QR"}
               onClick={handleGenerateQR}

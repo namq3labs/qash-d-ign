@@ -38,11 +38,7 @@ export const PrimaryButton = ({
       {loading ? (
         <img src="/loading-square.gif" alt="loading" className="w-5 h-5" />
       ) : (
-        <>
-          {icon && iconPosition === "left" && <img src={icon} alt="" className={`w-5 h-5 ${iconClassName || ""}`} />}
-          <span className="text-[14px]">{text}</span>
-          {icon && iconPosition === "right" && <img src={icon} alt="" className={`w-5 h-5 ${iconClassName || ""}`} />}
-        </>
+        <span className="text-[14px]">{text}</span>
       )}
     </TextureButton>
   );

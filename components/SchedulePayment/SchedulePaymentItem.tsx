@@ -49,8 +49,8 @@ const CLASSES = {
   barlowMedium: "font-['Barlow:Medium',_sans-serif]",
   barlowRegular: "font-['Barlow:Regular',_sans-serif]",
   text14: "text-[14px]",
-  textGray: "text-[#989898]",
-  textWhite: "text-white",
+  textGray: "text-text-secondary",
+  textWhite: "text-text-primary",
   flexCenter: "flex items-center justify-center",
   statusIconBase: "rounded-full w-10 h-10 flex items-center justify-center",
   blurBg: "backdrop-blur-[30px] bg-[rgba(83,83,83,0.45)]",
@@ -205,22 +205,22 @@ const TransactionInfo: React.FC<{
   const statusColors = {
     [TransactionStatus.CONSUMED]: "text-[#1e8fff]",
     [TransactionStatus.PENDING]: "text-[#ffd71b]",
-    [TransactionStatus.RECALLED]: "text-white",
-    ready_to_claim: "text-white",
+    [TransactionStatus.RECALLED]: "text-text-primary",
+    ready_to_claim: "text-text-primary",
   };
 
   const badge = () => {
     if (status === TransactionStatus.RECALLED) {
       return (
-        <div className="bg-[#192E4B] rounded-full px-2 py-1 leading-[15px] flex items-center justify-center">
-          <span className="text-[#48B3FF]">Cancelled</span>
+        <div className="bg-primary-blue/10 rounded-full px-2 py-1 leading-[15px] flex items-center justify-center">
+          <span className="text-primary-blue">Cancelled</span>
         </div>
       );
     }
     if (status === TransactionStatus.CONSUMED && label !== "Create") {
       return (
-        <div className="bg-[#213E27] rounded-full px-2 py-1 leading-[15px] flex items-center justify-center">
-          <span className="text-[#33F55A]">Claimed</span>
+        <div className="bg-[#1DAF61]/10 rounded-full px-2 py-1 leading-[15px] flex items-center justify-center">
+          <span className="text-[#1DAF61]">Claimed</span>
         </div>
       );
     }
@@ -230,7 +230,7 @@ const TransactionInfo: React.FC<{
   return (
     <div className="flex flex-col items-center gap-0.5 w-[125px]">
       <div className={`${CLASSES.flexCenter} w-full gap-1`}>
-        <div className={`${CLASSES.barlowMedium} ${CLASSES.text14} leading-[15px] text-white`}>{label}</div>
+        <div className={`${CLASSES.barlowMedium} ${CLASSES.text14} leading-[15px] text-text-primary`}>{label}</div>
         {badge()}
       </div>
       <div className={`${CLASSES.barlowMedium} ${CLASSES.text14} ${CLASSES.textGray} text-center leading-[normal]`}>
@@ -312,12 +312,12 @@ export const SchedulePaymentItem: React.FC<SchedulePaymentItemProps> = ({
   return (
     <div
       ref={containerRef}
-      className="bg-[#1e1e1e] rounded-2xl transition-colors duration-200 flex flex-col gap-3 rounded-t-2xl"
+      className="bg-background border border-primary-divider rounded-2xl transition-colors duration-200 flex flex-col gap-3 rounded-t-2xl"
       onClick={onClick}
       onMouseEnter={onHover}
     >
       {/* Header Section */}
-      <div className="bg-[#292929] px-10 py-2 border-b border-[#3d3d3d] rounded-t-2xl">
+      <div className="bg-app-background px-10 py-2 border-b border-primary-divider rounded-t-2xl">
         <div className="flex items-center justify-between w-full">
           {/* Recipient Info */}
           <div className="flex items-center">
@@ -391,7 +391,7 @@ export const SchedulePaymentItem: React.FC<SchedulePaymentItemProps> = ({
             </div>
 
             {/* Custom Progress Bar */}
-            <div className="bg-[#0c0c0c] h-6 rounded p-[6px] flex items-center overflow-hidden">
+            <div className="bg-app-background h-6 rounded p-[6px] flex items-center overflow-hidden">
               <div
                 className="bg-gradient-to-l from-[#caffef] to-[#416af9] via-[#6fb2f1] h-full rounded relative transition-all duration-300 ease-out"
                 style={{ width: `${Math.max(1, calculatedClaimProgress)}%` }}
@@ -442,7 +442,7 @@ export const SchedulePaymentItem: React.FC<SchedulePaymentItemProps> = ({
             >
               {/* Background Progress Line */}
               <div
-                className="absolute h-6 bg-[#292929] rounded-full top-1/2 -translate-y-1/2"
+                className="absolute h-6 bg-app-background rounded-full top-1/2 -translate-y-1/2"
                 style={{
                   left: "101px", // Start from center of first transaction (40px + 61px)
                   width: `${containerWidth - 122}px`, // Span to center of last transaction

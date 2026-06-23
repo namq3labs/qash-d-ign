@@ -5,7 +5,7 @@ import { SchedulePaymentFrequency } from "@/types/schedule-payment";
 import { getClaimableTimeLabel } from "@/services/utils/claimableTime";
 import { useMidenSdkStore } from "@/contexts/MidenSdkProvider";
 
-const labelClass = "text-[#989898] text-[14px] leading-5 tracking-[0.07px]";
+const labelClass = "text-text-secondary text-[14px] leading-5 tracking-[0.07px]";
 
 const getFrequencyLabel = (frequency: SchedulePaymentFrequency): string => {
   switch (frequency) {
@@ -30,13 +30,13 @@ export const ScheduleTransactionRow: React.FC<{ index: number; amountLabel: stri
   <div className="grid grid-cols-[1fr_2fr] items-center gap-2 py-1 px-3">
     <span className={`${labelClass} truncate`}>{`Transaction ${index}`}</span>
     <div className="flex items-center gap-2">
-      <div className="bg-[#3d3d3d] rounded-md px-2 py-1.5 w-[135px]">
-        <span className="text-white text-[14px] leading-5 tracking-[0.07px] truncate block text-center">
+      <div className="bg-app-background rounded-md px-2 py-1.5 w-[135px]">
+        <span className="text-text-primary text-[14px] leading-5 tracking-[0.07px] truncate block text-center">
           {amountLabel}
         </span>
       </div>
-      <div className="bg-[#3d3d3d] rounded-md px-2 py-1.5 w-full">
-        <span className="text-white text-[14px] leading-5 tracking-[0.07px] truncate block text-center">
+      <div className="bg-app-background rounded-md px-2 py-1.5 w-full">
+        <span className="text-text-primary text-[14px] leading-5 tracking-[0.07px] truncate block text-center">
           {claimableAfterLabel}
         </span>
       </div>
@@ -121,7 +121,7 @@ export const ScheduleTransactionDropdown: React.FC<{
   };
 
   return (
-    <div className={`bg-[#292929] rounded-lg flex flex-col gap-1 ${className} ${open ? "pb-2" : ""}`}>
+    <div className={`bg-background border border-primary-divider rounded-lg flex flex-col gap-1 ${className} ${open ? "pb-2" : ""}`}>
       {/* Header */}
       <button
         type="button"
@@ -130,7 +130,7 @@ export const ScheduleTransactionDropdown: React.FC<{
         aria-expanded={open}
         disabled={isAnimating}
       >
-        <span className="text-[#989898] text-[14px] tracking-[0.07px] leading-5">Schedule Payment</span>
+        <span className="text-text-secondary text-[14px] tracking-[0.07px] leading-5">Schedule Payment</span>
         <img
           src="/arrow/chevron-down.svg"
           alt="chevron-down"

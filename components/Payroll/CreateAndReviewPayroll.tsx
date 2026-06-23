@@ -9,6 +9,7 @@ import { useModal } from "@/contexts/ModalManagerProvider";
 import { AssetWithMetadata } from "@/types/faucet";
 import { ContractTerm } from "./ContractTerm";
 import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
 import { CompanyContactResponseDto } from "@qash/types/dto/employee";
 import { useCreatePayroll } from "@/services/api/payroll";
 import { useGetMyCompany } from "@/services/api/company";
@@ -240,13 +241,17 @@ const CreatePayroll = ({
   return (
     <>
       {/* Header */}
-      <div className="flex flex-row items-center justify-start gap-3 w-full">
-        <img src="/sidebar/payroll.svg" alt="Qash" className="w-6 h-6" />
-        <span className="text-2xl font-bold">Create new payroll</span>
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Create payroll</h1>
+          <p className="text-[14px] text-text-secondary">
+            Set up a recurring payroll contract for an employee with payment details and schedule.
+          </p>
+        </div>
       </div>
 
       {/* Content */}
-      <div className="bg-payroll-main-background border border-primary-divider rounded-[20px] flex w-[980px] gap-8">
+      <div className="mx-6 mb-6 bg-payroll-main-background border border-primary-divider rounded-[20px] flex w-[980px] gap-8">
         {/* Left Section - Basic Information */}
         <div className="w-[45%] p-4 pr-0 flex flex-col gap-3 top-1 sticky h-fit">
           <h2 className="text-text-primary text-lg leading-none">Basic Information</h2>
@@ -504,12 +509,16 @@ const ReviewPayroll = ({ onBackAndEdit, payrollDto, employee, owner, company }: 
   return (
     <div className="flex flex-col w-full h-full overflow-hidden">
       {/* Header */}
-      <div className="flex flex-row items-center justify-start gap-3 w-full">
-        <img src="/sidebar/payroll.svg" alt="Qash" className="w-6 h-6" />
-        <span className="text-2xl font-bold">Review payroll</span>
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Review payroll</h1>
+          <p className="text-[14px] text-text-secondary">
+            Preview the invoice generated for your employee and confirm before creating the payroll.
+          </p>
+        </div>
       </div>
 
-      <div className="w-full h-full flex-row flex">
+      <div className="w-full h-full flex-row flex px-6 pb-6">
         <div className="flex flex-col items-center justify-center w-full h-full gap-8">
           <div className="flex flex-col items-center gap-2 w-full">
             <div className="flex flex-col items-center gap-2 w-full">
@@ -532,9 +541,7 @@ const ReviewPayroll = ({ onBackAndEdit, payrollDto, employee, owner, company }: 
               onClick={() => {
                 onBackAndEdit();
               }}
-              buttonClassName="w-40"
-              icon="/misc/edit-icon.svg"
-              iconPosition="left"
+              buttonClassName="w-fit whitespace-nowrap"
               variant="light"
               disabled={isSubmitting}
             />
@@ -542,9 +549,8 @@ const ReviewPayroll = ({ onBackAndEdit, payrollDto, employee, owner, company }: 
             <PrimaryButton
               text={isSubmitting ? "Creating..." : "Confirm and create"}
               onClick={handleConfirmAndCreate}
-              containerClassName="w-50"
-              icon="/misc/document-forward-icon.svg"
-              iconPosition="left"
+              containerClassName="w-fit"
+              buttonClassName="whitespace-nowrap"
               disabled={isSubmitting}
             />
           </div>
@@ -641,23 +647,26 @@ const CreateAndReviewPayroll = () => {
   }, [isDirty, router]);
 
   useEffect(() => {
-    const handleBack = () => {
-      router.back();
-    };
-
     setTitle(
-      <div className="flex items-center gap-2">
-        <span className="text-text-secondary">Payroll /</span>
-        <span className="text-text-primary">Create new payroll</span>
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <button
+          type="button"
+          onClick={() => router.push("/payroll")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Payroll
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Create</span>
       </div>,
     );
-    setShowBackArrow(true);
-    setOnBackClick(() => handleBack);
+    setShowBackArrow(false);
 
     return () => {
       setOnBackClick(undefined);
       setShowBackArrow(false);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   const onReview = (
@@ -669,9 +678,16 @@ const CreateAndReviewPayroll = () => {
     payDayToSave: number,
   ) => {
     setTitle(
-      <div className="flex items-center gap-2">
-        <span className="text-text-secondary">Create new payroll /</span>
-        <span className="text-text-primary">Review payroll</span>
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <button
+          type="button"
+          onClick={() => router.push("/payroll")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Payroll
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Review</span>
       </div>,
     );
     setFormData(formDataToSave);
@@ -714,7 +730,7 @@ const CreateAndReviewPayroll = () => {
     }
   };
 
-  return <div className={`w-full h-full p-5 flex flex-col items-center gap-4 justify-start`}>{renderContent()}</div>;
+  return <div className="flex w-full h-full flex-col bg-background">{renderContent()}</div>;
 };
 
 export default CreateAndReviewPayroll;

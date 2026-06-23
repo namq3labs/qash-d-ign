@@ -28,12 +28,18 @@ import { CategoryBadge } from "../ContactBook/ContactBookContainer";
 import { CategoryShapeEnum } from "@qash/types/enums";
 import { getInvoiceByUUID } from "@/services/api/invoice";
 import { InvoiceModalProps } from "@/types/modal";
+import { useTitle } from "@/contexts/TitleProvider";
+import { Check, NavArrowRight } from "iconoir-react";
 
-const TransactionDetailContainer = () => {
+const TransactionDetailContainer = ({
+  proposalId: proposalIdProp,
+  inModal = false,
+}: { proposalId?: number | string; inModal?: boolean } = {}) => {
   const router = useRouter();
   const { openModal, closeModal } = useModal();
+  const { setTitle, setShowBackArrow } = useTitle();
   const searchParams = useSearchParams();
-  const rawProposalId = searchParams.get("proposalId") || "";
+  const rawProposalId = proposalIdProp != null ? String(proposalIdProp) : searchParams.get("proposalId") || "";
   const proposalId = parseInt(rawProposalId, 10);
   const { commitment: signerCommitment } = useParaSigner();
   const { client: midenClient } = useMidenProvider();
@@ -43,6 +49,26 @@ const TransactionDetailContainer = () => {
   );
   const [receiptPreview, setReceiptPreview] = useState<any>(null);
   const { data: multisigAccount } = useGetMultisigAccount(proposal?.accountId, { enabled: !!proposal?.accountId });
+
+  // Breadcrumb in the top title bar: Transactions › Detail
+  useEffect(() => {
+    if (inModal) return;
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <button
+          type="button"
+          onClick={() => router.push("/transactions")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Transactions
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Detail</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Mutation hooks for voting
   const signProposalMutation = useSignProposal();
@@ -345,12 +371,22 @@ const TransactionDetailContainer = () => {
   const pendingCount = pendingMembers.length;
 
   return (
-    <div className="flex flex-col w-full h-full px-10 py-5 gap-6 bg-background">
-      <div className="flex flex-row gap-5 items-center">
-        <span className="text-xl leading-none font-bold text-text-primary">{proposal.description}</span>
-      </div>
+    <div className={`flex w-full flex-col bg-background ${inModal ? "" : "h-full"}`}>
+      {/* Page header (concept) — hidden in modal, the modal has its own header */}
+      {!inModal && (
+        <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+          <div className="flex flex-col gap-0.5">
+            <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">
+              {proposal.description}
+            </h1>
+            <p className="text-[14px] text-text-secondary">
+              Review the transaction details, approvers and progress for this proposal.
+            </p>
+          </div>
+        </div>
+      )}
 
-      <div className="w-full h-full flex flex-row gap-5">
+      <div className={`w-full flex flex-row gap-5 px-6 pb-6 ${inModal ? "pt-6" : "h-full"}`}>
         <div className="flex-1 flex-col w-full h-full gap-2 flex">
           {/* Proposal Details Cards */}
           <div className="flex flex-row gap-3 w-full">
@@ -439,7 +475,7 @@ const TransactionDetailContainer = () => {
           {/* Transaction Table */}
           <div className="border border-primary-divider rounded-2xl overflow-hidden flex flex-col h-fit">
             <div className="flex flex-row justify-between items-center px-4 py-3 border-b border-primary-divider">
-              <h2 className="text-2xl font-bold text-text-primary">Transaction Details</h2>
+              <h2 className="text-lg font-semibold text-text-primary">Transaction Details</h2>
               <div className="flex gap-8 items-center">
                 {proposal.bills && proposal.bills.length > 0 && (
                   <>
@@ -589,7 +625,7 @@ const TransactionDetailContainer = () => {
           {/* Members */}
           <div className="border border-primary-divider rounded-2xl overflow-hidden flex flex-col h-fit">
             <div className="flex flex-row justify-between items-center px-4 py-3 border-b border-primary-divider">
-              <h2 className="text-2xl font-bold text-text-primary">Approvers</h2>
+              <h2 className="text-lg font-semibold text-text-primary">Approvers</h2>
               <div className="flex gap-2 items-center">
                 <span className="text-sm text-text-secondary font-medium">Threshold</span>
                 <span className="text-sm text-text-primary font-semibold">
@@ -650,65 +686,80 @@ const TransactionDetailContainer = () => {
           </div>
         </div>
 
-        {/* Timeline Section */}
+        {/* Progress Section (vertical stepper, matches the invoice Timeline) */}
         <div className="w-80 flex flex-col gap-3">
-          <div className="border border-primary-divider rounded-2xl px-4 flex-1 flex flex-col justify-between py-2">
-            <div className="flex flex-col">
-              <h2 className="text-2xl font-bold text-text-primary pb-4">Progress</h2>
-
-              <div className="flex flex-col gap-3">
-                {/* Build timeline from proposal creation, signatures, and execution */}
-                {[
-                  {
-                    label: "Proposal created",
-                    date: formatDateTime(proposal.createdAt),
-                    icon: "/misc/blue-polygon.svg",
-                  },
-                  ...approvedMembers.map((a: any, idx: number) => ({
+          <h2 className="text-lg font-semibold text-text-primary">Progress</h2>
+          <div className="flex-1 flex flex-col justify-between gap-4 rounded-2xl border border-primary-divider bg-app-background p-5">
+            <ol className="flex flex-col">
+              {(() => {
+                const items = [
+                  { label: "Proposal created", date: formatDateTime(proposal.createdAt), done: true },
+                  ...approvedMembers.map((a: any) => ({
                     label: `${a.firstName || "Approver"} signed`,
-                    date: formatDateTime(a.signature?.createdAt || a.signature?.createdAt),
-                    icon: "/misc/blue-polygon.svg",
+                    date: formatDateTime(a.signature?.createdAt),
+                    done: true,
                   })),
-
                   proposal.status === "EXECUTED" &&
                     proposal.transactionId && {
                       label: "Proposal executed",
                       date: formatDateTime(proposal.updatedAt),
-                      icon: "/misc/blue-polygon.svg",
+                      done: true,
                     },
                   (proposal.status === "FAILED" || proposal.status === "CANCELLED") && {
                     label: `Proposal ${proposal.status.toLowerCase()}`,
                     date: formatDateTime(proposal.updatedAt),
-                    icon: "/misc/blue-polygon.svg",
+                    done: true,
                   },
-                ]
-                  .filter(Boolean)
-                  .map((item: any, idx, arr) => (
-                    <div className="flex gap-7 pb-6" key={idx}>
-                      {/* Timeline Marker */}
-                      <div className="flex flex-col items-center pt-1 relative">
-                        <img
-                          src={item.icon || "/misc/blue-polygon.svg"}
-                          alt="Timeline Marker"
-                          className="w-6 h-6 z-10"
+                  proposal.status === "PENDING" && {
+                    label: "Awaiting approval",
+                    date: "In progress",
+                    done: false,
+                    pending: true,
+                  },
+                ].filter(Boolean);
+                return items.map((item: any, idx: number) => {
+                  const isLast = idx === items.length - 1;
+                  const nextPending = items[idx + 1]?.pending;
+                  return (
+                    <li key={idx} className="relative flex gap-3.5 pb-6 last:pb-0">
+                      {!isLast && (
+                        <span
+                          aria-hidden
+                          className={`absolute left-[15px] top-9 bottom-0 w-0.5 ${
+                            nextPending ? "bg-primary-divider" : "bg-primary-blue/40"
+                          }`}
                         />
-                        {/* Vertical Line (not for first item) */}
-                        {idx !== 0 && (
-                          <div
-                            className="absolute top-0 left-1/2 -translate-x-1/2"
-                            style={{ height: 75, width: 4, background: "#066EFF", zIndex: 0, marginTop: -50 }}
-                          />
+                      )}
+                      <span
+                        className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+                          item.done
+                            ? "bg-primary-blue text-white"
+                            : "border-2 border-primary-blue/40 bg-primary-blue/5"
+                        }`}
+                      >
+                        {item.done ? (
+                          <Check width={16} height={16} strokeWidth={2.5} />
+                        ) : (
+                          <span className="h-2.5 w-2.5 rounded-full bg-primary-blue animate-pulse" />
+                        )}
+                      </span>
+                      <div className="flex flex-col gap-0.5 pt-1">
+                        <p
+                          className={`text-sm font-semibold leading-tight ${
+                            item.pending ? "text-text-secondary" : "text-text-primary"
+                          }`}
+                        >
+                          {item.label}
+                        </p>
+                        {item.date && item.date !== "N/A" && (
+                          <p className="text-xs text-text-secondary leading-tight">{item.date}</p>
                         )}
                       </div>
-                      {/* Timeline Content */}
-                      <div className="flex flex-col gap-1.5 w-40">
-                        <p className="text-sm font-semibold text-text-primary leading-none">{item.label}</p>
-                        <p className="text-sm font-medium text-text-secondary leading-none">{item.date}</p>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </div>
+                    </li>
+                  );
+                });
+              })()}
+            </ol>
             {/* Vote Status Section */}
             {renderVoteComponent()}
           </div>

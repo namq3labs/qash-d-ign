@@ -61,7 +61,7 @@ export function CreateClientContactModal({ isOpen, onClose, zIndex }: ModalProp<
   const [selectedCompanyType, setSelectedCompanyType] = useState<string>("");
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [showAdditionalDetails, setShowAdditionalDetails] = useState<boolean>(false);
-  const { closeModal } = useModal();
+  const { closeModal, openModal } = useModal();
 
   const {
     register,
@@ -225,7 +225,7 @@ export function CreateClientContactModal({ isOpen, onClose, zIndex }: ModalProp<
           </div>
 
           <div className="flex gap-2 w-full">
-            <SecondaryButton variant="light" text="Cancel" onClick={handleCancel} />
+            <SecondaryButton variant="light" text="Cancel" onClick={() => openModal(MODAL_IDS.DISCARD_CHANGES, { onConfirm: handleCancel })} />
             <PrimaryButton text="Save changes" onClick={handleSubmit(onSubmit)} disabled={!isValid} />
           </div>
         </form>

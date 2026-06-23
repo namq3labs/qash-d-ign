@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Tooltip } from "react-tooltip";
-import { ValidatingModalProps } from "@/types/modal";
-import { ModalProp } from "@/contexts/ModalManagerProvider";
+import { ValidatingModalProps, MODAL_IDS } from "@/types/modal";
+import { ModalProp, useModal } from "@/contexts/ModalManagerProvider";
 import BaseModal from "../BaseModal";
 import { ModalHeader } from "../../Common/ModalHeader";
 import { ActionButton } from "../../Common/ActionButton";
@@ -34,6 +34,7 @@ export function CreateCategoryModal({ isOpen, onClose, zIndex }: ModalProp<Valid
   const [selectedColor, setSelectedColor] = useState("#35ADE9");
   const { mutate: createCategory } = useCreateCategory();
   const { data: categories } = useGetCategories();
+  const { openModal } = useModal();
 
   const {
     register,
@@ -194,7 +195,7 @@ export function CreateCategoryModal({ isOpen, onClose, zIndex }: ModalProp<Valid
           <div className="flex flex-row gap-2 mt-2">
             <SecondaryButton
               text="Cancel"
-              onClick={onClose}
+              onClick={() => openModal(MODAL_IDS.DISCARD_CHANGES, { onConfirm: onClose })}
               buttonClassName="flex-1"
               disabled={isLoading}
               variant="light"

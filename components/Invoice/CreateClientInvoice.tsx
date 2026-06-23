@@ -120,12 +120,10 @@ const CreateClientInvoice = () => {
     }
   }, [user, isAdmin]);
 
-  // Breadcrumb in the top title bar: Invoice › Create invoice
+  // Breadcrumb in the top title bar: Invoice › Create
   useEffect(() => {
     setTitle(
       <div className="flex items-center gap-1.5 text-[14px]">
-        <span className="text-text-secondary">Receive</span>
-        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
         <button
           type="button"
           onClick={() => router.push("/invoice")}
@@ -134,7 +132,7 @@ const CreateClientInvoice = () => {
           Invoice
         </button>
         <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
-        <span className="font-medium text-text-primary">Create invoice</span>
+        <span className="font-medium text-text-primary">Create</span>
       </div>,
     );
     setShowBackArrow(false);
@@ -466,11 +464,11 @@ const CreateClientInvoice = () => {
   }
 
   return (
-    <div className="flex h-full w-full flex-col bg-background">
+    <div className="flex w-full h-full flex-col bg-background">
       {/* Header with actions */}
-      <div className="flex items-start justify-between gap-4 px-6 pt-6 pb-4">
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
         <div className="flex flex-col gap-0.5">
-          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Create Invoice</h1>
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Create invoice</h1>
           <p className="text-[14px] text-text-secondary">Generate and send a new invoice.</p>
         </div>
         <div className="flex shrink-0 items-center gap-2 pt-1">
@@ -483,6 +481,13 @@ const CreateClientInvoice = () => {
             {showPreview ? "Hide Preview" : "Show Preview"}
           </button>
           <SecondaryButton
+            text="Cancel"
+            variant="red"
+            onClick={() => openModal(MODAL_IDS.DISCARD_CHANGES, { onConfirm: () => router.push("/invoice") })}
+            buttonClassName="w-fit"
+            disabled={isLoading}
+          />
+          <SecondaryButton
             text="Save as Draft"
             variant="light"
             onClick={handleSaveDraft}
@@ -492,7 +497,7 @@ const CreateClientInvoice = () => {
           <PrimaryButton
             text={isLoading ? "Sending..." : "Send Invoice"}
             onClick={handleSendInvoice}
-            containerClassName="w-[150px]"
+            containerClassName="w-fit"
             buttonClassName="whitespace-nowrap"
             disabled={isLoading}
           />

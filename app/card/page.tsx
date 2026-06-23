@@ -59,6 +59,72 @@ function CardVisual({ card, size = "sm" }: { card: DemoCard; size?: "sm" | "lg" 
   );
 }
 
+// ─── Card Face (large, "Your Virtual Accounts" style) ───────────────────────
+
+function CardFaceLarge({ card, onClick }: { card: DemoCard; onClick: () => void }) {
+  const pct = card.spendingLimit > 0 ? Math.min(100, Math.round((card.currentSpend / card.spendingLimit) * 100)) : 0;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="shrink-0 snap-start cursor-pointer rounded-2xl opacity-95 transition-all duration-200 hover:-translate-y-0.5 hover:opacity-100 focus:outline-none"
+    >
+      <div
+        className={`relative flex h-[210px] w-[340px] flex-col justify-between overflow-hidden rounded-2xl p-5 text-left text-white shadow-sm ${
+          card.frozen ? "grayscale opacity-80" : ""
+        }`}
+        style={{ background: CARD_GRADIENTS[card.brand] || CARD_GRADIENTS.Visa }}
+      >
+        {/* decorative shapes */}
+        <span className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/10" />
+        <span className="pointer-events-none absolute -bottom-14 -left-10 h-40 w-40 rounded-full bg-white/5" />
+
+        {/* top row */}
+        <div className="relative z-10 flex items-start justify-between">
+          <div>
+            <p className="text-[11px] font-medium uppercase tracking-wide text-white/60">Corporate Card</p>
+            <p className="text-xl font-bold leading-tight">{card.brand}</p>
+          </div>
+          <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide">
+            {card.frozen ? "Frozen" : "Active"}
+          </span>
+        </div>
+
+        {/* chip + number + spending */}
+        <div className="relative z-10 flex flex-col gap-2.5">
+          <span className="h-6 w-9 rounded-md bg-gradient-to-br from-white/70 to-white/40" />
+          <p className="num text-[15px] font-medium leading-snug tracking-[0.18em]">**** **** **** {card.last4}</p>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between text-[10px] text-white/70">
+              <span className="font-medium">
+                ${card.currentSpend.toLocaleString()} / ${card.spendingLimit.toLocaleString()}
+              </span>
+              <span>{pct}%</span>
+            </div>
+            <div className="h-1 w-full overflow-hidden rounded-full bg-white/20">
+              <div className="h-full rounded-full bg-white/80" style={{ width: `${pct}%` }} />
+            </div>
+          </div>
+        </div>
+
+        {/* bottom row */}
+        <div className="relative z-10 flex items-end justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-[9px] font-medium uppercase tracking-wide text-white/50">Cardholder</p>
+            <p className="truncate text-sm font-semibold">{card.cardholder}</p>
+          </div>
+          <div className="min-w-0 text-right">
+            <p className="text-[9px] font-medium uppercase tracking-wide text-white/50">Expires</p>
+            <p className="truncate text-sm font-semibold">
+              {String(card.expiryMonth).padStart(2, "0")}/{String(card.expiryYear).slice(-2)}
+            </p>
+          </div>
+        </div>
+      </div>
+    </button>
+  );
+}
+
 // ─── Stat Card (matches Bill page pattern) ──────────────────────────────────
 
 function StatCard({ title, children }: { title: string; children: React.ReactNode }) {
@@ -478,25 +544,14 @@ function CardOverview({
         </StatCard>
       </div>
 
-      {/* Toolbar + count */}
-      <div className="mt-2 flex w-full items-center justify-between gap-2 border-b border-primary-divider px-6 pb-3">
+      {/* Your Cards (Your Virtual Accounts style) */}
+      <div className="flex flex-col gap-1 px-6 pb-6 pt-3">
         <span className="text-lg font-semibold text-text-primary">Your Cards</span>
-        <span className="text-sm text-text-secondary">{cards.length} cards</span>
-      </div>
-
-      {/* Cards table */}
-      <div className="w-full p-5">
-        <Table
-          data={tableData}
-          headers={tableHeaders}
-          showFooter={false}
-          showPagination={true}
-          currentPage={currentPage}
-          rowsPerPage={rowsPerPage}
-          onPageChange={setCurrentPage}
-          onRowsPerPageChange={setRowsPerPage}
-          onRowClick={handleRowClick}
-        />
+        <div className="-mx-1 flex flex-wrap gap-4 px-1 pt-2">
+          {cards.map((card) => (
+            <CardFaceLarge key={card.id} card={card} onClick={() => onSelectCard(card)} />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -542,7 +597,7 @@ function CardDetail({
   const [txRows, setTxRows] = useState(10);
 
   const transactions = data.cardTransactions;
-  const labelStyles = "py-1 text-base font-medium text-text-secondary";
+  const labelStyles = "py-1 text-sm font-medium text-text-secondary";
 
   // Breadcrumb in the top title bar: Expenses › Corporate Card › {cardholder}
   useEffect(() => {
@@ -644,20 +699,20 @@ function CardDetail({
       <div className="flex gap-3 items-stretch w-full px-6 pb-2">
         <div className="flex-1 border border-primary-divider rounded-2xl px-5 py-4 flex flex-col gap-1">
           <span className="text-text-secondary text-sm">Balance</span>
-          <span className="text-text-primary text-xl font-bold">${data.totalBalance.toLocaleString()}</span>
+          <span className="num text-text-primary text-2xl leading-none">${data.totalBalance.toLocaleString()}</span>
         </div>
         <div className="flex-1 border border-primary-divider rounded-2xl px-5 py-4 flex flex-col gap-1">
           <span className="text-text-secondary text-sm">Spent this month</span>
-          <span className="text-text-primary text-xl font-bold">${card.currentSpend.toLocaleString()}</span>
+          <span className="num text-text-primary text-2xl leading-none">${card.currentSpend.toLocaleString()}</span>
           <span className="text-text-secondary text-xs">of ${card.spendingLimit.toLocaleString()} limit</span>
         </div>
         <div className="flex-1 border border-primary-divider rounded-2xl px-5 py-4 flex flex-col gap-1">
           <span className="text-text-secondary text-sm">Daily Limit</span>
-          <span className="text-text-primary text-xl font-bold">${(card.dailyLimit ?? card.spendingLimit).toLocaleString()}</span>
+          <span className="num text-text-primary text-2xl leading-none">${(card.dailyLimit ?? card.spendingLimit).toLocaleString()}</span>
         </div>
         <div className="flex-1 border border-primary-divider rounded-2xl px-5 py-4 flex flex-col gap-1">
           <span className="text-text-secondary text-sm">Expires</span>
-          <span className="text-text-primary text-xl font-bold">
+          <span className="num text-text-primary text-2xl leading-none">
             {String(card.expiryMonth).padStart(2, "0")}/{card.expiryYear}
           </span>
         </div>
@@ -675,7 +730,7 @@ function CardDetail({
           </div>
           <div className="flex-1 flex flex-col gap-1">
             <div className="py-1 flex items-center gap-2">
-              <span className="text-base font-medium text-text-primary font-mono">**** **** **** {card.last4}</span>
+              <span className="text-sm font-medium text-text-primary font-mono">**** **** **** {card.last4}</span>
               <img
                 src="/misc/copy-icon.svg"
                 alt="Copy"
@@ -684,7 +739,7 @@ function CardDetail({
               />
             </div>
             <div className="py-1 flex items-center gap-2">
-              <span className="text-base font-medium text-text-primary font-mono">{showCvv ? card.cvv : "***"}</span>
+              <span className="text-sm font-medium text-text-primary font-mono">{showCvv ? card.cvv : "***"}</span>
               <img
                 src="/misc/eye-icon.svg"
                 alt="Toggle"
@@ -692,23 +747,33 @@ function CardDetail({
                 onClick={() => setShowCvv(!showCvv)}
               />
             </div>
-            <div className="py-1 text-base font-medium text-text-primary">Virtual</div>
-            <div className="py-1 text-base font-medium text-text-primary">{card.brand}</div>
+            <div className="py-1 text-sm font-medium text-text-primary">Virtual</div>
+            <div className="py-1 text-sm font-medium text-text-primary">{card.brand}</div>
           </div>
         </div>
 
         {/* Spending Limits */}
-        <div className="flex-1 border border-primary-divider rounded-2xl px-4 py-3 flex gap-3 items-center">
-          <div className="flex flex-col gap-1 w-[110px]">
-            <div className={labelStyles}>Daily</div>
-            <div className={labelStyles}>Weekly</div>
-            <div className={labelStyles}>Monthly</div>
-          </div>
-          <div className="flex-1 flex flex-col gap-1">
-            <div className="py-1 text-base font-medium text-text-primary">${(card.dailyLimit ?? 0).toLocaleString()}</div>
-            <div className="py-1 text-base font-medium text-text-primary">${(card.weeklyLimit ?? 0).toLocaleString()}</div>
-            <div className="py-1 text-base font-medium text-text-primary">${(card.monthlyLimit ?? card.spendingLimit).toLocaleString()}</div>
-          </div>
+        <div className="flex-1 border border-primary-divider rounded-2xl px-5 py-4 flex flex-col justify-center gap-4">
+          {[
+            { label: "Daily", limit: card.dailyLimit ?? 0, spent: Math.round(card.currentSpend * 0.12) },
+            { label: "Weekly", limit: card.weeklyLimit ?? 0, spent: Math.round(card.currentSpend * 0.45) },
+            { label: "Monthly", limit: card.monthlyLimit ?? card.spendingLimit, spent: card.currentSpend },
+          ].map(({ label, limit, spent }) => {
+            const pct = limit > 0 ? Math.min(100, Math.round((spent / limit) * 100)) : 0;
+            return (
+              <div key={label} className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-text-secondary">{label}</span>
+                  <span className="text-sm font-medium text-text-primary">
+                    ${spent.toLocaleString()} <span className="text-text-secondary">/ ${limit.toLocaleString()}</span>
+                  </span>
+                </div>
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-app-background">
+                  <div className="h-full rounded-full bg-primary-blue transition-all" style={{ width: `${pct}%` }} />
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

@@ -531,7 +531,7 @@ export function EditEmployeeContactModal({
           <div className="flex flex-row gap-3">
             <SecondaryButton
               text="Cancel"
-              onClick={handleCancel}
+              onClick={() => openModal(MODAL_IDS.DISCARD_CHANGES, { onConfirm: handleCancel })}
               buttonClassName="flex-1"
               disabled={updateEmployee.isPending}
               variant="light"

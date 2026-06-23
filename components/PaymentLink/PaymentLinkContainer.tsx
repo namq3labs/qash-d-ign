@@ -233,7 +233,7 @@ const PaymentLinkContainer = () => {
             src={`/token/${((link as any).currency || link.acceptedTokens?.[0]?.symbol || "usdt").toLowerCase()}.svg`}
             onError={(e) => { (e.target as HTMLImageElement).src = "/token/usdt.svg"; }}
             alt={(link as any).currency || link.acceptedTokens?.[0]?.symbol || "USDT"}
-            className="w-3 h-3"
+            className="w-5 h-5"
           />
           <span className="text-text-primary text-sm leading-none">
             {(link as any).currency || link.acceptedTokens?.[0]?.symbol || "USDT"}
@@ -258,7 +258,6 @@ const PaymentLinkContainer = () => {
         <Badge
           status={link.status === PaymentLinkStatus.ACTIVE ? BadgeStatus.SUCCESS : BadgeStatus.NEUTRAL}
           text={link.status}
-          className="!py-2"
         />
       ),
       " ": isAdmin ? (
@@ -304,10 +303,8 @@ const PaymentLinkContainer = () => {
         </div>
         <PrimaryButton
           text="Create payment link"
-          icon="/misc/plus-icon.svg"
-          iconPosition="left"
           onClick={() => router.push("/payment-link/create")}
-          containerClassName="w-[200px]"
+          containerClassName="w-fit"
           buttonClassName="whitespace-nowrap"
         />
       </div>
@@ -344,6 +341,7 @@ const PaymentLinkContainer = () => {
           <Table
             headers={tableHeaders}
             data={tableData}
+            rowClassName="py-5"
             actionColumn={false}
             showFooter={false}
             showPagination={true}

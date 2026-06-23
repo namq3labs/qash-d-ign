@@ -325,9 +325,8 @@ export function BatchTransactionContainer() {
             <PrimaryButton
               text="Add transaction"
               onClick={() => router.push("/move-crypto?tab=send")}
-              containerClassName="w-[180px]"
-              icon="/misc/plus-icon.svg"
-              iconPosition="left"
+              containerClassName="w-fit"
+              buttonClassName="whitespace-nowrap"
             />
           </div>
         )}
