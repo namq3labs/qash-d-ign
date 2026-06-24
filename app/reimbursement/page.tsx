@@ -5,8 +5,10 @@ import { NavArrowRight } from "iconoir-react";
 import { PrimaryButton } from "@/components/Common/PrimaryButton";
 import { SecondaryButton } from "@/components/Common/SecondaryButton";
 import { Table } from "@/components/Common/Table";
+import { TabContainer } from "@/components/Common/TabContainer";
 import { Badge, BadgeStatus } from "@/components/Common/Badge";
 import { ModalHeader } from "@/components/Common/ModalHeader";
+import FieldInput from "@/components/Common/Input/FieldInput";
 import BaseModal from "@/components/Modal/BaseModal";
 import { useModal } from "@/contexts/ModalManagerProvider";
 import { useTitle } from "@/contexts/TitleProvider";
@@ -33,7 +35,7 @@ interface Reimbursement {
 const MOCK_REIMBURSEMENTS: Reimbursement[] = [
   { id: "r-001", employeeName: "Sarah Kim", description: "Client dinner at Marina Bay", amount: 245.80, currency: "USDT", category: "Meals", date: "2026-03-28", status: "pending", receiptUrl: null, receiptName: "dinner_receipt.jpg" },
   { id: "r-002", employeeName: "Alex Chen", description: "AWS Summit conference ticket", amount: 599.00, currency: "USDT", category: "Conference", date: "2026-03-25", status: "pending", receiptUrl: null, receiptName: "aws_summit.pdf" },
-  { id: "r-003", employeeName: "Marcus Rivera", description: "Uber rides (March)", amount: 87.50, currency: "USDT", category: "Transport", date: "2026-03-22", status: "pending", receiptUrl: null, receiptName: "uber_march.pdf" },
+  { id: "r-003", employeeName: "Marcus Rivera", description: "Uber rides (March)", amount: 87.50, currency: "USDT", category: "Transport", date: "2026-03-22", status: "pending", receiptUrl: null, receiptName: null },
   { id: "r-004", employeeName: "James Liu", description: "GitHub Enterprise renewal", amount: 1200.00, currency: "USDT", category: "Software", date: "2026-03-20", status: "approved", receiptUrl: null, receiptName: "github_invoice.pdf" },
   { id: "r-005", employeeName: "Priya Sharma", description: "Office supplies", amount: 63.20, currency: "USDT", category: "Office", date: "2026-03-18", status: "paid", receiptUrl: null, receiptName: "supplies.jpg" },
   { id: "r-006", employeeName: "Daniel Park", description: "Figma team plan", amount: 450.00, currency: "USDT", category: "Software", date: "2026-03-15", status: "paid", receiptUrl: null, receiptName: "figma_invoice.pdf" },
@@ -53,6 +55,9 @@ function simulateExtract(fileName: string) {
     return { description: "Travel expense", amount: "850.00", category: "Travel", employee: "" };
   return { description: "Office expense", amount: "0.00", category: "Other", employee: "" };
 }
+
+// Preset reimbursement categories offered in the New Reimbursement form.
+const CATEGORY_OPTIONS = ["Meals", "Travel", "Transport", "Software", "Office", "Conference", "Other"];
 
 // ---- Right Sidebar Panel ----
 
@@ -77,9 +82,21 @@ function ReimbursementSidebar({
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
+  const [categoryOpen, setCategoryOpen] = useState(false);
+  const categoryRef = useRef<HTMLDivElement>(null);
   const [selectedToken, setSelectedToken] = useState<{ symbol: string; icon: string } | null>(
     { symbol: "USDT", icon: "/token/usdt.svg" }
   );
+
+  // Close the category dropdown when clicking outside it.
+  useEffect(() => {
+    if (!categoryOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (categoryRef.current && !categoryRef.current.contains(e.target as Node)) setCategoryOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [categoryOpen]);
 
   const resetForm = () => {
     setFile(null);
@@ -150,8 +167,8 @@ function ReimbursementSidebar({
     onClose();
   };
 
-  const inputClass = "bg-app-background rounded-xl border-b-2 border-primary-divider";
-  const labelClass = "text-text-secondary text-sm font-medium";
+  const inputClass = "bg-background rounded-xl border border-primary-divider";
+  const labelClass = "text-text-secondary text-xs font-medium leading-none";
 
   return (
     <>
@@ -241,7 +258,7 @@ function ReimbursementSidebar({
                     <span className="text-xs text-primary-blue">Extracting...</span>
                   </div>
                 ) : (
-                  <Badge status={BadgeStatus.SUCCESS} text="Extracted" className="px-3" />
+                  <Badge status={BadgeStatus.SUCCESS} text="Extracted" />
                 )}
                 <img
                   src="/misc/close-icon.svg"
@@ -265,10 +282,10 @@ function ReimbursementSidebar({
               })
             }
           >
-            <div className="flex items-center justify-between px-4 py-2">
+            <div className="flex items-center justify-between px-3.5 py-2.5">
               {employee ? (
                 <div className="flex items-center gap-3 flex-1">
-                  <div className="w-8 h-8 rounded-full bg-primary-blue/10 flex items-center justify-center text-primary-blue text-xs font-bold shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-primary-blue/10 flex items-center justify-center text-primary-blue text-xs font-bold shrink-0">
                     {employee.split(" ").map((w: string) => w[0]).join("").toUpperCase().slice(0, 2)}
                   </div>
                   <div className="flex flex-col">
@@ -286,18 +303,12 @@ function ReimbursementSidebar({
             </div>
           </div>
 
-          <div className={inputClass}>
-            <div className="flex flex-col gap-1 px-4 py-2">
-              <label className={labelClass}>Description</label>
-              <input
-                type="text"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="What was this expense for?"
-                className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-              />
-            </div>
-          </div>
+          <FieldInput
+            label="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="What was this expense for?"
+          />
 
           {/* Token selector */}
           <div
@@ -314,11 +325,11 @@ function ReimbursementSidebar({
               })
             }
           >
-            <div className="flex items-center justify-between px-4 py-2">
+            <div className="flex items-center justify-between px-3.5 py-2.5">
               <div className="flex items-center gap-3 flex-1">
                 {selectedToken ? (
                   <>
-                    <img src={selectedToken.icon} alt="" className="w-8 h-8" />
+                    <img src={selectedToken.icon} alt="" className="w-7 h-7 shrink-0" />
                     <div className="flex flex-col">
                       <span className={labelClass}>Reimburse with</span>
                       <span className="text-text-primary text-sm font-medium">{selectedToken.symbol}</span>
@@ -336,29 +347,52 @@ function ReimbursementSidebar({
           </div>
 
           <div className="flex gap-3">
-            <div className={`flex-1 ${inputClass}`}>
-              <div className="flex flex-col gap-1 px-4 py-2">
-                <label className={labelClass}>Amount</label>
-                <input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  placeholder="0.00"
-                  className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
+            <FieldInput
+              containerClassName="flex-1"
+              label="Amount"
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="0.00"
+            />
+            <div className="relative flex flex-1 flex-col" ref={categoryRef}>
+              <label className="mb-1.5 text-[13px] font-medium text-text-primary">Category</label>
+              <button
+                type="button"
+                onClick={() => setCategoryOpen((o) => !o)}
+                className={`flex h-[46px] w-full items-center justify-between rounded-xl border bg-background pl-3.5 pr-3 text-left text-[14px] outline-none transition ${
+                  categoryOpen ? "border-primary-blue ring-2 ring-primary-blue/15" : "border-primary-divider"
+                } ${category ? "text-text-primary" : "text-[#C1C1C1]"}`}
+              >
+                <span className="truncate">{category || "Select category"}</span>
+                <img
+                  src="/arrow/chevron-down.svg"
+                  alt=""
+                  className={`h-4 w-4 shrink-0 transition-transform ${categoryOpen ? "rotate-180" : ""}`}
                 />
-              </div>
-            </div>
-            <div className={`flex-1 ${inputClass}`}>
-              <div className="flex flex-col gap-1 px-4 py-2">
-                <label className={labelClass}>Category</label>
-                <input
-                  type="text"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  placeholder="e.g. Meals, Transport"
-                  className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-                />
-              </div>
+              </button>
+              {categoryOpen && (
+                <div className="absolute bottom-full left-0 right-0 z-50 mb-1.5 max-h-60 overflow-y-auto rounded-xl border border-primary-divider bg-background p-1.5 shadow-lg">
+                  {(category && !CATEGORY_OPTIONS.includes(category)
+                    ? [category, ...CATEGORY_OPTIONS]
+                    : CATEGORY_OPTIONS
+                  ).map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => {
+                        setCategory(c);
+                        setCategoryOpen(false);
+                      }}
+                      className={`flex w-full items-center rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-app-background ${
+                        category === c ? "bg-app-background font-medium text-text-primary" : "text-text-primary"
+                      }`}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -461,6 +495,7 @@ const ReimbursementPage = () => {
   const router = useRouter();
   const { setTitle, setShowBackArrow } = useTitle();
   const [reimbursements, setReimbursements] = useState<Reimbursement[]>(MOCK_REIMBURSEMENTS);
+  const [activeTab, setActiveTab] = useState<"all" | "pending" | "approved" | "paid">("all");
   const [showSidebar, setShowSidebar] = useState(false);
   const [previewItem, setPreviewItem] = useState<Reimbursement | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -482,6 +517,10 @@ const ReimbursementPage = () => {
   const pending = reimbursements.filter((r) => r.status === "pending" || r.status === "approved");
   const pendingTotal = pending.reduce((sum, r) => sum + r.amount, 0);
 
+  // Rows shown in the table, filtered by the active status tab ("all" shows everything).
+  const filteredReimbursements =
+    activeTab === "all" ? reimbursements : reimbursements.filter((r) => r.status === activeTab);
+
   const handleAddReimbursement = (r: Reimbursement) => {
     setReimbursements((prev) => [r, ...prev]);
   };
@@ -492,7 +531,7 @@ const ReimbursementPage = () => {
 
   const tableHeaders = ["Employee", "Description", "Category", "Date", "Amount", "Status", "Receipt"];
 
-  const tableData = reimbursements.map((r) => ({
+  const tableData = filteredReimbursements.map((r) => ({
     Employee: (
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-full bg-[#7D52F4]/10 flex items-center justify-center text-[#7D52F4] text-xs font-bold shrink-0">
@@ -532,7 +571,6 @@ const ReimbursementPage = () => {
               : BadgeStatus.NEUTRAL
           }
           text={r.status.charAt(0).toUpperCase() + r.status.slice(1)}
-          className="px-3"
         />
       </div>
     ),
@@ -546,12 +584,12 @@ const ReimbursementPage = () => {
         </div>
       </div>
     ) : (
-      <span className="text-text-secondary text-xs text-center block">No receipt</span>
+      <span className="text-text-secondary text-xs text-center block">No file</span>
     ),
   }));
 
   const handleRowClick = (_: Record<string, any>, index: number) => {
-    setPreviewItem(reimbursements[index]);
+    setPreviewItem(filteredReimbursements[index]);
   };
 
   const paidThisMonthTotal = reimbursements
@@ -613,10 +651,21 @@ const ReimbursementPage = () => {
         />
       </div>
 
-      {/* Table header row + count */}
+      {/* Status tabs + count */}
       <div className="mt-2 flex w-full items-center justify-between gap-2 border-b border-primary-divider px-6 pb-3">
-        <span className="text-text-primary font-medium">Reimbursements</span>
-        <span className="text-sm text-text-secondary">{reimbursements.length} requests</span>
+        <TabContainer
+          tabs={[
+            { id: "all", label: "All" },
+            { id: "pending", label: "Pending" },
+            { id: "approved", label: "Approved" },
+            { id: "paid", label: "Paid" },
+          ]}
+          activeTab={activeTab}
+          //@ts-ignore
+          setActiveTab={setActiveTab}
+          textSize="sm"
+        />
+        <span className="text-sm text-text-secondary">{filteredReimbursements.length} requests</span>
       </div>
 
       {/* Reimbursements table */}

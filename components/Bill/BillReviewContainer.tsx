@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { NavArrowRight } from "iconoir-react";
 import { SecondaryButton } from "../Common/SecondaryButton";
+import FieldTextarea from "@/components/Common/Input/FieldTextarea";
 import { useInvoice } from "@/hooks/server/useInvoice";
 import { CategoryBadge } from "../ContactBook/ContactBookContainer";
 import { useGetAllEmployeeGroups } from "@/services/api/employee";
@@ -376,13 +377,13 @@ const BillReviewContainer = () => {
 
             {/* Proposal description */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-text-primary">Proposal description</label>
-              <textarea
+              <FieldTextarea
+                label="Proposal description"
                 {...register("proposalDescription")}
                 placeholder={`Payment for ${selectedInvoices.length} invoice(s)`}
                 aria-label="Proposal description"
                 maxLength={500}
-                className="w-full min-h-[96px] resize-none rounded-xl border border-primary-divider bg-app-background p-3 text-sm text-text-primary focus:outline-none"
+                rows={4}
               />
               {proposalDescription && proposalDescription.length > 0 && (
                 <span className="self-end text-xs text-text-secondary">{proposalDescription.length}/500</span>

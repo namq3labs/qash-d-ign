@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import { PrimaryButton } from "../Common/PrimaryButton";
 import { SecondaryButton } from "../Common/SecondaryButton";
 import InputOutlined from "../Common/Input/InputOutlined";
+import FieldInput from "@/components/Common/Input/FieldInput";
+import FieldTextarea from "@/components/Common/Input/FieldTextarea";
 import toast from "react-hot-toast";
 import { QASH_TOKEN_ADDRESS } from "@/services/utils/constant";
 import { useCreatePaymentLink } from "@/services/api/payment-link";
@@ -178,12 +180,12 @@ const CreatePaymentLinkContainer = () => {
       {/* Body: form + live preview */}
       <div className="flex min-h-0 flex-1 gap-6 overflow-hidden px-6 pb-6">
         {/* Form */}
-        <div className="flex flex-1 flex-col overflow-y-auto pb-4">
+        <div className="flex flex-1 min-w-0 flex-col overflow-y-auto pb-4">
           <div className="flex flex-col gap-6 rounded-2xl border border-primary-divider bg-background p-6">
             {/* === Information === */}
             <div className="flex flex-col gap-3">
               <SectionTitle subtitle="What this payment is for.">Information</SectionTitle>
-              <InputOutlined
+              <FieldInput
                 label="Title"
                 placeholder="e.g. Q3 Consulting Services"
                 error={!!errors.title}
@@ -194,25 +196,20 @@ const CreatePaymentLinkContainer = () => {
                 })}
               />
               <div className="flex flex-col gap-1">
-                <div className="flex flex-col rounded-[12px] border border-primary-divider px-4 py-2">
-                  <label className="text-[14px] text-text-secondary">Description</label>
-                  <textarea
-                    {...register("description", {
-                      required: "Description is required",
-                      maxLength: { value: 250, message: "Description cannot exceed 250 characters" },
-                    })}
-                    className="h-16 w-full resize-none bg-transparent text-[16px] text-text-primary outline-none placeholder:text-[#C1C1C1]"
-                    placeholder="Payment for software development services as per contract agreement."
-                    maxLength={250}
-                    autoComplete="off"
-                  />
-                </div>
-                <div className="flex items-center justify-between px-1">
-                  {errors.description ? (
-                    <span className="text-[12px] text-[#E93544]">{errors.description.message}</span>
-                  ) : (
-                    <span />
-                  )}
+                <FieldTextarea
+                  label="Description"
+                  rows={3}
+                  {...register("description", {
+                    required: "Description is required",
+                    maxLength: { value: 250, message: "Description cannot exceed 250 characters" },
+                  })}
+                  placeholder="Payment for software development services as per contract agreement."
+                  maxLength={250}
+                  autoComplete="off"
+                  error={!!errors.description}
+                  errorMessage={errors.description?.message}
+                />
+                <div className="flex items-center justify-end px-1">
                   <p className="text-xs text-text-secondary">{watch("description")?.length || 0}/250</p>
                 </div>
               </div>
@@ -280,7 +277,7 @@ const CreatePaymentLinkContainer = () => {
                   })
                 }
               />
-              <InputOutlined
+              <FieldInput
                 label="Amount"
                 placeholder="Enter amount"
                 error={!!errors.amount}
@@ -298,7 +295,7 @@ const CreatePaymentLinkContainer = () => {
         </div>
 
         {/* Live preview */}
-        <div className="flex w-[42%] shrink-0 flex-col gap-3 overflow-y-auto">
+        <div className="flex flex-1 min-w-0 flex-col gap-3 overflow-y-auto">
           <PaymentLinkPreview
             chrome
             recipient={myCompany?.companyName || "Your Company"}

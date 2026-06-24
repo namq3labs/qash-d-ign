@@ -8,6 +8,7 @@ import { MODAL_IDS, PermissionRequiredModalProps } from "@/types/modal";
 import { useModal } from "@/contexts/ModalManagerProvider";
 import { AssetWithMetadata } from "@/types/faucet";
 import { ContractTerm } from "./ContractTerm";
+import FieldInput from "@/components/Common/Input/FieldInput";
 import { useTitle } from "@/contexts/TitleProvider";
 import { NavArrowRight } from "iconoir-react";
 import { CompanyContactResponseDto } from "@qash/types/dto/employee";
@@ -41,7 +42,7 @@ interface CreatePayrollFormData {
 
 type Step = "create" | "review";
 
-const inputContainerClass = "bg-background rounded-xl p-3 border-b-2 border-primary-divider";
+const inputContainerClass = "bg-background rounded-xl p-3 border border-primary-divider";
 const labelClass = "text-text-secondary text-sm";
 
 interface EmployeeInfo {
@@ -344,26 +345,15 @@ const CreatePayroll = ({
             <img alt="" className="w-6 h-6" src="/arrow/chevron-down.svg" />
           </div>
 
-          <div className="flex flex-col gap-2">
-            <div className="bg-background rounded-xl border-b-2 border-primary-divider">
-              <div className="flex flex-col gap-1 px-4 py-2">
-                <label className="text-text-secondary text-sm font-medium">Wallet address</label>
-                <input
-                  {...register("walletAddress")}
-                  type="text"
-                  placeholder="Paste wallet address"
-                  className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-                  autoComplete="off"
-                />
-              </div>
-            </div>
-            {errors.walletAddress && (
-              <div className="flex items-center gap-1 pl-2">
-                <img src="/misc/red-circle-warning.svg" alt="warning" className="w-4 h-4" />
-                <span className="text-[#E93544] text-sm">{errors.walletAddress?.message}</span>
-              </div>
-            )}
-          </div>
+          <FieldInput
+            label="Wallet address"
+            {...register("walletAddress")}
+            type="text"
+            placeholder="Paste wallet address"
+            autoComplete="off"
+            error={!!errors.walletAddress}
+            errorMessage={errors.walletAddress?.message}
+          />
         </div>
 
         {/* Right Section - Fixed Amount and Other Options */}

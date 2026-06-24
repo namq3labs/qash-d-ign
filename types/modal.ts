@@ -579,6 +579,7 @@ export interface PayrollSimulationModalProps extends BaseModalProps {
 
 export interface DeleteCompanyModalProps extends BaseModalProps {
   onDelete: () => Promise<void>;
+  companyName?: string;
 }
 
 export interface CreateEntityModalProps extends BaseModalProps {}

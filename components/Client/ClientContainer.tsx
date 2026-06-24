@@ -25,7 +25,7 @@ const ClientContainer = () => {
   }, []);
 
   return (
-    <div className="flex w-full h-full flex-col">
+    <div className="relative flex w-full h-full flex-col">
       {/* Page header (same concept as the Dashboard / Employee / Invoice pages) */}
       <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
         <div className="flex flex-col gap-0.5">

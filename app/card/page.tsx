@@ -11,6 +11,7 @@ import { Table } from "@/components/Common/Table";
 import { ModalHeader } from "@/components/Common/ModalHeader";
 import BaseModal from "@/components/Modal/BaseModal";
 import InputFilled from "@/components/Common/Input/InputFilled";
+import FieldInput from "@/components/Common/Input/FieldInput";
 import toast from "react-hot-toast";
 
 // ─── Card Visual ────────────────────────────────────────────────────────────
@@ -200,18 +201,14 @@ function TopUpModal({
         </div>
 
         {/* Amount input */}
-        <div className="bg-app-background rounded-xl border-b-2 border-primary-divider">
-          <div className="flex flex-col gap-1 px-4 py-2">
-            <label className="text-text-secondary text-sm font-medium">Amount (USD)</label>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="0.00"
-              className="w-full bg-transparent border-none outline-none text-text-primary text-xl font-bold placeholder:text-text-secondary"
-            />
-          </div>
-        </div>
+        <FieldInput
+          label="Amount (USD)"
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="0.00"
+          className="text-xl font-bold"
+        />
 
         {/* Quick presets */}
         <div className="flex gap-2">

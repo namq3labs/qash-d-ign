@@ -42,6 +42,7 @@ import { ToggleSwitch } from "../Common/ToggleSwitch";
 import BaseModal from "./BaseModal";
 import { ModalHeader } from "../Common/ModalHeader";
 import { SecondaryButton } from "../Common/SecondaryButton";
+import FieldTextarea from "../Common/Input/FieldTextarea";
 import { ModalProp } from "@/contexts/ModalManagerProvider";
 
 export enum AmountInputTab {
@@ -709,7 +710,7 @@ export function EditTransactionModal({
       >
         {/* Token Selector */}
         <div
-          className={`${inputContainerClass} flex items-center justify-between cursor-pointer`}
+          className="bg-background rounded-xl p-3 border border-primary-divider flex items-center justify-between cursor-pointer"
           onClick={() =>
             openModal(MODAL_IDS.SELECT_TOKEN, {
               selectedToken,
@@ -801,18 +802,14 @@ export function EditTransactionModal({
         </div>
 
         {/* Message Input */}
-        <div className={`${inputContainerClass} h-[120px] flex flex-col gap-2`}>
-          <div className="flex flex-col gap-0.5 flex-1">
-            <p className={labelClass}>Message (optional)</p>
-            <textarea
-              {...register("message")}
-              className={`${inputFieldClass} h-full resize-none`}
-              autoComplete="off"
-              placeholder="Hey there! Just a quick note to confirm your cryptocurrency transfer."
-              maxLength={250}
-            />
-          </div>
-        </div>
+        <FieldTextarea
+          label="Message (optional)"
+          {...register("message")}
+          autoComplete="off"
+          placeholder="Hey there! Just a quick note to confirm your cryptocurrency transfer."
+          maxLength={250}
+          rows={3}
+        />
         <div className="flex justify-end px-3">
           <p className="text-xs text-text-secondary">{watch("message")?.length || 0}/250</p>
         </div>

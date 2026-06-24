@@ -408,8 +408,8 @@ export default function EarnPage() {
 
       return {
         Type: (
-          <div className="flex justify-center">
-            <Badge status={badgeStatus} text={badgeText} className="px-3" />
+          <div className="flex justify-start">
+            <Badge status={badgeStatus} text={badgeText} />
           </div>
         ),
         Date: new Date(tx.date).toLocaleDateString("en-US", {
@@ -435,7 +435,7 @@ export default function EarnPage() {
         ),
         Status: (
           <div className="flex justify-center">
-            <Badge status={BadgeStatus.SUCCESS} text="Completed" className="px-3" />
+            <Badge status={BadgeStatus.SUCCESS} text="Completed" />
           </div>
         ),
       };

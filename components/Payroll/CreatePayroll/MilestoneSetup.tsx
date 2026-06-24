@@ -4,6 +4,7 @@ import { MODAL_IDS } from "@/types/modal";
 import { useModal } from "@/contexts/ModalManagerProvider";
 import React, { useState } from "react";
 import { AssetWithMetadata } from "@/types/faucet";
+import FieldTextarea from "@/components/Common/Input/FieldTextarea";
 import { formatNumberWithCommas } from "@/services/utils/formatNumber";
 import { formatUnits } from "viem";
 
@@ -112,19 +113,15 @@ const MilestoneItem = ({
       </div>
       {/* Description Input */}
       <div className="flex flex-col gap-1 w-full">
-        <div className={`${inputContainerClass} min-h-[175px] flex flex-col gap-2`}>
-          <div className="flex flex-col gap-0.5 flex-1">
-            <p className="text-text-secondary text-sm">Description</p>
-            <textarea
-              value={milestone.description}
-              onChange={e => onUpdate("description", e.target.value)}
-              className={`w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary h-full resize-none`}
-              autoComplete="off"
-              placeholder="Write description about this milestone"
-              maxLength={250}
-            />
-          </div>
-        </div>
+        <FieldTextarea
+          label="Description"
+          value={milestone.description}
+          onChange={e => onUpdate("description", e.target.value)}
+          autoComplete="off"
+          placeholder="Write description about this milestone"
+          maxLength={250}
+          rows={6}
+        />
         <div className="flex justify-between px-3">
           <p className="text-xs text-text-secondary">(Optional)</p>
           <p className="text-xs text-text-secondary">{milestone.description.length}/250</p>

@@ -28,7 +28,11 @@ interface TableProps {
   rowClassName?: string | ((rowData: Record<string, CellContent>, index: number) => string);
   actionColumn?: boolean;
   actionRenderer?: (rowData: Record<string, CellContent>, index: number) => React.ReactNode;
+  /** Width of the auto-generated Actions column. Defaults to "10%". Useful with tableLayout="fixed". */
+  actionColumnWidth?: string;
   columnWidths?: Record<string, string>;
+  /** "auto" (default) sizes columns to content; "fixed" keeps column widths constant regardless of content. */
+  tableLayout?: "auto" | "fixed";
   draggable?: boolean;
   onDragEnd?: (newData: Record<string, CellContent>[]) => void;
   selectedRows?: number[];
@@ -163,7 +167,7 @@ const SortableTableRow = ({
       {cells.map((cell, index) => (
         <td
           key={index}
-          className={`${tdPadding} text-sm text-table-row-text ${index <= 1 ? "text-left" : "text-center"}`}
+          className={`${tdPadding} whitespace-nowrap text-sm text-table-row-text ${index <= 1 ? "text-left" : "text-center"}`}
           style={{
             width: columnWidths[index.toString()],
             borderColor: "var(--color-table-row-border)",
@@ -180,16 +184,18 @@ const TableHeader = ({
   columns,
   headerClassName = "",
   actionColumn = false,
+  actionColumnWidth = "10%",
   columnWidths = {},
   draggable = false,
 }: {
   columns: (string | React.ReactNode)[];
   headerClassName?: string;
   actionColumn?: boolean;
+  actionColumnWidth?: string;
   columnWidths?: Record<string, string>;
   draggable?: boolean;
 }) => {
-  const defaultHeaderClass = `px-3 py-2 text-sm font-medium`;
+  const defaultHeaderClass = `px-3 py-2 text-sm font-medium whitespace-nowrap`;
   const headerStyle = {
     backgroundColor: "var(--color-table-header-background)",
     color: "var(--color-table-header-text)",
@@ -241,7 +247,7 @@ const TableHeader = ({
           <th
             className={`${defaultHeaderClass} rounded-tr-lg text-center ${headerClassName}`}
             style={{
-              width: "10%",
+              width: actionColumnWidth,
               backgroundColor: "var(--color-table-header-background)",
               color: "var(--color-table-header-text)",
               borderColor: "var(--color-table-header-border)",
@@ -281,7 +287,7 @@ const TableRow = ({
       {cells.map((cell, index) => (
         <td
           key={index}
-          className={`${tdPadding} text-sm text-table-row-text ${index <= 1 ? "text-left" : "text-center"}`}
+          className={`${tdPadding} whitespace-nowrap text-sm text-table-row-text ${index <= 1 ? "text-left" : "text-center"}`}
           style={{
             width: columnWidths[index.toString()],
             borderColor: "var(--color-table-row-border)",
@@ -332,7 +338,9 @@ export function Table({
   rowClassName = "",
   actionColumn = false,
   actionRenderer,
+  actionColumnWidth = "10%",
   columnWidths = {},
+  tableLayout = "auto",
   draggable = false,
   onDragEnd,
   selectedRows = [],
@@ -391,11 +399,12 @@ export function Table({
       >
         <div className={getTableClass(headerClassName, className, showPagination)} style={tableStyle}>
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <table className="w-full table-auto">
+            <table className={`w-full ${tableLayout === "fixed" ? "table-fixed" : "table-auto"}`}>
               <TableHeader
                 columns={headers}
                 headerClassName={headerClassName}
                 actionColumn={actionColumn}
+                actionColumnWidth={actionColumnWidth}
                 columnWidths={columnWidths}
                 draggable={draggable}
               />
@@ -468,11 +477,12 @@ export function Table({
       style={{ backgroundColor: paginatedData.length > 0 ? "" : "var(--color-background)" }}
     >
       <div className={getTableClass(headerClassName, className, showPagination)} style={tableStyle}>
-        <table className="w-full table-auto relative">
+        <table className={`w-full relative ${tableLayout === "fixed" ? "table-fixed" : "table-auto"}`}>
           <TableHeader
             columns={headers}
             headerClassName={headerClassName}
             actionColumn={actionColumn}
+            actionColumnWidth={actionColumnWidth}
             columnWidths={columnWidths}
             draggable={draggable}
           />

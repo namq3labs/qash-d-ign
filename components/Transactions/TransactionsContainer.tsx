@@ -766,7 +766,9 @@ export function TransactionsContainer() {
                 className="w-full"
                 rowClassName="py-4"
                 headerClassName="py-3"
-                columnWidths={{ "0": "170px", "2": "150px", "3": "130px", "4": "180px" }}
+                tableLayout="fixed"
+                columnWidths={{ "0": "155px", "2": "150px", "3": "130px", "4": "180px" }}
+                actionColumnWidth="210px"
                 showFooter={false}
                 showPagination={true}
                 actionColumn={true}

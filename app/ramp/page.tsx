@@ -121,7 +121,7 @@ export default function CashoutPage() {
       {/* Main content */}
       <div className="flex flex-row gap-4 w-full px-6 pb-5 flex-1 min-h-0">
         {/* Cashout form */}
-        <div className="w-[420px] flex flex-col gap-4">
+        <div className="w-[380px] flex flex-col gap-4">
           <div className="bg-background rounded-2xl border border-primary-divider p-6 flex flex-col gap-5">
             <div className="flex flex-col gap-1">
               <span className="text-lg font-semibold text-text-primary">Withdraw to Bank</span>
@@ -132,15 +132,17 @@ export default function CashoutPage() {
             <div className="flex flex-col gap-2">
               <span className="text-sm font-medium text-text-secondary">Amount (USDT)</span>
               <div className="flex items-center gap-3 p-4 rounded-xl border border-primary-divider bg-app-background">
-                <img src="/token/usdt.svg" alt="USDT" className="w-6 h-6" />
                 <input
                   type="number"
                   value={amount}
                   onChange={e => setAmount(e.target.value)}
                   placeholder="0.00"
-                  className="flex-1 text-2xl font-semibold text-text-primary bg-transparent outline-none placeholder:text-text-secondary/40"
+                  className="min-w-0 flex-1 text-2xl font-semibold text-text-primary bg-transparent outline-none placeholder:text-text-secondary/40"
                 />
-                <span className="text-sm text-text-secondary font-medium">USDT</span>
+                <div className="flex shrink-0 items-center gap-1.5">
+                  <img src="/token/usdt.svg" alt="USDT" className="w-5 h-5" />
+                  <span className="text-sm font-medium text-text-secondary">USDT</span>
+                </div>
               </div>
             </div>
 
@@ -168,7 +170,7 @@ export default function CashoutPage() {
                       {FIAT_OPTIONS.map(f => (
                         <button
                           key={f.code}
-                          className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-app-background transition-colors cursor-pointer ${f.code === fiat ? "bg-app-background" : ""}`}
+                          className={`w-full flex items-center gap-3 px-3 py-3 hover:bg-app-background transition-colors cursor-pointer ${f.code === fiat ? "bg-app-background" : ""}`}
                           onClick={() => { setFiat(f.code); setShowFiatDropdown(false); }}
                         >
                           <img src={f.flag} alt={f.code} className="w-6 h-4 rounded-sm object-cover" onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
@@ -236,16 +238,16 @@ export default function CashoutPage() {
             <span className="text-lg font-semibold text-text-primary">Withdrawal History</span>
             <span className="text-sm text-text-secondary">{rampHistory.length} transactions</span>
           </div>
-          <div className="overflow-auto">
+          <div className="overflow-auto thin-scrollbar">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-primary-divider">
-                  <th className="text-left text-xs font-medium text-text-secondary uppercase px-5 py-3">Date</th>
-                  <th className="text-left text-xs font-medium text-text-secondary uppercase px-5 py-3">Type</th>
-                  <th className="text-right text-xs font-medium text-text-secondary uppercase px-5 py-3">Crypto</th>
-                  <th className="text-right text-xs font-medium text-text-secondary uppercase px-5 py-3">Fiat</th>
-                  <th className="text-left text-xs font-medium text-text-secondary uppercase px-5 py-3">Bank</th>
-                  <th className="text-center text-xs font-medium text-text-secondary uppercase px-5 py-3">Status</th>
+                  <th className="text-left text-xs font-medium text-text-secondary uppercase whitespace-nowrap px-3 py-3">Date</th>
+                  <th className="text-left text-xs font-medium text-text-secondary uppercase whitespace-nowrap px-3 py-3">Type</th>
+                  <th className="text-right text-xs font-medium text-text-secondary uppercase whitespace-nowrap px-3 py-3">Crypto</th>
+                  <th className="text-right text-xs font-medium text-text-secondary uppercase whitespace-nowrap px-3 py-3">Fiat</th>
+                  <th className="text-left text-xs font-medium text-text-secondary uppercase whitespace-nowrap px-3 py-3">Bank</th>
+                  <th className="text-center text-xs font-medium text-text-secondary uppercase whitespace-nowrap px-3 py-3">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -261,21 +263,21 @@ export default function CashoutPage() {
                     const isWithdraw = entry.type === "OFF_RAMP";
                     return (
                       <tr key={entry.id} className="border-b border-primary-divider last:border-b-0 hover:bg-app-background transition-colors">
-                        <td className="px-5 py-3.5 text-sm text-text-primary">{fmtDate(entry.completedAt)}</td>
-                        <td className="px-5 py-3.5">
+                        <td className="px-3 py-3.5 whitespace-nowrap text-sm text-text-primary">{fmtDate(entry.completedAt)}</td>
+                        <td className="px-3 py-3.5 whitespace-nowrap">
                           <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${isWithdraw ? "bg-red-50 text-red-600" : "bg-blue-50 text-blue-600"}`}>
                             {isWithdraw ? "Withdraw" : "Deposit"}
                           </span>
                         </td>
-                        <td className="px-5 py-3.5 text-sm text-right font-medium text-text-primary">
+                        <td className="px-3 py-3.5 whitespace-nowrap text-sm text-right font-medium text-text-primary">
                           {isWithdraw ? "-" : "+"}{fmt(isWithdraw ? entry.fromAmount : entry.toAmount)} {isWithdraw ? entry.fromCurrency : entry.toCurrency}
                         </td>
-                        <td className="px-5 py-3.5 text-sm text-right font-medium text-text-primary">
+                        <td className="px-3 py-3.5 whitespace-nowrap text-sm text-right font-medium text-text-primary">
                           {isWithdraw ? "+" : "-"}{fmt(isWithdraw ? entry.toAmount : entry.fromAmount)} {isWithdraw ? entry.toCurrency : entry.fromCurrency}
                         </td>
-                        <td className="px-5 py-3.5 text-sm text-text-secondary">{entry.bankAccount}</td>
-                        <td className="px-5 py-3.5 text-center">
-                          <Badge text={entry.status} status={BadgeStatus.SUCCESS} className="px-3" />
+                        <td className="px-3 py-3.5 whitespace-nowrap text-sm text-text-secondary">{entry.bankAccount}</td>
+                        <td className="px-3 py-3.5 whitespace-nowrap text-center">
+                          <Badge text={entry.status.charAt(0) + entry.status.slice(1).toLowerCase()} status={BadgeStatus.SUCCESS} />
                         </td>
                       </tr>
                     );

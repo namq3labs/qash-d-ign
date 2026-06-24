@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import InputOutlined from "@/components/Common/Input/InputOutlined";
+import FieldInput from "@/components/Common/Input/FieldInput";
+import FieldTextarea from "@/components/Common/Input/FieldTextarea";
 import { PrimaryButton } from "@/components/Common/PrimaryButton";
 import { SecondaryButton } from "@/components/Common/SecondaryButton";
 import { DueDateDropdown } from "@/components/Common/Dropdown/DueDateDropdown";
@@ -514,15 +516,15 @@ const CreateClientInvoice = () => {
         <div className="flex flex-col gap-3">
           <SectionTitle subtitle="Who is sending this invoice.">Your Information</SectionTitle>
           <div className="flex gap-3">
-            <InputOutlined label="Name" placeholder="Your name" {...register("name")} containerClassName="flex-1" />
-            <InputOutlined label="Email" placeholder="your@email.com" type="email" {...register("email")} containerClassName="flex-1" />
+            <FieldInput label="Name" placeholder="Your name" {...register("name")} containerClassName="flex-1" />
+            <FieldInput label="Email" placeholder="your@email.com" type="email" {...register("email")} containerClassName="flex-1" />
           </div>
-          <InputOutlined label="Company name" placeholder="Company name" {...register("companyName")} />
+          <FieldInput label="Company name" placeholder="Company name" {...register("companyName")} />
           <button onClick={() => setExpandFromDetails(!expandFromDetails)} className="flex gap-1 items-center text-text-secondary cursor-pointer w-fit text-sm">
             <span>Additional details</span>
             <img src="/arrow/chevron-down.svg" alt="" className={`w-4 h-4 transition-transform ${expandFromDetails ? "rotate-180" : ""}`} />
           </button>
-          {expandFromDetails && <InputOutlined label="Address" placeholder="Enter address" {...register("address")} />}
+          {expandFromDetails && <FieldInput label="Address" placeholder="Enter address" {...register("address")} />}
         </div>
 
         <SectionDivider />
@@ -531,8 +533,8 @@ const CreateClientInvoice = () => {
         <div className="flex flex-col gap-3">
           <SectionTitle subtitle="Who is receiving this invoice.">Bill To</SectionTitle>
           <div className="flex gap-3">
-            <InputOutlined label="Name" placeholder="Client name" {...register("billToContactName")} containerClassName="flex-1" />
-            <InputOutlined label="Email" placeholder="client@email.com" type="email" {...register("billToEmail")} containerClassName="flex-1" />
+            <FieldInput label="Name" placeholder="Client name" {...register("billToContactName")} containerClassName="flex-1" />
+            <FieldInput label="Email" placeholder="client@email.com" type="email" {...register("billToEmail")} containerClassName="flex-1" />
           </div>
           <InputOutlined
             label="Company name"
@@ -547,7 +549,7 @@ const CreateClientInvoice = () => {
             <span>Additional details</span>
             <img src="/arrow/chevron-down.svg" alt="" className={`w-4 h-4 transition-transform ${expandBillToDetails ? "rotate-180" : ""}`} />
           </button>
-          {expandBillToDetails && <InputOutlined label="Address" placeholder="Enter address" {...register("billToAddress")} />}
+          {expandBillToDetails && <FieldInput label="Address" placeholder="Enter address" {...register("billToAddress")} />}
         </div>
 
         <SectionDivider />
@@ -557,7 +559,7 @@ const CreateClientInvoice = () => {
           <SectionTitle>Invoice Details</SectionTitle>
           <div className="flex gap-3">
             <div className="flex-1">
-              <InputOutlined label="Invoice number" placeholder="Auto-generated" disabled {...register("invoiceNumber")} />
+              <FieldInput label="Invoice number" placeholder="Auto-generated" disabled {...register("invoiceNumber")} />
             </div>
             <div className="flex-1">
               <DueDateDropdown selectedDate={formData.dueDate} onDateSelect={date => setValue("dueDate", date)} />
@@ -709,8 +711,7 @@ const CreateClientInvoice = () => {
         {/* === Section 6: Note === */}
         <div className="flex flex-col gap-2">
           <SectionTitle>Note</SectionTitle>
-          <textarea placeholder="Add a note (optional)" {...register("note")}
-            className="w-full h-20 border border-primary-divider rounded-lg p-3 placeholder-text-secondary focus:outline-none focus:border-primary-blue text-sm" />
+          <FieldTextarea placeholder="Add a note (optional)" {...register("note")} rows={3} />
         </div>
 
         {/* === Section 7: Email CC (tag input: type + Enter -> pill, keep typing) === */}

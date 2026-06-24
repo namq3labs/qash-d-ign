@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 import { getAppUrl } from "@/services/utils/getAppUrl";
 import { PaymentLinkActionsTooltip } from "../../PaymentLink/PaymentLinkActionsTooltip";
 import { Tooltip } from "react-tooltip";
-import { FloatingFooter } from "../../Common/FloatingFooter";
+import { FloatingAction } from "../../Bill/FloatingAction";
 
 interface PaymentLinkProps {
   checkedRows: number[];
@@ -273,20 +273,18 @@ export const PaymentLink: React.FC<PaymentLinkProps> = ({ checkedRows, setChecke
       />
 
       {checkedRows.length > 0 && (
-        <FloatingFooter
+        <FloatingAction
           selectedCount={checkedRows.length}
+          allSelected={isAllChecked}
+          onDeselectAll={() => setCheckedRows([])}
+          totalLabel={`Total (${checkedRows.length} ${checkedRows.length === 1 ? "link" : "links"})`}
           actionButtons={
-            <>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handleBulkDelete}
-                  className="bg-background rounded-full px-5 py-2 flex items-center gap-2 hover:bg-red-50 transition-colors cursor-pointer"
-                >
-                  <img src="/misc/trashcan-icon.svg" alt="remove" className="w-5 h-5" />
-                  <span className="text-[#E93544]">Remove {checkedRows.length} links</span>
-                </button>
-              </div>
-            </>
+            <SecondaryButton
+              text={`Remove ${checkedRows.length} ${checkedRows.length === 1 ? "link" : "links"}`}
+              variant="red"
+              buttonClassName="w-fit whitespace-nowrap rounded-xl"
+              onClick={handleBulkDelete}
+            />
           }
         />
       )}

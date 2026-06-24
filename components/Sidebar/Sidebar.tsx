@@ -9,13 +9,16 @@ import { AccountTooltip } from "../Common/ToolTip/AccountTooltip";
 import CompanyAvatar from "../Common/CompanyAvatar";
 import TeamSidebar from "./TeamSidebar";
 import EntitySwitcher from "./EntitySwitcher";
+import { SidebarCollapse, SidebarExpand } from "iconoir-react";
 
-export const MOVE_CRYPTO_SIDEBAR_OFFSET = 290;
+export const MOVE_CRYPTO_SIDEBAR_OFFSET = 238;
 
 interface NavProps {
   onActionItemClick?: (itemIndex: number) => void;
   onTeamItemClick?: (index: number) => void;
   onConnectWallet?: () => void;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 export enum SidebarLink {
@@ -185,7 +188,7 @@ export const actionItems = [
   },
 ];
 
-export const Sidebar: React.FC<NavProps> = ({ onActionItemClick }) => {
+export const Sidebar: React.FC<NavProps> = ({ onActionItemClick, collapsed = false, onToggleCollapse }) => {
   const { data, entities, activeEntityId, switchEntity } = useDemo();
   const [action, setActions] = useState(actionItems);
   const router = useRouter();
@@ -248,23 +251,31 @@ export const Sidebar: React.FC<NavProps> = ({ onActionItemClick }) => {
       >
         <div className="flex flex-col justify-between h-full">
           <div className="w-full">
-            {/* Logo */}
+            {/* Logo + collapse toggle */}
             <header
-              className="flex max-w-full leading-6 justify-items-start gap-2 cursor-pointer items-center px-3 pb-3 border-b border-primary-divider"
-              onClick={() => router.push("/")}
+              className={`flex items-center gap-2 px-3 pb-3 border-b border-primary-divider ${collapsed ? "justify-center" : "justify-between"}`}
             >
-              <div className="flex items-center justify-center">
-                <img src="/logo/qash-icon.svg" alt="Qash Logo" />
-                <img
-                  src="/logo/ash-text-icon.svg"
-                  alt="Qash Logo"
-                  className="w-12"
-                  style={{ transition: "width 200ms ease" }}
-                />
-              </div>
-              <div className="flex items-center justify-start px-3 bg-[#E7E7E8] rounded-full">
-                <p className="text-[13px] text-badge-neutral-text">Beta</p>
-              </div>
+              {!collapsed && (
+                <div
+                  className="flex min-w-0 cursor-pointer items-center gap-1.5"
+                  onClick={() => router.push("/")}
+                >
+                  <img src="/logo/qash-icon.svg" alt="Qash Logo" className="h-7 w-auto shrink-0" />
+                  <img src="/logo/ash-text-icon.svg" alt="Qash Logo" className="w-9 shrink-0" />
+                  <div className="flex shrink-0 items-center justify-start rounded-full bg-[#E7E7E8] px-2 py-0.5">
+                    <p className="text-[11px] text-badge-neutral-text">Beta</p>
+                  </div>
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={onToggleCollapse}
+                title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                className={`flex shrink-0 cursor-pointer items-center justify-center rounded-lg text-text-secondary transition-colors hover:bg-background hover:text-text-primary ${collapsed ? "h-10 w-10" : "h-8 w-8"}`}
+              >
+                {collapsed ? <SidebarExpand width={20} height={20} /> : <SidebarCollapse width={20} height={20} />}
+              </button>
             </header>
 
             {/* Entity Selector */}
@@ -272,18 +283,19 @@ export const Sidebar: React.FC<NavProps> = ({ onActionItemClick }) => {
               <button
                 ref={entityTriggerRef}
                 type="button"
-                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl cursor-pointer transition-colors hover:bg-background"
+                className={`w-full flex items-center rounded-xl cursor-pointer transition-colors hover:bg-background ${collapsed ? "justify-center px-1 py-2" : "gap-2.5 px-3 py-2.5"}`}
                 onClick={handleToggleEntitySwitcher}
+                title={collapsed ? (data?.company?.companyName ?? "") : undefined}
               >
                 <CompanyAvatar logo={data?.company?.logo ?? null} companyName={data?.company?.companyName ?? ""} size="w-8" />
-                <span className="flex-1 text-left text-sm font-medium text-text-primary truncate">
-                  {data?.company?.companyName ?? "Loading..."}
-                </span>
-                <img
-                  src="/arrow/chevron-up-down.svg"
-                  alt="switch entity"
-                  className="w-4"
-                />
+                {!collapsed && (
+                  <>
+                    <span className="flex-1 text-left text-sm font-medium text-text-primary truncate">
+                      {data?.company?.companyName ?? "Loading..."}
+                    </span>
+                    <img src="/arrow/chevron-up-down.svg" alt="switch entity" className="w-4" />
+                  </>
+                )}
               </button>
 
               <EntitySwitcher
@@ -297,7 +309,7 @@ export const Sidebar: React.FC<NavProps> = ({ onActionItemClick }) => {
             </div>
 
             {/* Entity Info Card */}
-            <div className="mx-2 mb-3 mt-1 rounded-xl bg-background shadow-sm border border-primary-divider cursor-pointer">
+            <div className={`mx-2 mb-3 mt-1 rounded-xl bg-background shadow-sm border border-primary-divider cursor-pointer ${collapsed ? "hidden" : ""}`}>
               <div className="flex items-center justify-between px-3 py-2.5 border-b border-primary-divider">
                 <span className="text-xs text-text-secondary">Total Balance</span>
                 <span className="text-sm num">
@@ -318,22 +330,30 @@ export const Sidebar: React.FC<NavProps> = ({ onActionItemClick }) => {
             </div>
 
             {/* Navigation */}
-            <NavSections sections={action} onItemClick={handleActionItemClick} onSubmenuClick={handleSubmenuClick} />
+            <NavSections
+              sections={action}
+              collapsed={collapsed}
+              onExpandRequest={onToggleCollapse}
+              onItemClick={handleActionItemClick}
+              onSubmenuClick={handleSubmenuClick}
+            />
           </div>
 
           {/* User section */}
-          <div className="flex flex-col justify-center p-5 border-t border-primary-divider mb-5">
-            <div className="flex items-center justify-between gap-5">
-              <div className="flex flex-col gap-1">
-                <span className="leading-none">
-                  {data?.user?.teamMembership?.firstName} {data?.user?.teamMembership?.lastName}
-                </span>
-                <span className="text-text-secondary leading-none">{data?.user?.email}</span>
-              </div>
+          <div className={`flex flex-col justify-center border-t border-primary-divider mb-5 ${collapsed ? "items-center px-2 py-4" : "p-5"}`}>
+            <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between gap-5"}`}>
+              {!collapsed && (
+                <div className="flex min-w-0 flex-col gap-1">
+                  <span className="leading-none truncate">
+                    {data?.user?.teamMembership?.firstName} {data?.user?.teamMembership?.lastName}
+                  </span>
+                  <span className="text-text-secondary leading-none truncate">{data?.user?.email}</span>
+                </div>
+              )}
               <img
                 src="/misc/three-dot-icon.svg"
                 alt="menu"
-                className="w-5 cursor-pointer"
+                className="w-5 shrink-0 cursor-pointer"
                 data-tooltip-id="account-tooltip"
                 data-tooltip-content="Account"
               />

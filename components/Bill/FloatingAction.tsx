@@ -7,11 +7,14 @@ export const FloatingAction = ({
   actionButtons,
   onDeselectAll,
   allSelected = false,
+  totalLabel,
 }: {
   selectedCount: number;
   actionButtons: React.ReactNode;
   onDeselectAll?: () => void;
   allSelected?: boolean;
+  /** Overrides the middle "Total (N transactions)" text. Defaults to transactions wording. */
+  totalLabel?: React.ReactNode;
 }) => {
   if (selectedCount === 0) return null;
 
@@ -40,7 +43,7 @@ export const FloatingAction = ({
         </button>
 
         {/* Total count */}
-        <div className="text-sm font-medium text-white">Total ({selectedCount} transactions)</div>
+        <div className="text-sm font-medium text-white">{totalLabel ?? `Total (${selectedCount} transactions)`}</div>
 
         {/* Action buttons */}
         <div className="flex gap-2 items-center">{actionButtons}</div>

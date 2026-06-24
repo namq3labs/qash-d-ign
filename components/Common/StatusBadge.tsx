@@ -6,6 +6,14 @@ interface StatusBadgeProps {
   text: string;
 }
 
+// SCREAMING-CAPS status enum values → Sentence case; leave already-cased text alone.
+const normalizeLabel = (value: string): string => {
+  if (/[a-z]/.test(value)) return value;
+  if (!/[A-Za-z]/.test(value)) return value;
+  const spaced = value.replace(/_/g, " ").toLowerCase();
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+};
+
 export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, text = status }) => {
   const getStatusStyles = () => {
     switch (status) {
@@ -24,8 +32,8 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, text = status 
     <div
       className={`flex gap-0.5 justify-center items-center self-stretch px-2 py-2 rounded-2xl w-fit ${getStatusStyles()}`}
     >
-      <span className={`text-xs font-medium tracking-tight leading-4 max-sm:text-xs ${getStatusStyles()} capitalize`}>
-        {text}
+      <span className={`text-xs font-medium tracking-tight leading-4 max-sm:text-xs ${getStatusStyles()}`}>
+        {normalizeLabel(text)}
       </span>
     </div>
   );

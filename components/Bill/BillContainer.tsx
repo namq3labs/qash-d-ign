@@ -218,7 +218,7 @@ const BillContainer = () => {
       "Due Date": dueDate,
       Status: (
         <div className="w-full flex justify-center items-center">
-          <Badge text={b.status} status={badgeStatus} className="px-5" />
+          <Badge text={b.status} status={badgeStatus} />
         </div>
       ),
     };

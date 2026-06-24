@@ -7,6 +7,7 @@ import { SecondaryButton } from "../../Common/SecondaryButton";
 import { useModal } from "@/contexts/ModalManagerProvider";
 import { MODAL_IDS } from "@/types/modal";
 import { AssetWithMetadata } from "@/types/faucet";
+import FieldInput from "@/components/Common/Input/FieldInput";
 
 interface FixedAmountProps {
   isFixedAmountEnabled: boolean;
@@ -57,7 +58,6 @@ export const FixedAmount = ({
   handleMonthlyBonusChange,
   numberOfMonths,
   inputContainerClass,
-  labelClass,
 }: FixedAmountProps) => {
   const { openModal } = useModal();
 
@@ -188,33 +188,22 @@ export const FixedAmount = ({
           </div>
 
           {/* Amount Input */}
-          <div className="flex flex-col gap-2">
-            <div className="bg-background rounded-xl border-b-2 border-primary-divider">
-              <div className="flex flex-col gap-1 px-4 py-2">
-                <label className="text-text-secondary text-sm font-medium">Amount per transaction (Monthly)</label>
-                <input
-                  {...register("monthlyAmount", {
-                    required: "Amount is required",
-                    pattern: {
-                      value: /^\d+(\.\d+)?$/,
-                      message: "Amount must be a valid positive number",
-                    },
-                  })}
-                  type="text"
-                  placeholder="Enter amount"
-                  className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-                  autoFocus={true}
-                  autoComplete="off"
-                />
-              </div>
-            </div>
-            {errors.monthlyAmount && (
-              <div className="flex items-center gap-1 pl-2">
-                <img src="/misc/red-circle-warning.svg" alt="warning" className="w-4 h-4" />
-                <span className="text-[#E93544] text-sm">{errors.monthlyAmount?.message}</span>
-              </div>
-            )}
-          </div>
+          <FieldInput
+            label="Amount per transaction (Monthly)"
+            {...register("monthlyAmount", {
+              required: "Amount is required",
+              pattern: {
+                value: /^\d+(\.\d+)?$/,
+                message: "Amount must be a valid positive number",
+              },
+            })}
+            type="text"
+            placeholder="Enter amount"
+            autoFocus={true}
+            autoComplete="off"
+            error={!!errors.monthlyAmount}
+            errorMessage={errors.monthlyAmount?.message}
+          />
 
           {/* Pay Day Calendar */}
           <div className="flex flex-col gap-2">
@@ -300,30 +289,26 @@ export const FixedAmount = ({
                   const monthKey = `month_${monthNumber}`;
                   const monthValue = monthlyBonusAmounts[monthKey] || "";
 
+                  const monthLabel = `${
+                    monthNumber === 1
+                      ? "1st"
+                      : monthNumber === 2
+                        ? "2nd"
+                        : monthNumber === 3
+                          ? "3rd"
+                          : `${monthNumber}th`
+                  } month`;
+
                   return (
-                    <div key={monthKey} className={`${inputContainerClass} flex items-center justify-between`}>
-                      <div className="flex flex-col gap-0.5 flex-1">
-                        <p className={labelClass}>
-                          {monthNumber === 1
-                            ? "1st"
-                            : monthNumber === 2
-                              ? "2nd"
-                              : monthNumber === 3
-                                ? "3rd"
-                                : `${monthNumber}th`}{" "}
-                          month
-                        </p>
-                        <input
-                          type="text"
-                          autoComplete="off"
-                          placeholder="0.00"
-                          value={monthValue}
-                          onChange={e => handleMonthlyBonusChange(monthKey, e.target.value)}
-                          className="outline-none bg-transparent text-text-primary placeholder:text-text-secondary"
-                        />
-                      </div>
-                      <span className="text-text-primary">{selectedToken.metadata.symbol}</span>
-                    </div>
+                    <FieldInput
+                      key={monthKey}
+                      label={monthLabel}
+                      type="text"
+                      autoComplete="off"
+                      placeholder="0.00"
+                      value={monthValue}
+                      onChange={e => handleMonthlyBonusChange(monthKey, e.target.value)}
+                    />
                   );
                 })}
                 {numberOfMonths > 3 && (

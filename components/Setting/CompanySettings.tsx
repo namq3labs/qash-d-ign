@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/services/auth/context";
-import InputOutlined from "../Common/Input/InputOutlined";
+import FieldInput from "@/components/Common/Input/FieldInput";
 import { CompanyTypeDropdown } from "../Common/Dropdown/CompanyTypeDropdown";
 import { CountryDropdown } from "../Common/Dropdown/CountryDropdown";
 import { CompanyInfoDto as CompanyInfo } from "@qash/types/dto/company";
@@ -47,6 +47,7 @@ export default function CompanySettings() {
 
   const handleDeleteCompany = () => {
     openModal(MODAL_IDS.DELETE_COMPANY, {
+      companyName: myCompany?.companyName || "",
       onDelete: async () => {
         try {
           await deleteCompanyMutation.mutateAsync();
@@ -228,7 +229,7 @@ export default function CompanySettings() {
           </div>
 
           {/* Company Name */}
-          <InputOutlined
+          <FieldInput
             label="Company name"
             placeholder="Enter your company name"
             readOnly={!isAdmin}
@@ -258,15 +259,15 @@ export default function CompanySettings() {
           {/* State and City Row */}
           <div className="flex gap-2 w-full">
             <div className="flex-1">
-              <InputOutlined label="State" placeholder="Select state" readOnly={!isAdmin} {...register("state")} />
+              <FieldInput label="State" placeholder="Select state" readOnly={!isAdmin} {...register("state")} />
             </div>
             <div className="flex-1">
-              <InputOutlined label="City" placeholder="Select city" readOnly={!isAdmin} {...register("city")} />
+              <FieldInput label="City" placeholder="Select city" readOnly={!isAdmin} {...register("city")} />
             </div>
           </div>
 
           {/* Address 1 */}
-          <InputOutlined
+          <FieldInput
             label="Address 1"
             placeholder="Enter address 1"
             readOnly={!isAdmin}
@@ -274,7 +275,7 @@ export default function CompanySettings() {
           />
 
           {/* Address 2 */}
-          <InputOutlined
+          <FieldInput
             label="Address 2"
             placeholder="Enter address 2"
             readOnly={!isAdmin}
@@ -285,13 +286,13 @@ export default function CompanySettings() {
         {/* Second Section */}
         <div className="flex flex-col gap-3 pt-6">
           {/* Tax ID */}
-          <InputOutlined label="Tax ID" placeholder="Enter tax ID" readOnly={!isAdmin} {...register("taxId")} />
+          <FieldInput label="Tax ID" placeholder="Enter tax ID" readOnly={!isAdmin} {...register("taxId")} />
 
           {/* Postal Code */}
-          <InputOutlined label="Postal code" placeholder="e.g. 70000" readOnly={!isAdmin} {...register("postalCode")} />
+          <FieldInput label="Postal code" placeholder="e.g. 70000" readOnly={!isAdmin} {...register("postalCode")} />
 
           {/* Company Registration Number */}
-          <InputOutlined
+          <FieldInput
             label="Company registration number"
             placeholder="e.g. 8683949"
             readOnly={!isAdmin}

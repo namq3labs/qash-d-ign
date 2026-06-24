@@ -28,14 +28,25 @@ interface BadgeProps {
   showDot?: boolean;
 }
 
-export const Badge: React.FC<BadgeProps> = ({ status, text = status, className, showDot = true }) => {
+// Normalize SCREAMING-CAPS status strings (e.g. "PAID", "ACTIVE", "IN_PROGRESS")
+// to Sentence case ("Paid", "Active", "In progress"). Already mixed-case labels
+// ("Completed", "Coming soon", "12.34%") are left untouched, so this is safe to
+// apply to every badge regardless of where its text comes from.
+const normalizeLabel = (text: string): string => {
+  if (/[a-z]/.test(text)) return text; // already has lowercase → leave as-is
+  if (!/[A-Za-z]/.test(text)) return text; // no letters (e.g. "12.34%") → leave as-is
+  const spaced = text.replace(/_/g, " ").toLowerCase();
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+};
+
+export const Badge: React.FC<BadgeProps> = ({ status, text = status, className = "", showDot = true }) => {
   const s = STYLES[status] || STYLES[BadgeStatus.NEUTRAL];
   return (
     <span
       className={`inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${s.pill} ${className}`}
     >
       {showDot && <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${s.dot}`} />}
-      <span className="whitespace-nowrap leading-none">{text}</span>
+      <span className="whitespace-nowrap leading-none">{normalizeLabel(text)}</span>
     </span>
   );
 };

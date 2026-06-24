@@ -5,6 +5,8 @@ import { TabContainer } from "../Common/TabContainer";
 import { useTitle } from "@/contexts/TitleProvider";
 import { NavArrowRight } from "iconoir-react";
 import { Table } from "../Common/Table";
+import { FloatingAction } from "../Bill/FloatingAction";
+import { SecondaryButton } from "../Common/SecondaryButton";
 import { CustomCheckbox } from "../Common/CustomCheckbox";
 import { useRouter } from "next/navigation";
 import {
@@ -324,7 +326,9 @@ const PaymentLinkContainer = () => {
           setActiveTab={(tab: string) => setActiveTab(tabs.find(t => t.id === tab) || tabs[0])}
           textSize="sm"
         />
-        <span className="text-sm text-text-secondary">{displayedLinks.length} links</span>
+        <span className="text-sm text-text-secondary">
+          {displayedLinks.length} {displayedLinks.length === 1 ? "link" : "links"}
+        </span>
       </div>
 
       {/* Payment links table */}
@@ -366,13 +370,21 @@ const PaymentLinkContainer = () => {
       </div>
 
       {selectedRows.length > 0 && (
-        <div
-          className="absolute bottom-6 right-6 flex flex-row items-center justify-between bg-background rounded-lg p-3 border border-primary-divider gap-2 cursor-pointer hover:bg-red-50 transition-colors"
-          onClick={handleBulkDelete}
-        >
-          <img src="/misc/trashcan-icon.svg" alt="trash" className="w-5 h-5" />
-          <span className="text-[#E93544]">Remove {selectedRows.length} links</span>
-        </div>
+        <FloatingAction
+          selectedCount={selectedRows.length}
+          allSelected={isAllChecked}
+          onDeselectAll={() => setSelectedRows([])}
+          totalLabel={`Total (${selectedRows.length} ${selectedRows.length === 1 ? "link" : "links"})`}
+          actionButtons={
+            <SecondaryButton
+              text={`Remove ${selectedRows.length} ${selectedRows.length === 1 ? "link" : "links"}`}
+              variant="red"
+              disabled={deletePaymentLinksMutation.isPending}
+              buttonClassName="w-fit whitespace-nowrap rounded-xl"
+              onClick={handleBulkDelete}
+            />
+          }
+        />
       )}
 
       {/* Payment Link Actions Tooltips */}
