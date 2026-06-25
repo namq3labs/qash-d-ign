@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import { useListAccountsByCompany, useLocalAccountBalances, useListProposalsByCompany } from "@/services/api/multisig";
 import { useGetMyCompany } from "@/services/api/company";
@@ -180,6 +181,7 @@ const TransactionHistory = ({ onCreateAccount }: { onCreateAccount?: () => void 
   const cardPoolBalance = demoData?.cardPoolBalance ?? 0;
   // Highlight a single account across the donut + legend when either is hovered.
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const router = useRouter();
   const { data: myCompany } = useGetMyCompany();
   const { data: multisigAccounts } = useListAccountsByCompany(myCompany?.id, { enabled: !!myCompany?.id });
   const accountIds = useMemo(() => multisigAccounts?.map(a => a.accountId) || [], [multisigAccounts]);
@@ -267,7 +269,10 @@ const TransactionHistory = ({ onCreateAccount }: { onCreateAccount?: () => void 
 
         <div className="flex flex-col gap-2">
           {/* Earn */}
-          <div className="bg-app-background rounded-2xl p-4 flex flex-col gap-1">
+          <div
+            onClick={() => router.push("/earn")}
+            className="bg-app-background rounded-2xl p-4 flex flex-col gap-1 cursor-pointer transition-all duration-150 hover:-translate-y-0.5 hover:bg-background hover:shadow-[0_6px_20px_rgba(0,0,0,0.08)] hover:ring-1 hover:ring-primary-divider"
+          >
             <div className="flex items-start justify-between gap-2">
               <span className="text-sm text-text-secondary">Earn</span>
               <StatusPill variant="success" icon={TrendUp}>
@@ -280,7 +285,10 @@ const TransactionHistory = ({ onCreateAccount }: { onCreateAccount?: () => void 
 
           {/* Card Pool Balance + Pending Actions, side by side */}
           <div className="flex flex-row gap-2 items-stretch">
-          <div className="flex-1 bg-app-background rounded-2xl p-4 flex flex-col gap-1">
+          <div
+            onClick={() => router.push("/card")}
+            className="flex-1 bg-app-background rounded-2xl p-4 flex flex-col gap-1 cursor-pointer transition-all duration-150 hover:-translate-y-0.5 hover:bg-background hover:shadow-[0_6px_20px_rgba(0,0,0,0.08)] hover:ring-1 hover:ring-primary-divider"
+          >
             <span className="text-sm text-text-secondary">Card Pool Balance</span>
             <span className="text-2xl num text-text-primary">
               ${(cardPoolBalance).toLocaleString("en-US", { minimumFractionDigits: 2 })}
@@ -292,7 +300,10 @@ const TransactionHistory = ({ onCreateAccount }: { onCreateAccount?: () => void 
           </div>
 
           {/* Pending Action Transactions */}
-          <div className="flex-1 bg-app-background rounded-2xl p-4 flex flex-col gap-1">
+          <div
+            onClick={() => router.push("/transactions")}
+            className="flex-1 bg-app-background rounded-2xl p-4 flex flex-col gap-1 cursor-pointer transition-all duration-150 hover:-translate-y-0.5 hover:bg-background hover:shadow-[0_6px_20px_rgba(0,0,0,0.08)] hover:ring-1 hover:ring-primary-divider"
+          >
             <span className="text-sm text-text-secondary">Pending Actions</span>
             <span className="text-2xl num text-text-primary">{pendingCount}</span>
             <span className="text-xs text-text-secondary mt-0.5">

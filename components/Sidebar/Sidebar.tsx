@@ -7,6 +7,7 @@ import { useDemo } from "@/contexts/DemoProvider";
 import { Tooltip } from "react-tooltip";
 import { AccountTooltip } from "../Common/ToolTip/AccountTooltip";
 import CompanyAvatar from "../Common/CompanyAvatar";
+import { EmployeeAvatar } from "../Common/EmployeeAvatar";
 import TeamSidebar from "./TeamSidebar";
 import EntitySwitcher from "./EntitySwitcher";
 import { SidebarCollapse, SidebarExpand } from "iconoir-react";
@@ -340,14 +341,21 @@ export const Sidebar: React.FC<NavProps> = ({ onActionItemClick, collapsed = fal
           </div>
 
           {/* User section */}
-          <div className={`flex flex-col justify-center border-t border-primary-divider mb-5 ${collapsed ? "items-center px-2 py-4" : "p-5"}`}>
-            <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between gap-5"}`}>
+          <div className={`flex flex-col justify-center border-t border-primary-divider ${collapsed ? "items-center px-2 py-4" : "px-5 py-4"}`}>
+            <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between gap-3"}`}>
               {!collapsed && (
-                <div className="flex min-w-0 flex-col gap-1">
-                  <span className="leading-none truncate">
-                    {data?.user?.teamMembership?.firstName} {data?.user?.teamMembership?.lastName}
-                  </span>
-                  <span className="text-text-secondary leading-none truncate">{data?.user?.email}</span>
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <EmployeeAvatar
+                    seed={data?.user?.email}
+                    name={`${data?.user?.teamMembership?.firstName ?? ""} ${data?.user?.teamMembership?.lastName ?? ""}`.trim()}
+                    className="h-9 w-9 shrink-0"
+                  />
+                  <div className="flex min-w-0 flex-col gap-0.5">
+                    <span className="text-[13px] font-medium leading-tight text-text-primary truncate">
+                      {data?.user?.teamMembership?.firstName} {data?.user?.teamMembership?.lastName}
+                    </span>
+                    <span className="text-[11px] text-text-secondary leading-tight truncate">{data?.user?.email}</span>
+                  </div>
                 </div>
               )}
               <img

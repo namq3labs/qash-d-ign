@@ -179,7 +179,7 @@ export default function CompanySettings() {
         buttonText="Save Changes"
         onButtonClick={handleSubmit(onSubmit)}
         buttonDisabled={!hasChanges || isUpdating || !isAdmin}
-        buttonClassName="w-30"
+        buttonClassName="w-fit"
       />
 
       {/* Form */}
@@ -238,6 +238,7 @@ export default function CompanySettings() {
 
           {/* Company Type Dropdown */}
           <CompanyTypeDropdown
+            size="compact"
             selectedCompanyType={selectedCompanyType}
             disabled={!isAdmin}
             onCompanyTypeSelect={value => {
@@ -248,6 +249,7 @@ export default function CompanySettings() {
 
           {/* Country Dropdown */}
           <CountryDropdown
+            size="compact"
             selectedCountry={selectedCountry}
             disabled={!isAdmin}
             onCountrySelect={value => {

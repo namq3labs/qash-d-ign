@@ -1,5 +1,6 @@
 "use client";
 import React, { useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { useMultisigAssets, useListAccountsByCompany } from "@/services/api/multisig";
 import { useGetMyCompany } from "@/services/api/company";
 import { useGetPayrollStats } from "@/services/api/payroll";
@@ -124,7 +125,9 @@ const UpcomingPayrollCard = ({
   subtitle: string;
   nextPayDate: string | null;
   totalPayees: number;
-}) => (
+}) => {
+  const router = useRouter();
+  return (
   <div className="flex h-[180px] w-full min-w-[300px] gap-5 rounded-2xl border border-primary-divider bg-background p-5">
     {/* Left: label + amount (aligned with Treasury) + due date */}
     <div className="flex shrink-0 flex-col justify-between">
@@ -152,7 +155,11 @@ const UpcomingPayrollCard = ({
     <div className="flex min-w-0 flex-1 flex-col gap-2 border-l border-primary-divider pl-5">
       <div className="flex items-center justify-between">
         <span className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">Schedule</span>
-        <button type="button" className="text-xs font-medium text-primary-blue transition-colors hover:underline">
+        <button
+          type="button"
+          onClick={() => router.push("/payroll")}
+          className="text-xs font-medium text-primary-blue transition-colors hover:underline"
+        >
           See all
         </button>
       </div>
@@ -174,7 +181,8 @@ const UpcomingPayrollCard = ({
       </div>
     </div>
   </div>
-);
+  );
+};
 
 export const CardContainer = () => {
   const { data: myCompany } = useGetMyCompany();

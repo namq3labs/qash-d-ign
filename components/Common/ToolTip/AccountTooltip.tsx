@@ -41,14 +41,16 @@ export const AccountTooltip = ({ onLogout }: AccountTooltipProps) => {
 
   return (
     <div className="bg-white border border-primary-divider rounded-2xl shadow-lg w-[185px]">
-      {/* Support Button */}
+      {/* Account info */}
       <TooltipItem>
-        <div className="flex flex-col gap-1">
-          <span className="text-text-primary leading-none">
+        <div className="flex min-w-0 w-full flex-col gap-1">
+          <span className="text-sm font-medium text-text-primary leading-none truncate">
             {(user as AuthMeResponse["user"])?.teamMembership?.firstName}{" "}
             {(user as AuthMeResponse["user"])?.teamMembership?.lastName}
           </span>
-          <span className="text-text-secondary leading-none">{(user as AuthMeResponse["user"])?.email}</span>
+          <span className="text-xs text-text-secondary leading-none truncate">
+            {(user as AuthMeResponse["user"])?.email}
+          </span>
         </div>
       </TooltipItem>
 

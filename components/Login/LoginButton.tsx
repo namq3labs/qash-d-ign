@@ -11,7 +11,7 @@ export default function LoginButton({ onClick, loading = false, disabled = false
     <button
       onClick={onClick}
       disabled={loading || disabled}
-      className="bg-primary-blue flex items-center justify-center h-[47px] rounded-[16px] shadow-lg w-full cursor-pointer gap-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="bg-primary-blue flex items-center justify-center h-[47px] rounded-[16px] shadow-lg w-full cursor-pointer gap-2 mt-4 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
     >
       {loading ? (
         <span className="text-[14px] text-white text-center">Loading...</span>

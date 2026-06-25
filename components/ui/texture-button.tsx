@@ -33,7 +33,7 @@ const buttonVariantsOuter = cva("", {
   },
 });
 
-const innerDivVariants = cva("w-full h-full flex items-center justify-center text-muted-foreground", {
+const innerDivVariants = cva("w-full h-full flex items-center justify-center whitespace-nowrap text-muted-foreground", {
   variants: {
     variant: {
       primary:
