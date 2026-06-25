@@ -22,12 +22,12 @@ const SchedulePaymentTooltip: React.FC<SchedulePaymentTooltipProps> = ({
   onCancel,
 }) => {
   return (
-    <div className={`bg-[#292929] relative rounded-xl w-[390px]`}>
+    <div className={`bg-background border border-primary-divider relative rounded-xl w-[390px]`}>
       <div className="flex flex-col gap-2.5 p-3">
         {/* Row: Status + Cancel */}
         <div className="flex items-center justify-between w-full">
           <div className="flex flex-row gap-2 items-center text-[14px] tracking-[0.07px]">
-            <span className="text-[#989898] leading-5">Status:</span>
+            <span className="text-text-secondary leading-5">Status:</span>
             <span className="text-[#ffb700] font-medium leading-none">{statusText}</span>
           </div>
 
@@ -43,39 +43,39 @@ const SchedulePaymentTooltip: React.FC<SchedulePaymentTooltipProps> = ({
         {/* Row: Sent */}
         {sentText && (
           <div className="flex flex-row gap-2 items-center">
-            <span className="text-[#989898] text-[14px] tracking-[0.07px] leading-5">Sent:</span>
+            <span className="text-text-secondary text-[14px] tracking-[0.07px] leading-5">Sent:</span>
             <div className="flex items-center gap-1.5">
-              <span className="text-white text-[14px] tracking-[0.07px] leading-5 font-medium">{sentText}</span>
+              <span className="text-text-primary text-[14px] tracking-[0.07px] leading-5 font-medium">{sentText}</span>
             </div>
           </div>
         )}
 
         {/* Row: Date/Time */}
         <div className="flex flex-row gap-2 items-center text-[14px] tracking-[0.07px]">
-          <span className="text-[#989898] leading-5">Date/Time:</span>
-          <span className="text-white leading-5">{dateTimeText}</span>
+          <span className="text-text-secondary leading-5">Date/Time:</span>
+          <span className="text-text-primary leading-5">{dateTimeText}</span>
         </div>
 
         {/* Row: Balance */}
         <div className="flex flex-row gap-2 items-center text-[14px] tracking-[0.07px]">
-          <span className="text-[#989898] leading-5">Balance:</span>
-          <span className="text-white font-medium leading-5">{balanceText}</span>
+          <span className="text-text-secondary leading-5">Balance:</span>
+          <span className="text-text-primary font-medium leading-5">{balanceText}</span>
         </div>
 
         {/* Row: Remaining time */}
         <div className="flex flex-row gap-2 items-center text-[14px] tracking-[0.07px]">
-          <span className="text-[#989898] leading-5">Remaining time:</span>
-          <span className="text-white font-medium leading-5">{remainingTimeText}</span>
+          <span className="text-text-secondary leading-5">Remaining time:</span>
+          <span className="text-text-primary font-medium leading-5">{remainingTimeText}</span>
         </div>
 
         {/* Row: Next Schedule Date */}
         {/* <div className="flex items-center justify-between w-full">
           <div className="flex flex-row gap-2 items-center text-[14px] tracking-[0.07px]">
-            <span className="text-[#989898] leading-5">Next Schedule Date:</span>
+            <span className="text-text-secondary leading-5">Next Schedule Date:</span>
           </div>
 
           <div className="flex flex-row gap-2 items-center text-[14px] tracking-[0.07px]">
-            <span className="text-white font-medium leading-5">
+            <span className="text-text-primary font-medium leading-5">
               2025-08-15 <span className="text-[#48B3FF]">(10 days left)</span>
             </span>
           </div>
@@ -83,7 +83,7 @@ const SchedulePaymentTooltip: React.FC<SchedulePaymentTooltipProps> = ({
       </div>
 
       {/* bottom border accent to match Figma */}
-      <div className="absolute inset-0 pointer-events-none rounded-xl border-b-2 border-[#454545]" aria-hidden />
+      <div className="absolute inset-0 pointer-events-none rounded-xl border-b-2 border-primary-divider" aria-hidden />
     </div>
   );
 };

@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { EmployeeContact } from "./EmployeeContact";
 import { CategoryShapeEnum } from "@qash/types/enums";
 import { PageHeader } from "../Common/PageHeader";
 import { useModal } from "@/contexts/ModalManagerProvider";
 import { MODAL_IDS } from "@/types/modal";
 import { PrimaryButton } from "../Common/PrimaryButton";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
 
 export const CategoryTab = ({ label }: { label: React.ReactNode }) => {
   return <span className="truncate">{label}</span>;
@@ -29,9 +32,29 @@ export const CategoryBadge = ({ shape, color, name }: { shape: CategoryShapeEnum
 
 const ContactBookContainer = () => {
   const { openModal } = useModal();
+  const { setTitle, setShowBackArrow } = useTitle();
+  const router = useRouter();
+
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <button
+          type="button"
+          onClick={() => router.push("/contact-book")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Contact
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Employee</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="flex w-full h-full flex-col bg-background">
       {/* Page header (heading + subtitle + action), same structure as the Dashboard */}
       <div className="w-full flex items-start justify-between gap-4 px-6 pt-6 pb-3">
         <div className="flex flex-col gap-0.5">
@@ -40,10 +63,9 @@ const ContactBookContainer = () => {
         </div>
         <PrimaryButton
           text="Add employee"
-          icon="/misc/plus-icon.svg"
-          iconPosition="left"
           onClick={() => openModal(MODAL_IDS.CREATE_EMPLOYEE_CONTACT)}
-          containerClassName="w-[160px]"
+          containerClassName="w-fit"
+          buttonClassName="whitespace-nowrap"
         />
       </div>
 

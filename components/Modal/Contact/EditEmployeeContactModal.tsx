@@ -9,6 +9,7 @@ import BaseModal from "../BaseModal";
 import { ModalHeader } from "../../Common/ModalHeader";
 import { PrimaryButton } from "../../Common/PrimaryButton";
 import { SecondaryButton } from "../../Common/SecondaryButton";
+import FieldInput from "../../Common/Input/FieldInput";
 import {
   useUpdateEmployee,
   useGetAllEmployeeGroups,
@@ -42,30 +43,17 @@ interface FormInputProps {
 }
 
 const FormInput = ({ label, placeholder, type = "text", register, error, disabled, required }: FormInputProps) => (
-  <div className="flex flex-col gap-2">
-    <div className="bg-app-background rounded-xl border-b-2 border-primary-divider">
-      <div className="flex flex-col gap-1 px-4 py-2">
-        <label className="text-text-secondary text-sm font-medium">
-          {label} {!required && <span className="text-text-secondary">(Optional)</span>}
-        </label>
-        <input
-          {...register}
-          type={type}
-          placeholder={placeholder}
-          className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-          autoFocus={label === "Name"}
-          disabled={disabled}
-          autoComplete="off"
-        />
-      </div>
-    </div>
-    {error && (
-      <div className="flex items-center gap-1 pl-2">
-        <img src="/misc/red-circle-warning.svg" alt="warning" className="w-4 h-4" />
-        <span className="text-[#E93544] text-sm">{error}</span>
-      </div>
-    )}
-  </div>
+  <FieldInput
+    label={required ? label : `${label} (Optional)`}
+    type={type}
+    placeholder={placeholder}
+    error={!!error}
+    errorMessage={error}
+    autoFocus={label === "Name"}
+    disabled={disabled}
+    autoComplete="off"
+    {...register}
+  />
 );
 
 // Helper function to map network name to icon and value
@@ -472,7 +460,7 @@ export function EditEmployeeContactModal({
           <input type="hidden" {...groupIdRegister} value={selectedGroups[0]?.id ?? ""} />
 
           {/* Network Selection */}
-          <div className="bg-app-background rounded-xl border-b-2 border-primary-divider">
+          <div className="bg-background rounded-xl border border-primary-divider">
             <button
               type="button"
               onClick={() => openModal(MODAL_IDS.SELECT_NETWORK, { onNetworkSelect: handleNetworkSelect })}
@@ -489,7 +477,7 @@ export function EditEmployeeContactModal({
           </div>
 
           {/* Token Selection */}
-          <div className="bg-app-background rounded-xl border-b-2 border-primary-divider">
+          <div className="bg-background rounded-xl border border-primary-divider">
             <button
               type="button"
               onClick={() => openModal(MODAL_IDS.SELECT_TOKEN, { onTokenSelect: handleTokenSelect })}
@@ -518,7 +506,7 @@ export function EditEmployeeContactModal({
           </div>
 
           {/* Category Selection */}
-          <div className="bg-app-background rounded-xl border-b-2 border-primary-divider py-2">
+          <div className="bg-background rounded-xl border border-primary-divider py-2">
             <EmployeeGroupDropdown
               groups={employeeGroups}
               selectedGroupIds={selectedGroups.map(g => g.id)}
@@ -531,7 +519,7 @@ export function EditEmployeeContactModal({
           <div className="flex flex-row gap-3">
             <SecondaryButton
               text="Cancel"
-              onClick={handleCancel}
+              onClick={() => openModal(MODAL_IDS.DISCARD_CHANGES, { onConfirm: handleCancel })}
               buttonClassName="flex-1"
               disabled={updateEmployee.isPending}
               variant="light"

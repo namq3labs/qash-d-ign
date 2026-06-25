@@ -147,7 +147,7 @@ export default function GoogleSheetsIntegrationSettings() {
           </div>
           {connectionStep === "connected" && (
             <div className="ml-auto">
-              <Badge status={BadgeStatus.SUCCESS} text="Connected" className="px-3" />
+              <Badge status={BadgeStatus.SUCCESS} text="Connected" />
             </div>
           )}
         </div>
@@ -227,7 +227,7 @@ export default function GoogleSheetsIntegrationSettings() {
 
             {/* Last synced */}
             <div className="flex items-center gap-2">
-              <Badge status={BadgeStatus.SUCCESS} text="Synced" className="px-2" />
+              <Badge status={BadgeStatus.SUCCESS} text="Synced" />
               <p className="text-xs text-text-secondary tracking-[-0.21px]">2 minutes ago</p>
             </div>
           </div>

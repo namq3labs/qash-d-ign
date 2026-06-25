@@ -332,9 +332,9 @@ export default function GlobalAccountPage() {
             <thead>
               <tr className="border-b border-primary-divider bg-app-background">
                 <th className="text-left text-xs font-medium text-text-secondary px-5 py-3">Sender</th>
-                <th className="text-left text-xs font-medium text-text-secondary px-5 py-3">Method</th>
-                <th className="text-left text-xs font-medium text-text-secondary px-5 py-3">Date</th>
-                <th className="text-right text-xs font-medium text-text-secondary px-5 py-3">Amount</th>
+                <th className="text-center text-xs font-medium text-text-secondary px-5 py-3">Method</th>
+                <th className="text-center text-xs font-medium text-text-secondary px-5 py-3">Date</th>
+                <th className="text-center text-xs font-medium text-text-secondary px-5 py-3">Amount</th>
                 <th className="text-center text-xs font-medium text-text-secondary px-5 py-3">Status</th>
               </tr>
             </thead>
@@ -342,22 +342,22 @@ export default function GlobalAccountPage() {
               {RECENT_DEPOSITS.map((deposit) => (
                 <tr key={deposit.id} className="border-b border-primary-divider last:border-0">
                   <td className="px-5 py-3.5 text-sm font-medium text-text-primary">{deposit.sender}</td>
-                  <td className="px-5 py-3.5 text-sm text-text-secondary">
+                  <td className="px-5 py-3.5 text-center text-sm text-text-secondary">
                     {deposit.currency} {deposit.method}
                   </td>
-                  <td className="px-5 py-3.5 text-sm text-text-secondary">
+                  <td className="px-5 py-3.5 text-center text-sm text-text-secondary">
                     {new Date(deposit.date).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
                       year: "numeric",
                     })}
                   </td>
-                  <td className="num px-5 py-3.5 text-sm font-semibold text-text-primary text-right">
+                  <td className="num px-5 py-3.5 text-center text-sm font-semibold text-text-primary">
                     {fmtCurrency(deposit.amount, deposit.currency)}
                   </td>
                   <td className="px-5 py-3.5 text-center">
                     <div className="flex justify-center">
-                      <Badge status={BadgeStatus.SUCCESS} text="Completed" className="px-3" />
+                      <Badge status={BadgeStatus.SUCCESS} text="Completed" />
                     </div>
                   </td>
                 </tr>

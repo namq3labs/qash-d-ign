@@ -78,10 +78,8 @@ const TeamSettings = () => {
         {isAdmin && (
           <PrimaryButton
             text="Add new members"
-            icon="/misc/plus-icon.svg"
-            iconPosition="left"
             onClick={() => openModal("INVITE_TEAM_MEMBER")}
-            containerClassName="w-[180px] shrink-0"
+            containerClassName="w-fit shrink-0"
             buttonClassName="whitespace-nowrap"
           />
         )}

@@ -3,7 +3,7 @@ import EditTransactionModal from "@/components/Modal/EditTransactionModal";
 import SelectEmployeeModal from "@/components/Modal/Contact/SelecteEmployeeModal";
 import SelectClientModal from "@/components/Modal/Contact/SelectClientModal";
 import SetupModulesModal from "@/components/Modal/SetupModulesModal";
-import TransactionDetailModal from "@/components/Modal/TransactionDetailModal";
+import TransactionDetailModal from "@/components/Modal/Transactions/TransactionDetailModal";
 import CreateNewGroupModal from "@/components/Modal/Group/CreateNewGroupModal";
 import NewRequestModal from "@/components/Modal/NewRequestModal";
 import CreateCustomQRModal from "@/components/Modal/CreateCustomQRModal";
@@ -58,6 +58,8 @@ import RemoveInvoiceModal from "@/components/Modal/Invoice/RemoveInvoiceModal";
 import ConnectMidenWallet from "@/components/Modal/Wallet/ConnectMidenWallet";
 import RemovePayrollModal from "@/components/Modal/Payroll/RemovePayrollModal";
 import ConfirmAndReviewInvoiceModal from "@/components/Modal/Invoice/ConfirmAndReviewInvoiceModal";
+import PayInvoiceConfirmModal from "@/components/Modal/Invoice/PayInvoiceConfirmModal";
+import DiscardChangesModal from "@/components/Modal/Common/DiscardChangesModal";
 import ChooseContactTypeModal from "@/components/Modal/Contact/ChooseContactTypeModal";
 import CreateAccountModal from "@/components/Modal/Account/CreateAccountModal";
 import AddMemberModal from "@/components/Modal/Account/AddMemberModal";
@@ -144,6 +146,8 @@ export const MODAL_IDS = {
   REMOVE_PAYROLL: "REMOVE_PAYROLL",
   REMOVE_INVOICE: "REMOVE_INVOICE",
   CONFIRM_AND_REVIEW_INVOICE: "CONFIRM_AND_REVIEW_INVOICE",
+  PAY_INVOICE_CONFIRM: "PAY_INVOICE_CONFIRM",
+  DISCARD_CHANGES: "DISCARD_CHANGES",
   CHOOSE_CONTACT_TYPE: "CHOOSE_CONTACT_TYPE",
   CREATE_ACCOUNT: "CREATE_ACCOUNT",
   ADD_MEMBER: "ADD_MEMBER",
@@ -209,9 +213,7 @@ export interface ModulesSetupProps extends BaseModalProps {
 }
 
 export interface TransactionDetailModalProps extends BaseModalProps {
-  onDeny?: () => void;
-  onAccept?: () => void;
-  onCopyLink?: () => void;
+  proposalId: number | string;
 }
 
 export interface CreateNewGroupModalProps extends BaseModalProps {}
@@ -506,6 +508,20 @@ export interface ConfirmAndReviewInvoiceModalProps extends BaseModalProps {
   onConfirm: () => Promise<void>;
 }
 
+export interface PayInvoiceConfirmModalProps extends BaseModalProps {
+  invoice?: any;
+  invoices?: any[];
+  invoiceUUIDs?: string[];
+  billUUID?: string;
+}
+
+export interface DiscardChangesModalProps extends BaseModalProps {
+  onConfirm?: () => void;
+  title?: string;
+  message?: string;
+  confirmText?: string;
+}
+
 export interface ChooseContactTypeModalProps extends BaseModalProps {
   onContactTypeSelect: (type: "employee" | "client") => void;
 }
@@ -563,6 +579,7 @@ export interface PayrollSimulationModalProps extends BaseModalProps {
 
 export interface DeleteCompanyModalProps extends BaseModalProps {
   onDelete: () => Promise<void>;
+  companyName?: string;
 }
 
 export interface CreateEntityModalProps extends BaseModalProps {}
@@ -625,6 +642,8 @@ export type ModalPropsMap = {
   [MODAL_IDS.REMOVE_PAYROLL]: RemovePayrollModalProps;
   [MODAL_IDS.REMOVE_INVOICE]: RemoveInvoiceModalProps;
   [MODAL_IDS.CONFIRM_AND_REVIEW_INVOICE]: ConfirmAndReviewInvoiceModalProps;
+  [MODAL_IDS.PAY_INVOICE_CONFIRM]: PayInvoiceConfirmModalProps;
+  [MODAL_IDS.DISCARD_CHANGES]: DiscardChangesModalProps;
   [MODAL_IDS.CHOOSE_CONTACT_TYPE]: ChooseContactTypeModalProps;
   [MODAL_IDS.CREATE_ACCOUNT]: CreateAccountModalProps;
   [MODAL_IDS.ADD_MEMBER]: AddMemberModalProps;
@@ -702,6 +721,8 @@ export const modalRegistry = {
   [MODAL_IDS.REMOVE_PAYROLL]: RemovePayrollModal,
   [MODAL_IDS.REMOVE_INVOICE]: RemoveInvoiceModal,
   [MODAL_IDS.CONFIRM_AND_REVIEW_INVOICE]: ConfirmAndReviewInvoiceModal,
+  [MODAL_IDS.PAY_INVOICE_CONFIRM]: PayInvoiceConfirmModal,
+  [MODAL_IDS.DISCARD_CHANGES]: DiscardChangesModal,
   [MODAL_IDS.CHOOSE_CONTACT_TYPE]: ChooseContactTypeModal,
   [MODAL_IDS.CREATE_ACCOUNT]: CreateAccountModal,
   [MODAL_IDS.ADD_MEMBER]: AddMemberModal,

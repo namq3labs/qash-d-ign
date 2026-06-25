@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { AssetWithMetadata } from "@/types/faucet";
+import FieldInput from "@/components/Common/Input/FieldInput";
 
 interface FixedAmountProps {
   selectedToken: AssetWithMetadata | null;
@@ -15,7 +16,6 @@ interface FixedAmountProps {
 }
 
 export const ContractTerm = ({
-  selectedToken,
   selectedPayDay,
   setSelectedPayDay,
   register,
@@ -79,34 +79,22 @@ export const ContractTerm = ({
         </div>
 
         {/* Amount Input */}
-        <div className="flex flex-col gap-2">
-          <div className="bg-background rounded-xl border-b-2 border-primary-divider flex items-center justify-between">
-            <div className="flex flex-col gap-1 px-4 py-2">
-              <label className="text-text-secondary text-sm font-medium">Amount (Monthly)</label>
-              <input
-                {...register("monthlyAmount", {
-                  required: "Amount is required",
-                  pattern: {
-                    value: /^\d+(\.\d+)?$/,
-                    message: "Amount must be a valid positive number",
-                  },
-                })}
-                type="text"
-                placeholder="Enter amount"
-                className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-                autoFocus={true}
-                autoComplete="off"
-              />
-            </div>
-            <span className="text-text-primary pr-2">{selectedToken ? selectedToken.metadata.symbol : ""}</span>
-          </div>
-          {errors.monthlyAmount && (
-            <div className="flex items-center gap-1 pl-2">
-              <img src="/misc/red-circle-warning.svg" alt="warning" className="w-4 h-4" />
-              <span className="text-[#E93544] text-sm">{errors.monthlyAmount?.message}</span>
-            </div>
-          )}
-        </div>
+        <FieldInput
+          label="Amount (Monthly)"
+          {...register("monthlyAmount", {
+            required: "Amount is required",
+            pattern: {
+              value: /^\d+(\.\d+)?$/,
+              message: "Amount must be a valid positive number",
+            },
+          })}
+          type="text"
+          placeholder="Enter amount"
+          autoFocus={true}
+          autoComplete="off"
+          error={!!errors.monthlyAmount}
+          errorMessage={errors.monthlyAmount?.message}
+        />
 
         {/* Pay Day Calendar */}
         <div className="flex flex-col gap-2">
@@ -129,47 +117,29 @@ export const ContractTerm = ({
         </div>
 
         <div className="flex flex-col gap-2">
-          <div className="bg-background rounded-xl border-b-2 border-primary-divider">
-            <div className="flex flex-col gap-1 px-4 py-2">
-              <label className="text-text-secondary text-sm font-medium">Item description</label>
-              <input
-                {...register("description", {
-                  required: "Description is required",
-                })}
-                type="text"
-                placeholder="Add a description"
-                className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-                autoFocus={true}
-                autoComplete="off"
-              />
-            </div>
-          </div>
-          {errors.description && (
-            <div className="flex items-center gap-1 pl-2">
-              <img src="/misc/red-circle-warning.svg" alt="warning" className="w-4 h-4" />
-              <span className="text-[#E93544] text-sm">{errors.description?.message}</span>
-            </div>
-          )}
+          <FieldInput
+            label="Item description"
+            {...register("description", {
+              required: "Description is required",
+            })}
+            type="text"
+            placeholder="Add a description"
+            autoFocus={true}
+            autoComplete="off"
+            error={!!errors.description}
+            errorMessage={errors.description?.message}
+          />
 
-          <div className="bg-background rounded-xl border-b-2 border-primary-divider">
-            <div className="flex flex-col gap-1 px-4 py-2">
-              <label className="text-text-secondary text-sm font-medium">Note (Optional)</label>
-              <input
-                {...register("note")}
-                type="text"
-                placeholder="Add a note"
-                className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-                autoFocus={true}
-                autoComplete="off"
-              />
-            </div>
-          </div>
-          {errors.note && (
-            <div className="flex items-center gap-1 pl-2">
-              <img src="/misc/red-circle-warning.svg" alt="warning" className="w-4 h-4" />
-              <span className="text-[#E93544] text-sm">{errors.note?.message}</span>
-            </div>
-          )}
+          <FieldInput
+            label="Note (Optional)"
+            {...register("note")}
+            type="text"
+            placeholder="Add a note"
+            autoFocus={true}
+            autoComplete="off"
+            error={!!errors.note}
+            errorMessage={errors.note?.message}
+          />
         </div>
       </div>
     </div>

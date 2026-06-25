@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import { useListAccountsByCompany, useLocalAccountBalances, useListProposalsByCompany } from "@/services/api/multisig";
 import { useGetMyCompany } from "@/services/api/company";
@@ -178,6 +179,9 @@ function useResolvedTokenMeta(faucetHexIds: string[]) {
 const TransactionHistory = ({ onCreateAccount }: { onCreateAccount?: () => void }) => {
   const { data: demoData } = useDemo();
   const cardPoolBalance = demoData?.cardPoolBalance ?? 0;
+  // Highlight a single account across the donut + legend when either is hovered.
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const router = useRouter();
   const { data: myCompany } = useGetMyCompany();
   const { data: multisigAccounts } = useListAccountsByCompany(myCompany?.id, { enabled: !!myCompany?.id });
   const accountIds = useMemo(() => multisigAccounts?.map(a => a.accountId) || [], [multisigAccounts]);
@@ -265,7 +269,10 @@ const TransactionHistory = ({ onCreateAccount }: { onCreateAccount?: () => void 
 
         <div className="flex flex-col gap-2">
           {/* Earn */}
-          <div className="bg-app-background rounded-2xl p-4 flex flex-col gap-1">
+          <div
+            onClick={() => router.push("/earn")}
+            className="bg-app-background rounded-2xl p-4 flex flex-col gap-1 cursor-pointer transition-all duration-150 hover:-translate-y-0.5 hover:bg-background hover:shadow-[0_6px_20px_rgba(0,0,0,0.08)] hover:ring-1 hover:ring-primary-divider"
+          >
             <div className="flex items-start justify-between gap-2">
               <span className="text-sm text-text-secondary">Earn</span>
               <StatusPill variant="success" icon={TrendUp}>
@@ -278,7 +285,10 @@ const TransactionHistory = ({ onCreateAccount }: { onCreateAccount?: () => void 
 
           {/* Card Pool Balance + Pending Actions, side by side */}
           <div className="flex flex-row gap-2 items-stretch">
-          <div className="flex-1 bg-app-background rounded-2xl p-4 flex flex-col gap-1">
+          <div
+            onClick={() => router.push("/card")}
+            className="flex-1 bg-app-background rounded-2xl p-4 flex flex-col gap-1 cursor-pointer transition-all duration-150 hover:-translate-y-0.5 hover:bg-background hover:shadow-[0_6px_20px_rgba(0,0,0,0.08)] hover:ring-1 hover:ring-primary-divider"
+          >
             <span className="text-sm text-text-secondary">Card Pool Balance</span>
             <span className="text-2xl num text-text-primary">
               ${(cardPoolBalance).toLocaleString("en-US", { minimumFractionDigits: 2 })}
@@ -290,7 +300,10 @@ const TransactionHistory = ({ onCreateAccount }: { onCreateAccount?: () => void 
           </div>
 
           {/* Pending Action Transactions */}
-          <div className="flex-1 bg-app-background rounded-2xl p-4 flex flex-col gap-1">
+          <div
+            onClick={() => router.push("/transactions")}
+            className="flex-1 bg-app-background rounded-2xl p-4 flex flex-col gap-1 cursor-pointer transition-all duration-150 hover:-translate-y-0.5 hover:bg-background hover:shadow-[0_6px_20px_rgba(0,0,0,0.08)] hover:ring-1 hover:ring-primary-divider"
+          >
             <span className="text-sm text-text-secondary">Pending Actions</span>
             <span className="text-2xl num text-text-primary">{pendingCount}</span>
             <span className="text-xs text-text-secondary mt-0.5">
@@ -335,9 +348,17 @@ const TransactionHistory = ({ onCreateAccount }: { onCreateAccount?: () => void 
                     paddingAngle={2}
                     dataKey="value"
                     isAnimationActive={false}
+                    onMouseEnter={(_, idx) => setActiveIndex(idx)}
+                    onMouseLeave={() => setActiveIndex(null)}
                   >
-                    {accounts.map(account => (
-                      <Cell key={`cell-${account.id}`} fill={account.color} />
+                    {accounts.map((account, index) => (
+                      <Cell
+                        key={`cell-${account.id}`}
+                        fill={account.color}
+                        fillOpacity={activeIndex === null || activeIndex === index ? 1 : 0.25}
+                        stroke="none"
+                        style={{ transition: "fill-opacity 200ms ease", cursor: "pointer", outline: "none" }}
+                      />
                     ))}
                   </Pie>
                   <Tooltip content={() => null} />
@@ -350,7 +371,7 @@ const TransactionHistory = ({ onCreateAccount }: { onCreateAccount?: () => void 
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">Weight</span>
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-[2]">
                     <p className="text-sm font-medium">Account</p>
                   </div>
                   <div className="flex-1 text-right">
@@ -360,17 +381,19 @@ const TransactionHistory = ({ onCreateAccount }: { onCreateAccount?: () => void 
                 {accounts.map((account, index) => (
                   <div
                     key={account.id}
-                    className={`flex items-center px-4 py-3 gap-4 ${index !== accounts.length - 1 ? "border-b border-primary-divider" : ""}`}
+                    onMouseEnter={() => setActiveIndex(index)}
+                    onMouseLeave={() => setActiveIndex(null)}
+                    className={`flex items-center px-4 py-3 gap-4 rounded-lg transition-colors ${index !== accounts.length - 1 ? "border-b border-primary-divider" : ""} ${activeIndex === index ? "bg-app-background" : ""} ${activeIndex !== null && activeIndex !== index ? "opacity-40" : "opacity-100"}`}
                   >
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full" style={{ backgroundColor: account.color }}></div>
                       <span className="text-sm num">{account.percentage}%</span>
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{account.name}</p>
+                    <div className="min-w-0 flex-[2]">
+                      <p className="truncate text-sm font-medium" title={account.name}>{account.name}</p>
                     </div>
                     <div className="flex-1 text-right">
-                      <p className="text-sm num">{account.balance}</p>
+                      <p className="text-sm num whitespace-nowrap">{account.balance}</p>
                     </div>
                   </div>
                 ))}

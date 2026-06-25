@@ -26,6 +26,7 @@ export default function InputOutlined({
   icon,
   iconOnClick,
   size = "default",
+  containerClassName = "",
   ...rest
 }: InputOutlinedProps) {
   const heightClass = size === "compact" ? "h-[52px]" : "h-[64px]";
@@ -33,7 +34,7 @@ export default function InputOutlined({
   const inputSize = size === "compact" ? "text-[14px]" : "text-[16px]";
 
   return (
-    <div className="flex flex-col w-full">
+    <div className={`flex flex-col w-full ${containerClassName}`}>
       <div
         className={`border flex items-center flex-row justify-between ${heightClass} px-4 py-2 rounded-[12px] w-full ${
           error ? "border-[#E93544]" : "border-primary-divider"

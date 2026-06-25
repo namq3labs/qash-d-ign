@@ -32,7 +32,7 @@ export const SchedulePaymentCard: React.FC<SchedulePaymentCardProps> = ({
     <button
       type="button"
       onClick={onClick}
-      className={`w-full text-left bg-[#0c0c0c] rounded-lg p-2 flex items-center gap-3 cursor-pointer ${className}`}
+      className={`w-full text-left bg-background border border-primary-divider rounded-lg p-2 flex items-center gap-3 cursor-pointer ${className}`}
     >
       <div
         className="shrink-0 w-16 h-16 rounded bg-center bg-no-repeat"
@@ -47,30 +47,30 @@ export const SchedulePaymentCard: React.FC<SchedulePaymentCardProps> = ({
       <div className="flex flex-col gap-3 flex-1">
         <div className="flex items-start gap-3 w-full">
           <div className="w-[206px] truncate">
-            <span className="text-white text-[16px] leading-[1.2] font-medium truncate">{recipientName}</span>
+            <span className="text-text-primary text-[16px] leading-[1.2] font-medium truncate">{recipientName}</span>
           </div>
         </div>
 
         <div className="flex items-center gap-2 w-full">
-          <div className="bg-[#292929] rounded-md px-2 py-1.5 flex items-center gap-2">
+          <div className="bg-app-background rounded-md px-2 py-1.5 flex items-center gap-2">
             <img
               src={token.faucetId === QASH_TOKEN_ADDRESS ? "/token/usdt.svg" : blo(turnBechToHex(token.faucetId))}
               alt="token"
               className="w-3.5 h-3.5"
             />
-            <span className="text-white text-[14px] leading-3 tracking-[0.07px] font-medium">{amount}</span>
+            <span className="text-text-primary text-[14px] leading-3 tracking-[0.07px] font-medium">{amount}</span>
           </div>
 
-          <div className="bg-[#292929] rounded-md px-2 py-1.5 flex items-center">
-            <span className="text-white text-[14px] leading-3 tracking-[0.07px] font-medium">{frequencyLabel}</span>
+          <div className="bg-app-background rounded-md px-2 py-1.5 flex items-center">
+            <span className="text-text-primary text-[14px] leading-3 tracking-[0.07px] font-medium">{frequencyLabel}</span>
           </div>
 
-          <div className="bg-[#292929] rounded-md px-2 py-1.5 flex items-center">
-            <span className="text-white text-[14px] leading-3 tracking-[0.07px] font-medium">{startDateLabel}</span>
+          <div className="bg-app-background rounded-md px-2 py-1.5 flex items-center">
+            <span className="text-text-primary text-[14px] leading-3 tracking-[0.07px] font-medium">{startDateLabel}</span>
           </div>
 
-          <div className="bg-[#292929] rounded-md px-2 py-1.5 flex items-center">
-            <span className="text-white text-[14px] leading-3 tracking-[0.07px] font-medium">{timesLabel}</span>
+          <div className="bg-app-background rounded-md px-2 py-1.5 flex items-center">
+            <span className="text-text-primary text-[14px] leading-3 tracking-[0.07px] font-medium">{timesLabel}</span>
           </div>
         </div>
       </div>

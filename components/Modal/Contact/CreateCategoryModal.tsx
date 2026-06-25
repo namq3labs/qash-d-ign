@@ -2,13 +2,14 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Tooltip } from "react-tooltip";
-import { ValidatingModalProps } from "@/types/modal";
-import { ModalProp } from "@/contexts/ModalManagerProvider";
+import { ValidatingModalProps, MODAL_IDS } from "@/types/modal";
+import { ModalProp, useModal } from "@/contexts/ModalManagerProvider";
 import BaseModal from "../BaseModal";
 import { ModalHeader } from "../../Common/ModalHeader";
 import { ActionButton } from "../../Common/ActionButton";
 import { SecondaryButton } from "../../Common/SecondaryButton";
 import { PrimaryButton } from "../../Common/PrimaryButton";
+import FieldInput from "../../Common/Input/FieldInput";
 import ShapeSelectionTooltip, { createShapeElement } from "../../Common/ToolTip/ShapeSelectionTooltip";
 import { CategoryShape } from "@/types/address-book";
 import { useCreateCategory, useGetCategories } from "@/services/api/address-book";
@@ -34,6 +35,7 @@ export function CreateCategoryModal({ isOpen, onClose, zIndex }: ModalProp<Valid
   const [selectedColor, setSelectedColor] = useState("#35ADE9");
   const { mutate: createCategory } = useCreateCategory();
   const { data: categories } = useGetCategories();
+  const { openModal } = useModal();
 
   const {
     register,
@@ -111,28 +113,25 @@ export function CreateCategoryModal({ isOpen, onClose, zIndex }: ModalProp<Valid
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           {/* Category Name Input */}
           <div className="flex flex-col gap-1.5">
-            <div className="flex flex-col gap-1 p-3 rounded-xl bg-app-background border-b-2 border-primary-divider">
-              <span className="text-text-secondary text-sm">Group Name</span>
-              <input
-                {...register("name", {
-                  required: "Group name is required",
-                  minLength: {
-                    value: 2,
-                    message: "Group name must be at least 2 characters",
-                  },
-                  maxLength: {
-                    value: 50,
-                    message: "Group name cannot exceed 50 characters",
-                  },
-                })}
-                autoComplete="off"
-                type="text"
-                placeholder="Enter group name"
-                className="w-full bg-transparent border-none outline-none text-text-primary text-base placeholder:text-text-secondary"
-                autoFocus
-                disabled={isLoading}
-              />
-            </div>
+            <FieldInput
+              label="Group Name"
+              {...register("name", {
+                required: "Group name is required",
+                minLength: {
+                  value: 2,
+                  message: "Group name must be at least 2 characters",
+                },
+                maxLength: {
+                  value: 50,
+                  message: "Group name cannot exceed 50 characters",
+                },
+              })}
+              autoComplete="off"
+              type="text"
+              placeholder="Enter group name"
+              autoFocus
+              disabled={isLoading}
+            />
             {errors.name && (
               <div className="flex flex-row gap-1 items-center pl-2">
                 <img src="/misc/red-circle-warning.svg" alt="warning" className="w-4 h-4" />
@@ -156,7 +155,7 @@ export function CreateCategoryModal({ isOpen, onClose, zIndex }: ModalProp<Valid
             <div className="flex flex-row gap-5 items-center">
               <div
                 data-tooltip-id="shape-selection-tooltip"
-                className="bg-app-background rounded-full px-2 py-1 flex flex-row items-center gap-1 w-fit justify-center border-b-2 border-primary-divider cursor-pointer"
+                className="bg-background rounded-full px-2 py-1 flex flex-row items-center gap-1 w-fit justify-center border border-primary-divider cursor-pointer"
               >
                 <div className="w-8 h-8 flex items-center justify-center">{selectedShapeElement}</div>
 
@@ -194,7 +193,7 @@ export function CreateCategoryModal({ isOpen, onClose, zIndex }: ModalProp<Valid
           <div className="flex flex-row gap-2 mt-2">
             <SecondaryButton
               text="Cancel"
-              onClick={onClose}
+              onClick={() => openModal(MODAL_IDS.DISCARD_CHANGES, { onConfirm: onClose })}
               buttonClassName="flex-1"
               disabled={isLoading}
               variant="light"

@@ -445,7 +445,8 @@ export const EmployeeInvoiceReviewContainer = () => {
                 <PrimaryButton
                   text="Confirm"
                   onClick={handleConfirmInvoice}
-                  containerClassName="w-[170px]"
+                  containerClassName="w-fit"
+                  buttonClassName="whitespace-nowrap"
                   disabled={isLoading}
                 />
               )}

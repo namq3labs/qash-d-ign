@@ -184,7 +184,7 @@ export default function AuthCard({ onComplete }: { onComplete: (email: string) =
                 type="button"
                 onClick={google}
                 disabled={busy}
-                className="flex h-[46px] w-full items-center justify-center gap-2.5 rounded-xl border border-primary-divider bg-background text-[14px] font-medium text-text-primary transition hover:bg-app-background active:scale-[0.99] disabled:opacity-60"
+                className="flex h-[46px] w-full items-center justify-center gap-2.5 whitespace-nowrap rounded-xl border border-primary-divider bg-background text-[14px] font-medium text-text-primary transition hover:bg-app-background active:scale-[0.99] disabled:opacity-60"
               >
                 {authenticating ? (
                   <>

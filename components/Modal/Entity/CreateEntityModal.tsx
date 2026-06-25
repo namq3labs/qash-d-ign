@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { BaseModalProps } from "@/types/modal";
-import { ModalProp } from "@/contexts/ModalManagerProvider";
+import { BaseModalProps, MODAL_IDS } from "@/types/modal";
+import { ModalProp, useModal } from "@/contexts/ModalManagerProvider";
 import { ModalHeader } from "../../Common/ModalHeader";
 import BaseModal from "../BaseModal";
 import InputFilled from "@/components/Common/Input/InputFilled";
@@ -26,6 +26,7 @@ const COUNTRY_OPTIONS = [
 
 export function CreateEntityModal({ isOpen, onClose, zIndex }: ModalProp<CreateEntityModalProps>) {
   const { switchEntity } = useDemo();
+  const { openModal } = useModal();
   const [entityName, setEntityName] = useState("");
   const [country, setCountry] = useState("");
   const [industry, setIndustry] = useState("");
@@ -123,7 +124,7 @@ export function CreateEntityModal({ isOpen, onClose, zIndex }: ModalProp<CreateE
         <div className="flex flex-row gap-2">
           <SecondaryButton
             text="Cancel"
-            onClick={handleClose}
+            onClick={() => openModal(MODAL_IDS.DISCARD_CHANGES, { onConfirm: handleClose })}
             buttonClassName="flex-1"
             variant="light"
           />

@@ -44,9 +44,7 @@ export const SecondaryButton = ({
       disabled={disabled}
       className={buttonClassName || "w-full"}
     >
-      {icon && iconPosition === "left" && <img src={icon} alt="" className={`w-5 h-5 ${iconClassName || ""}`} />}
       {typeof text === "string" ? <span className="text-[14px]">{text}</span> : text}
-      {icon && iconPosition === "right" && <img src={icon} alt="" className={`w-5 h-5 ${iconClassName || ""}`} />}
       {closeIcon && (
         <img
           src="/misc/circle-close-icon.svg"

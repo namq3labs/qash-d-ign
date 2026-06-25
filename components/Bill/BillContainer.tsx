@@ -218,7 +218,7 @@ const BillContainer = () => {
       "Due Date": dueDate,
       Status: (
         <div className="w-full flex justify-center items-center">
-          <Badge text={b.status} status={badgeStatus} className="px-5" />
+          <Badge text={b.status} status={badgeStatus} />
         </div>
       ),
     };
@@ -327,15 +327,11 @@ const BillContainer = () => {
           const handlePay = async () => {
             // Collect uuids: include the clicked bill and any selected rows
             const selectedUUIDs = checkedRows.map(i => bills[i]?.invoice?.uuid).filter(Boolean) as string[];
-            const uuids = Array.from(new Set([bill.invoice?.uuid, ...selectedUUIDs]));
+            const uuids = Array.from(new Set([bill.invoice?.uuid, ...selectedUUIDs])).filter(Boolean) as string[];
 
             if (uuids.length === 0) return;
 
-            const params = new URLSearchParams();
-
-            //@ts-ignore
-            uuids.forEach(u => params.append("invoiceUUID", u));
-            router.push(`/bill/review?${params.toString()}`);
+            openModal("PAY_INVOICE_CONFIRM", { invoiceUUIDs: uuids });
           };
 
           const handleDelete = () => {
@@ -405,13 +401,10 @@ const BillContainer = () => {
               text="Pay all"
               variant="light"
               buttonClassName="w-fit whitespace-nowrap rounded-xl"
-              onClick={async () => {
+              onClick={() => {
                 const uuids = checkedRows.map(i => bills[i]?.invoice?.uuid).filter(Boolean) as string[];
                 if (uuids.length === 0) return;
-                // Navigate to review page with multiple invoiceUUID query params
-                const params = new URLSearchParams();
-                uuids.forEach(u => params.append("invoiceUUID", u));
-                router.push(`/bill/review?${params.toString()}`);
+                openModal("PAY_INVOICE_CONFIRM", { invoiceUUIDs: uuids });
               }}
             />
           }

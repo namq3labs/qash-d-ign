@@ -79,9 +79,9 @@ const InvoicePreview = (invoiceData: InvoiceData & { onDownload?: () => void }) 
       {/* Browser chrome */}
       <div className="flex items-center gap-3 border-b border-neutral-200 px-4 py-3">
         <div className="flex shrink-0 gap-1.5">
-          <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-          <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
-          <span className="h-3 w-3 rounded-full bg-[#28c840]" />
+          <span className="h-3 w-3 rounded-full bg-neutral-300" />
+          <span className="h-3 w-3 rounded-full bg-neutral-300" />
+          <span className="h-3 w-3 rounded-full bg-neutral-300" />
         </div>
         <div className="mx-auto max-w-[60%] truncate whitespace-nowrap rounded-md bg-neutral-100 px-3 py-1 text-[12px] text-neutral-500">
           app.qash.finance/invoice/{invoiceData.invoiceNumber}

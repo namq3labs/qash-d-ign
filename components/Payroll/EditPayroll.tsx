@@ -8,7 +8,9 @@ import { MODAL_IDS } from "@/types/modal";
 import { useModal } from "@/contexts/ModalManagerProvider";
 import { AssetWithMetadata } from "@/types/faucet";
 import { ContractTerm } from "./ContractTerm";
+import FieldInput from "@/components/Common/Input/FieldInput";
 import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
 import { CompanyContactResponseDto } from "@qash/types/dto/employee";
 import { useGetPayrollDetails, useUpdatePayroll } from "@/services/api/payroll";
 import { ContractTermEnum } from "@qash/types/enums";
@@ -36,7 +38,7 @@ interface CreatePayrollProps {
   initialPayDay?: number;
 }
 
-const inputContainerClass = "bg-background rounded-xl p-3 border-b-2 border-primary-divider";
+const inputContainerClass = "bg-background rounded-xl p-3 border border-primary-divider";
 const labelClass = "text-text-secondary text-sm";
 
 const EditPayroll = () => {
@@ -44,7 +46,7 @@ const EditPayroll = () => {
   const params = useParams();
   const searchParams = useSearchParams();
   const payrollId = (params?.id as string) || searchParams.get("id");
-  const { setTitle, setShowBackArrow, setOnBackClick } = useTitle();
+  const { setTitle, setShowBackArrow } = useTitle();
   const [selectedToken, setSelectedToken] = useState<AssetWithMetadata>({
     amount: "0",
     faucetId: "",
@@ -83,22 +85,22 @@ const EditPayroll = () => {
   const { data: payrollData, isLoading } = useGetPayrollDetails(payrollId ? parseInt(payrollId) : 0);
 
   useEffect(() => {
-    const isEditMode = !!payrollId;
     setTitle(
-      <div className="flex items-center gap-2">
-        <span className="text-text-secondary">Employee /</span>
-        <span className="text-text-primary">{isEditMode ? "Edit payroll" : "Create new payroll"}</span>
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <button
+          type="button"
+          onClick={() => router.push("/payroll")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Payroll
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Edit</span>
       </div>,
     );
-    setShowBackArrow(true);
-    setOnBackClick(() => () => router.back());
-
-    return () => {
-      setOnBackClick(undefined);
-      setShowBackArrow(false);
-    };
+    setShowBackArrow(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [payrollId]);
+  }, []);
 
   // Populate form data when payroll data is fetched
   useEffect(() => {
@@ -275,15 +277,18 @@ const EditPayroll = () => {
   }
 
   return (
-    <div className={`w-full h-full p-5 flex flex-col items-center gap-4 justify-start`}>
-      {/* Header */}
-      <div className="flex flex-row items-center justify-start gap-3 w-full">
-        <img src="/sidebar/payroll.svg" alt="Qash" className="w-6 h-6" />
-        <span className="text-2xl font-bold">Edit payroll</span>
+    <div className="flex w-full h-full flex-col bg-background">
+      {/* Page header (concept) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Edit payroll</h1>
+          <p className="text-[14px] text-text-secondary">Update the contract details for this employee payroll.</p>
+        </div>
       </div>
 
       {/* Content */}
-      <div className="bg-payroll-main-background border border-primary-divider rounded-[20px] flex w-[980px] gap-8">
+      <div className="flex w-full justify-center px-6 pb-6">
+        <div className="bg-payroll-main-background border border-primary-divider rounded-[20px] flex w-[980px] gap-8">
         {/* Left Section - Basic Information */}
         <div className="w-[45%] p-4 pr-0 flex flex-col gap-3 top-1 sticky h-fit">
           <h2 className="text-text-primary text-lg leading-none">Basic Information</h2>
@@ -372,27 +377,16 @@ const EditPayroll = () => {
             <img alt="" className="w-6 h-6" src="/arrow/chevron-down.svg" />
           </div>
 
-          <div className="flex flex-col gap-2">
-            <div className="bg-background rounded-xl border-b-2 border-primary-divider">
-              <div className="flex flex-col gap-1 px-4 py-2">
-                <label className="text-text-secondary text-sm font-medium">Wallet address</label>
-                <input
-                  {...register("walletAddress")}
-                  type="text"
-                  placeholder="Paste wallet address"
-                  className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-                  autoFocus={true}
-                  autoComplete="off"
-                />
-              </div>
-            </div>
-            {errors.walletAddress && (
-              <div className="flex items-center gap-1 pl-2">
-                <img src="/misc/red-circle-warning.svg" alt="warning" className="w-4 h-4" />
-                <span className="text-[#E93544] text-sm">{errors.walletAddress?.message}</span>
-              </div>
-            )}
-          </div>
+          <FieldInput
+            label="Wallet address"
+            {...register("walletAddress")}
+            type="text"
+            placeholder="Paste wallet address"
+            autoFocus={true}
+            autoComplete="off"
+            error={!!errors.walletAddress}
+            errorMessage={errors.walletAddress?.message}
+          />
         </div>
 
         {/* Right Section - Fixed Amount and Other Options */}
@@ -417,6 +411,7 @@ const EditPayroll = () => {
             disabled={isSubmitting || !selectedNetwork || !selectedToken.metadata.symbol}
           />
         </div>
+      </div>
       </div>
     </div>
   );

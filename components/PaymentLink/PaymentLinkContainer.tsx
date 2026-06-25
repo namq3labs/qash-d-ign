@@ -5,6 +5,8 @@ import { TabContainer } from "../Common/TabContainer";
 import { useTitle } from "@/contexts/TitleProvider";
 import { NavArrowRight } from "iconoir-react";
 import { Table } from "../Common/Table";
+import { FloatingAction } from "../Bill/FloatingAction";
+import { SecondaryButton } from "../Common/SecondaryButton";
 import { CustomCheckbox } from "../Common/CustomCheckbox";
 import { useRouter } from "next/navigation";
 import {
@@ -233,7 +235,7 @@ const PaymentLinkContainer = () => {
             src={`/token/${((link as any).currency || link.acceptedTokens?.[0]?.symbol || "usdt").toLowerCase()}.svg`}
             onError={(e) => { (e.target as HTMLImageElement).src = "/token/usdt.svg"; }}
             alt={(link as any).currency || link.acceptedTokens?.[0]?.symbol || "USDT"}
-            className="w-3 h-3"
+            className="w-5 h-5"
           />
           <span className="text-text-primary text-sm leading-none">
             {(link as any).currency || link.acceptedTokens?.[0]?.symbol || "USDT"}
@@ -258,7 +260,6 @@ const PaymentLinkContainer = () => {
         <Badge
           status={link.status === PaymentLinkStatus.ACTIVE ? BadgeStatus.SUCCESS : BadgeStatus.NEUTRAL}
           text={link.status}
-          className="!py-2"
         />
       ),
       " ": isAdmin ? (
@@ -304,10 +305,8 @@ const PaymentLinkContainer = () => {
         </div>
         <PrimaryButton
           text="Create payment link"
-          icon="/misc/plus-icon.svg"
-          iconPosition="left"
           onClick={() => router.push("/payment-link/create")}
-          containerClassName="w-[200px]"
+          containerClassName="w-fit"
           buttonClassName="whitespace-nowrap"
         />
       </div>
@@ -327,7 +326,9 @@ const PaymentLinkContainer = () => {
           setActiveTab={(tab: string) => setActiveTab(tabs.find(t => t.id === tab) || tabs[0])}
           textSize="sm"
         />
-        <span className="text-sm text-text-secondary">{displayedLinks.length} links</span>
+        <span className="text-sm text-text-secondary">
+          {displayedLinks.length} {displayedLinks.length === 1 ? "link" : "links"}
+        </span>
       </div>
 
       {/* Payment links table */}
@@ -344,6 +345,7 @@ const PaymentLinkContainer = () => {
           <Table
             headers={tableHeaders}
             data={tableData}
+            rowClassName="py-5"
             actionColumn={false}
             showFooter={false}
             showPagination={true}
@@ -368,13 +370,21 @@ const PaymentLinkContainer = () => {
       </div>
 
       {selectedRows.length > 0 && (
-        <div
-          className="absolute bottom-6 right-6 flex flex-row items-center justify-between bg-background rounded-lg p-3 border border-primary-divider gap-2 cursor-pointer hover:bg-red-50 transition-colors"
-          onClick={handleBulkDelete}
-        >
-          <img src="/misc/trashcan-icon.svg" alt="trash" className="w-5 h-5" />
-          <span className="text-[#E93544]">Remove {selectedRows.length} links</span>
-        </div>
+        <FloatingAction
+          selectedCount={selectedRows.length}
+          allSelected={isAllChecked}
+          onDeselectAll={() => setSelectedRows([])}
+          totalLabel={`Total (${selectedRows.length} ${selectedRows.length === 1 ? "link" : "links"})`}
+          actionButtons={
+            <SecondaryButton
+              text={`Remove ${selectedRows.length} ${selectedRows.length === 1 ? "link" : "links"}`}
+              variant="red"
+              disabled={deletePaymentLinksMutation.isPending}
+              buttonClassName="w-fit whitespace-nowrap rounded-xl"
+              onClick={handleBulkDelete}
+            />
+          }
+        />
       )}
 
       {/* Payment Link Actions Tooltips */}

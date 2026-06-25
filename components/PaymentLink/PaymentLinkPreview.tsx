@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CompanyAvatar from "../Common/CompanyAvatar";
-import { BaseContainer } from "../Common/BaseContainer";
 import { formatAddress } from "@/services/utils/miden/address";
 import { PrimaryButton } from "../Common/PrimaryButton";
 import { toast } from "react-hot-toast";
@@ -53,6 +52,8 @@ interface PaymentLinkPreviewProps {
   handleSubmitPayment?: () => void;
   handleConnectWallet?: () => void;
   isSending?: boolean;
+  /** Show the faux browser chrome (URL bar). Only in the create/edit preview, not on the live page. */
+  chrome?: boolean;
 }
 
 export const PaymentLinkPreview = ({
@@ -66,6 +67,7 @@ export const PaymentLinkPreview = ({
   handleSubmitPayment,
   handleConnectWallet,
   isSending,
+  chrome = false,
 }: PaymentLinkPreviewProps) => {
   const { address: paraAddress } = useMidenProvider();
   const { address: adapterAddress } = useWallet();
@@ -74,7 +76,11 @@ export const PaymentLinkPreview = ({
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("crypto");
   const [showMethodDropdown, setShowMethodDropdown] = useState(false);
   const [payChain, setPayChain] = useState(CHAINS[0]);
-  const [payToken, setPayToken] = useState(TOKENS["ethereum"][0]);
+  const [payToken, setPayToken] = useState<{ id: string; symbol: string; icon: string }>({
+    id: "usdt",
+    symbol: "USDT",
+    icon: "/token/usdt.svg",
+  });
   const [showChainDropdown, setShowChainDropdown] = useState(false);
   const [showTokenDropdown, setShowTokenDropdown] = useState(false);
   const [cardNumber, setCardNumber] = useState("");
@@ -86,6 +92,25 @@ export const PaymentLinkPreview = ({
   const receiveTokenSymbol = selectedToken?.metadata?.symbol || "USDT";
   const receiveTokenIcon = `/token/${receiveTokenSymbol.toLowerCase()}.svg`;
   const displayAmount = amount ? parseFloat(amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : null;
+
+  // Keep the pay token matched to the requested (receive) token so the amounts line up 1:1.
+  // The payer can still switch to another token via the dropdown.
+  useEffect(() => {
+    setPayToken({ id: receiveTokenSymbol.toLowerCase(), symbol: receiveTokenSymbol, icon: receiveTokenIcon });
+  }, [receiveTokenSymbol, receiveTokenIcon]);
+
+  // Browser-chrome URL slug, kept in sync with the title as the user types.
+  const slug =
+    (title || "")
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 32) || "your-payment-link";
+
+  // The "Pay with" dropdowns are interactive (the payer chooses how they pay). The amount stays
+  // read-only in the preview because it is driven by the form on the left (gated by `chrome`).
+  const interactive = true;
 
   const handleChainSelect = (chain: typeof CHAINS[0]) => {
     setPayChain(chain);
@@ -133,66 +158,80 @@ export const PaymentLinkPreview = ({
   };
 
   return (
-    <BaseContainer
-      header={
-        <header className="flex items-center w-full justify-between px-5 py-2">
-          <div className="flex flex-1 gap-2 items-center">
-            <CompanyAvatar logo={recipientAvatar} companyName={recipient} size="w-[24px]" className="text-xs" />
-            <div className="flex flex-col">
-              <span className="text-sm truncate text-text-primary leading-none">{recipient}</span>
-              <div className="flex items-center gap-1">
-                <span className="text-sm truncate text-text-secondary leading-none">
-                  {formatAddress(paymentWalletAddress || "0x")}
-                </span>
-                <img
-                  src="/misc/copy-icon.svg"
-                  className="w-4 cursor-pointer"
-                  alt="copy icon"
-                  onClick={() => {
-                    navigator.clipboard.writeText(paymentWalletAddress || "");
-                    toast.success("Copied to clipboard");
-                  }}
-                />
-              </div>
+    <div className="w-full overflow-hidden rounded-2xl border border-neutral-200 bg-white text-[#161616]">
+      {/* Browser chrome (same concept as the invoice preview) — preview only */}
+      {chrome && (
+        <div className="flex items-center gap-3 border-b border-neutral-200 px-4 py-3">
+          <div className="flex shrink-0 gap-1.5">
+            <span className="h-3 w-3 rounded-full bg-neutral-300" />
+            <span className="h-3 w-3 rounded-full bg-neutral-300" />
+            <span className="h-3 w-3 rounded-full bg-neutral-300" />
+          </div>
+          <div className="mx-auto max-w-[60%] truncate whitespace-nowrap rounded-md bg-neutral-100 px-3 py-1 text-[12px] text-neutral-500">
+            app.qash.finance/pay/{slug}
+          </div>
+        </div>
+      )}
+
+      {/* Recipient header */}
+      <header className="flex items-center w-full justify-between gap-2 border-b border-neutral-200 px-5 py-3">
+        <div className="flex flex-1 gap-2 items-center">
+          <CompanyAvatar logo={recipientAvatar} companyName={recipient} size="w-[24px]" className="text-xs" />
+          <div className="flex flex-col">
+            <span className="text-sm truncate text-text-primary leading-none">{recipient}</span>
+            <div className="flex items-center gap-1">
+              <span className="text-sm truncate text-text-secondary leading-none">
+                {formatAddress(paymentWalletAddress || "0x")}
+              </span>
+              <img
+                src="/misc/copy-icon.svg"
+                className="w-4 cursor-pointer"
+                alt="copy icon"
+                onClick={() => {
+                  navigator.clipboard.writeText(paymentWalletAddress || "");
+                  toast.success("Copied to clipboard");
+                }}
+              />
             </div>
           </div>
-        </header>
-      }
-      containerClassName="w-full h-full border-1 border-[#D4D6D9]"
-    >
-      <div className="w-full h-full flex flex-row gap-2 p-3">
+        </div>
+      </header>
+
+      <div className="w-full flex flex-row items-stretch gap-4 p-4">
         {/* Pay with */}
-        <div className="flex flex-col gap-3 bg-background rounded-xl p-3 w-[50%]">
-          <span className="text-text-primary text-lg font-semibold">Pay with</span>
+        <div className="flex flex-1 flex-col gap-2.5">
+          <span className="text-[12px] font-bold uppercase tracking-wide text-neutral-500">Pay with</span>
 
           {/* Payment method dropdown */}
           <div className="relative">
             <div
-              className="bg-app-background rounded-xl border-b-2 border-primary-divider cursor-pointer"
-              onClick={() => { setShowMethodDropdown(!showMethodDropdown); setShowChainDropdown(false); setShowTokenDropdown(false); }}
+              className={`h-[52px] rounded-xl border border-neutral-200 bg-white ${interactive ? "cursor-pointer" : ""}`}
+              onClick={interactive ? () => { setShowMethodDropdown(!showMethodDropdown); setShowChainDropdown(false); setShowTokenDropdown(false); } : undefined}
             >
               <div className="flex items-center gap-2 px-4 py-2 h-full w-full">
                 {paymentMethod === "crypto" ? (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
                     <path d="M13 11.15H7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     <path d="M2 11.15V7.53C2 5.49 3.65 3.84 5.69 3.84H11.31C13.35 3.84 15 5.17 15 7.21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     <path d="M17.48 12.2C16.98 12.68 16.74 13.42 16.94 14.18C17.19 15.11 18.11 15.7 19.07 15.7H20V17.15C20 19.36 18.21 21.15 16 21.15H6C3.79 21.15 2 19.36 2 17.15V10.15C2 7.94 3.79 6.15 6 6.15H16C17.83 6.15 20 7.95 20 10.15V11.6H18.92C18.36 11.6 17.85 11.82 17.48 12.2Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     <path d="M22 12.62V14.88C22 15.44 21.54 15.9 20.97 15.9H19.04C17.96 15.9 16.97 15.12 16.88 14.04C16.82 13.41 17.06 12.82 17.48 12.4C17.85 12.02 18.36 11.8 18.92 11.8H20.97C21.54 11.8 22 12.26 22 12.62Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 ) : (
-                  <svg width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                  <svg width="28" height="28" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
                     <rect x="1.5" y="3" width="13" height="10" rx="2" stroke="currentColor" strokeWidth="1.5"/>
                     <path d="M1.5 6.5H14.5" stroke="currentColor" strokeWidth="1.5"/>
                     <path d="M4 10H7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
                 )}
                 <div className="flex-1">
-                  <p className="text-text-secondary text-sm leading-none">Payment method</p>
-                  <p className="text-text-primary text-base font-medium">
+                  <p className="text-[11px] uppercase tracking-wide text-neutral-400 leading-none">Payment method</p>
+                  <p className="mt-1 text-[14px] font-medium leading-none text-[#161616]">
                     {paymentMethod === "crypto" ? "Cryptocurrency" : "Credit / Debit Card"}
                   </p>
                 </div>
-                <img src="/arrow/chevron-down.svg" alt="dropdown" className={`w-6 h-6 transition-transform ${showMethodDropdown ? "rotate-180" : ""}`} />
+                {interactive && (
+                  <img src="/arrow/chevron-down.svg" alt="dropdown" className={`w-6 h-6 transition-transform ${showMethodDropdown ? "rotate-180" : ""}`} />
+                )}
               </div>
             </div>
 
@@ -232,16 +271,18 @@ export const PaymentLinkPreview = ({
               {/* Network selector */}
               <div className="relative">
                 <div
-                  className="bg-app-background rounded-xl border-b-2 border-primary-divider cursor-pointer"
-                  onClick={() => { setShowChainDropdown(!showChainDropdown); setShowTokenDropdown(false); }}
+                  className={`h-[52px] rounded-xl border border-neutral-200 bg-white ${interactive ? "cursor-pointer" : ""}`}
+                  onClick={interactive ? () => { setShowChainDropdown(!showChainDropdown); setShowTokenDropdown(false); } : undefined}
                 >
                   <div className="flex items-center gap-2 px-4 py-2 h-full w-full">
-                    <img src={payChain.icon} alt={payChain.name} className="w-8 h-8" />
+                    <img src={payChain.icon} alt={payChain.name} className="w-7 h-7" />
                     <div className="flex-1">
-                      <p className="text-text-secondary text-sm leading-none">Network</p>
-                      <p className="text-text-primary text-base font-medium">{payChain.name}</p>
+                      <p className="text-[11px] uppercase tracking-wide text-neutral-400 leading-none">Network</p>
+                      <p className="mt-1 text-[14px] font-medium leading-none text-[#161616]">{payChain.name}</p>
                     </div>
-                    <img src="/arrow/chevron-down.svg" alt="dropdown" className={`w-6 h-6 transition-transform ${showChainDropdown ? "rotate-180" : ""}`} />
+                    {interactive && (
+                      <img src="/arrow/chevron-down.svg" alt="dropdown" className={`w-6 h-6 transition-transform ${showChainDropdown ? "rotate-180" : ""}`} />
+                    )}
                   </div>
                 </div>
 
@@ -265,16 +306,18 @@ export const PaymentLinkPreview = ({
               {/* Token selector */}
               <div className="relative">
                 <div
-                  className="bg-app-background rounded-xl border-b-2 border-primary-divider cursor-pointer"
-                  onClick={() => { setShowTokenDropdown(!showTokenDropdown); setShowChainDropdown(false); }}
+                  className={`h-[52px] rounded-xl border border-neutral-200 bg-white ${interactive ? "cursor-pointer" : ""}`}
+                  onClick={interactive ? () => { setShowTokenDropdown(!showTokenDropdown); setShowChainDropdown(false); } : undefined}
                 >
                   <div className="flex items-center gap-2 px-4 py-2 h-full w-full">
-                    <img src={payToken.icon} alt={payToken.symbol} className="w-8 h-8 rounded-full" />
+                    <img src={payToken.icon} alt={payToken.symbol} className="w-7 h-7 rounded-full" />
                     <div className="flex-1">
-                      <p className="text-text-secondary text-sm leading-none">Token</p>
-                      <p className="text-text-primary text-base font-medium">{payToken.symbol}</p>
+                      <p className="text-[11px] uppercase tracking-wide text-neutral-400 leading-none">Token</p>
+                      <p className="mt-1 text-[14px] font-medium leading-none text-[#161616]">{payToken.symbol}</p>
                     </div>
-                    <img src="/arrow/chevron-down.svg" alt="dropdown" className={`w-6 h-6 transition-transform ${showTokenDropdown ? "rotate-180" : ""}`} />
+                    {interactive && (
+                      <img src="/arrow/chevron-down.svg" alt="dropdown" className={`w-6 h-6 transition-transform ${showTokenDropdown ? "rotate-180" : ""}`} />
+                    )}
                   </div>
                 </div>
 
@@ -296,18 +339,23 @@ export const PaymentLinkPreview = ({
               </div>
 
               {/* Amount Input */}
-              <div className="bg-app-background rounded-xl border-b-2 border-primary-divider">
-                <div className="flex flex-col gap-1 px-4 py-2">
-                  <label className="text-text-secondary text-sm font-medium">Amount</label>
+              <div className="flex h-[52px] items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4">
+                <img src={payToken.icon} alt={payToken.symbol} className="h-7 w-7 shrink-0 rounded-full" />
+                <div className="flex flex-1 flex-col justify-center gap-0.5">
+                  <label className="text-[11px] uppercase tracking-wide text-neutral-400">Amount</label>
                   <div className="flex items-center">
-                    <input
-                      placeholder="Enter amount"
-                      value={amount || ""}
-                      className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-                      autoComplete="off"
-                      disabled={!!amount}
-                    />
-                    <span className="text-text-secondary text-sm">{payToken.symbol}</span>
+                    {chrome ? (
+                      <span className="w-full text-[14px] text-[#161616]">{amount || "0"}</span>
+                    ) : (
+                      <input
+                        placeholder="Enter amount"
+                        value={amount || ""}
+                        className="w-full bg-transparent border-none outline-none text-[14px] text-text-primary placeholder:text-text-secondary"
+                        autoComplete="off"
+                        disabled={!!amount}
+                      />
+                    )}
+                    <span className="shrink-0 text-sm text-text-secondary">{payToken.symbol}</span>
                   </div>
                 </div>
               </div>
@@ -315,9 +363,12 @@ export const PaymentLinkPreview = ({
                 <span className="text-text-secondary text-xs px-1">{"\u2248"} ${parseFloat(amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</span>
               )}
 
-              {/* Connect Wallet / Pay Button */}
-              <div className="flex justify-center mt-1">
-                {walletAddress && handleSubmitPayment ? (
+              {/* Pay CTA — the payer's action. In the create/edit preview this is a static mock
+                  (the merchant doesn't connect a wallet here); on the live page it's the real button. */}
+              <div className="mt-auto flex justify-center pt-1">
+                {chrome ? (
+                  <PrimaryButton text="Pay now" buttonClassName="pointer-events-none h-[52px]" />
+                ) : walletAddress && handleSubmitPayment ? (
                   <PrimaryButton text="Pay now" onClick={handleSubmitPayment} loading={isSending} />
                 ) : (
                   <PrimaryButton text="Connect Wallet" onClick={() => handleConnectWallet?.()} />
@@ -327,8 +378,8 @@ export const PaymentLinkPreview = ({
           ) : (
             <>
               {/* Card number */}
-              <div className="bg-app-background rounded-xl border-b-2 border-primary-divider">
-                <div className="flex flex-col gap-1 px-4 py-2">
+              <div className="h-[52px] rounded-xl border border-neutral-200 bg-white">
+                <div className="flex h-full flex-col justify-center gap-0.5 px-4">
                   <label className="text-text-secondary text-sm font-medium">Card number</label>
                   <div className="flex items-center">
                     <input
@@ -348,8 +399,8 @@ export const PaymentLinkPreview = ({
 
               {/* Expiry + CVC row */}
               <div className="flex gap-2">
-                <div className="bg-app-background rounded-xl border-b-2 border-primary-divider flex-1">
-                  <div className="flex flex-col gap-1 px-4 py-2">
+                <div className="h-[52px] rounded-xl border border-neutral-200 bg-white flex-1">
+                  <div className="flex h-full flex-col justify-center gap-0.5 px-4">
                     <label className="text-text-secondary text-sm font-medium">Expiry</label>
                     <input
                       placeholder="MM/YY"
@@ -361,8 +412,8 @@ export const PaymentLinkPreview = ({
                     />
                   </div>
                 </div>
-                <div className="bg-app-background rounded-xl border-b-2 border-primary-divider flex-1">
-                  <div className="flex flex-col gap-1 px-4 py-2">
+                <div className="h-[52px] rounded-xl border border-neutral-200 bg-white flex-1">
+                  <div className="flex h-full flex-col justify-center gap-0.5 px-4">
                     <label className="text-text-secondary text-sm font-medium">CVC</label>
                     <input
                       placeholder="123"
@@ -377,8 +428,8 @@ export const PaymentLinkPreview = ({
               </div>
 
               {/* Cardholder name */}
-              <div className="bg-app-background rounded-xl border-b-2 border-primary-divider">
-                <div className="flex flex-col gap-1 px-4 py-2">
+              <div className="h-[52px] rounded-xl border border-neutral-200 bg-white">
+                <div className="flex h-full flex-col justify-center gap-0.5 px-4">
                   <label className="text-text-secondary text-sm font-medium">Cardholder name</label>
                   <input
                     placeholder="John Doe"
@@ -391,9 +442,9 @@ export const PaymentLinkPreview = ({
               </div>
 
               {/* Amount display */}
-              <div className="bg-app-background rounded-xl border-b-2 border-primary-divider">
-                <div className="flex flex-col gap-1 px-4 py-2">
-                  <label className="text-text-secondary text-sm font-medium">Amount</label>
+              <div className="h-[52px] rounded-xl border border-neutral-200 bg-white">
+                <div className="flex h-full flex-col justify-center gap-0.5 px-4">
+                  <label className="text-[11px] uppercase tracking-wide text-neutral-400">Amount</label>
                   <div className="flex items-center">
                     <span className="text-text-primary flex-1">
                       {displayAmount ? `$${displayAmount}` : "$0.00"} USD
@@ -411,106 +462,68 @@ export const PaymentLinkPreview = ({
                 <span className="text-text-secondary text-xs">Card payments are converted to stablecoin and delivered on-chain</span>
               </div>
 
-              {/* Pay button */}
-              <div className="flex justify-center mt-1">
-                <PrimaryButton
-                  text={displayAmount ? `Pay $${displayAmount}` : "Pay now"}
-                  onClick={handleCardPay}
-                  loading={isProcessingCard}
-                  disabled={!cardNumber || !cardExpiry || !cardCvc || !cardName}
-                />
+              {/* Pay button (static mock in the create/edit preview) */}
+              <div className="mt-auto flex justify-center pt-1">
+                {chrome ? (
+                  <PrimaryButton
+                    text={displayAmount ? `Pay $${displayAmount}` : "Pay now"}
+                    buttonClassName="pointer-events-none"
+                  />
+                ) : (
+                  <PrimaryButton
+                    text={displayAmount ? `Pay $${displayAmount}` : "Pay now"}
+                    onClick={handleCardPay}
+                    loading={isProcessingCard}
+                    disabled={!cardNumber || !cardExpiry || !cardCvc || !cardName}
+                  />
+                )}
               </div>
             </>
           )}
         </div>
 
-        {/* Transfer Details */}
-        <div className="flex flex-col justify-between items-center w-[50%]">
-          <div className="flex flex-col gap-2 w-full">
-            <span className="text-text-primary text-2xl font-semibold">{recipient} receives</span>
+        {/* Receives */}
+        <div className="flex flex-1 flex-col gap-2.5">
+          <span className="truncate text-[12px] font-bold uppercase tracking-wide text-neutral-500">
+            {recipient} receives
+          </span>
 
-            {/* Locked network */}
-            <div
-              className="w-full bg-background rounded-[12px] flex flex-row gap-1 border border-primary-divider p-3 py-4 items-center"
-            >
-              <img src="/chain/miden.svg" alt="Miden" className="w-8 h-8" />
-              <div className="flex flex-col flex-1">
-                <span className="text-text-secondary text-xs leading-none">Network</span>
-                <span className="text-text-primary text-sm font-medium leading-none mt-0.5">Miden</span>
-              </div>
-              <img src="/misc/lock-icon.svg" alt="locked" className="w-4 h-4 opacity-40" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+          {/* Locked network */}
+          <div className="flex items-center gap-2.5 h-[52px] rounded-xl border border-neutral-200 bg-white px-3 py-2.5">
+            <img src="/chain/miden.svg" alt="Miden" className="h-7 w-7 shrink-0" />
+            <div className="flex flex-1 flex-col">
+              <span className="text-[11px] uppercase tracking-wide text-neutral-400 leading-none">Network</span>
+              <span className="mt-1 text-[14px] font-medium leading-none text-[#161616]">Miden</span>
             </div>
+            <img src="/misc/lock-icon.svg" alt="locked" className="h-3.5 w-3.5 opacity-40" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+          </div>
 
-            {/* Locked token */}
-            <div
-              className="w-full bg-background rounded-[12px] flex flex-row gap-1 border border-primary-divider p-3 py-4 items-center"
-            >
-              <img src={receiveTokenIcon} onError={(e) => { (e.target as HTMLImageElement).src = "/token/usdt.svg"; }} alt={receiveTokenSymbol} className="w-8 h-8" />
-              <div className="flex flex-col flex-1">
-                <span className="text-text-secondary text-xs leading-none">Token</span>
-                <span className="text-text-primary text-sm font-medium leading-none mt-0.5">{receiveTokenSymbol}</span>
-              </div>
-              <img src="/misc/lock-icon.svg" alt="locked" className="w-4 h-4 opacity-40" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+          {/* Locked token */}
+          <div className="flex items-center gap-2.5 h-[52px] rounded-xl border border-neutral-200 bg-white px-3 py-2.5">
+            <img src={receiveTokenIcon} onError={(e) => { (e.target as HTMLImageElement).src = "/token/usdt.svg"; }} alt={receiveTokenSymbol} className="h-7 w-7 shrink-0" />
+            <div className="flex flex-1 flex-col">
+              <span className="text-[11px] uppercase tracking-wide text-neutral-400 leading-none">Token</span>
+              <span className="mt-1 text-[14px] font-medium leading-none text-[#161616]">{receiveTokenSymbol}</span>
             </div>
+            <img src="/misc/lock-icon.svg" alt="locked" className="h-3.5 w-3.5 opacity-40" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+          </div>
 
-            {/* Transfer detail card */}
-            <div
-              className="w-full bg-background rounded-[12px] flex flex-row gap-1 border border-primary-divider p-3 py-5 justify-between items-center"
-              style={{
-                backgroundImage: "url(/card/background.svg)",
-                backgroundSize: "20%",
-                backgroundPosition: "right",
-                backgroundRepeat: "no-repeat",
-              }}
-            >
-              <div className="flex flex-col gap-2 flex-1 min-w-0 max-w-full">
-                <span className="text-text-secondary text-base font-bold leading-none truncate">
-                  {title || "Enter title"}
-                </span>
-                <span className="text-text-secondary text-sm leading-none truncate">
-                  {description || "Description"}
-                </span>
-              </div>
-
-              <div className="flex flex-row gap-1 items-center">
-                <img
-                  src={receiveTokenIcon}
-                  onError={(e) => { (e.target as HTMLImageElement).src = "/token/usdt.svg"; }}
-                  className="w-5 h-5"
-                />
-                <span className="text-text-primary font-semibold leading-none">
-                  {amount || "0"} {receiveTokenSymbol}
-                </span>
-              </div>
+          {/* Transfer detail card */}
+          <div className="flex items-center justify-between gap-2 h-[52px] rounded-xl border border-neutral-200 bg-white px-3">
+            <div className="flex min-w-0 flex-1 flex-col gap-1">
+              <span className="truncate text-[13px] font-bold leading-none text-[#161616]">{title || "Enter title"}</span>
+              <span className="truncate text-[12px] leading-none text-neutral-500">{description || "Description"}</span>
             </div>
+            <span className="shrink-0 whitespace-nowrap text-[14px] font-semibold leading-none text-[#161616]">{amount || "0"} {receiveTokenSymbol}</span>
+          </div>
 
-            {/* Total payable */}
-            <div
-              className="w-full bg-background rounded-[12px] flex flex-row gap-1 border border-primary-divider p-3 py-5 justify-between items-center"
-              style={{
-                backgroundImage: "url(/card/background.svg)",
-                backgroundSize: "20%",
-                backgroundPosition: "right",
-                backgroundRepeat: "no-repeat",
-              }}
-            >
-              <div className="flex flex-col gap-2">
-                <span className="text-text-secondary text-sm leading-none">Total payable amount</span>
-                <div className="flex flex-row gap-1 items-center">
-                  <img
-                    src={receiveTokenIcon}
-                    onError={(e) => { (e.target as HTMLImageElement).src = "/token/usdt.svg"; }}
-                    className="w-5 h-5"
-                  />
-                  <span className="text-text-primary text-2xl leading-none">
-                    {(parseFloat(amount || "0") + 0).toFixed(2)} {receiveTokenSymbol}
-                  </span>
-                </div>
-              </div>
-            </div>
+          {/* Total payable */}
+          <div className="mt-auto flex h-[52px] items-center justify-between gap-2 rounded-xl border border-neutral-200 bg-neutral-50 px-3">
+            <span className="shrink-0 whitespace-nowrap text-[11px] uppercase tracking-wide text-neutral-400">Total payable</span>
+            <span className="whitespace-nowrap text-[16px] font-bold leading-none text-[#161616]">{parseFloat(amount || "0").toFixed(2)} {receiveTokenSymbol}</span>
           </div>
         </div>
       </div>
-    </BaseContainer>
+    </div>
   );
 };

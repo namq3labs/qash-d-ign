@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import { useRouter } from "next/navigation";
 import { Table, CellContent } from "../Common/Table";
+import { FloatingAction } from "../Bill/FloatingAction";
+import { SecondaryButton } from "../Common/SecondaryButton";
 import { MultipleContactActionsTooltip } from "../Common/ToolTip/MultipleContactActionsTooltip";
 import { useGetClients, useDeleteClient } from "@/services/api/client";
 import { CustomCheckbox } from "../Common/CustomCheckbox";
@@ -384,6 +386,24 @@ export const ClientContact = () => {
           </div>
         )}
       />
+
+      {checkedRows.length > 0 && (
+        <FloatingAction
+          selectedCount={checkedRows.length}
+          allSelected={isAllChecked}
+          onDeselectAll={() => setCheckedRows([])}
+          totalLabel={`Total (${checkedRows.length} ${checkedRows.length === 1 ? "client" : "clients"})`}
+          actionButtons={
+            <SecondaryButton
+              text={`Remove ${checkedRows.length} ${checkedRows.length === 1 ? "client" : "clients"}`}
+              variant="red"
+              disabled={deleteClientMutation.isPending}
+              buttonClassName="w-fit whitespace-nowrap rounded-xl"
+              onClick={handleMultipleRemove}
+            />
+          }
+        />
+      )}
     </>
   );
 };

@@ -45,10 +45,19 @@ export const TitleProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+const NOOP_TITLE: TitleContextType = {
+  title: "",
+  showBackArrow: false,
+  setTitle: () => {},
+  setShowBackArrow: () => {},
+  onBackClick: undefined,
+  setOnBackClick: () => {},
+  resetTitle: () => {},
+};
+
 export const useTitle = () => {
   const context = useContext(TitleContext);
-  if (!context) {
-    throw new Error("useTitle must be used within a TitleProvider");
-  }
-  return context;
+  // When rendered outside a TitleProvider (e.g. inside a modal), fall back to a no-op
+  // so consumers that can appear both in-page and in-modal don't crash.
+  return context ?? NOOP_TITLE;
 };

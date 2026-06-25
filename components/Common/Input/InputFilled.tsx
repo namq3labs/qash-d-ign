@@ -1,7 +1,8 @@
 import React from "react";
-import { SecondaryButton } from "../SecondaryButton";
+import FieldInput from "./FieldInput";
+import FieldTextarea from "./FieldTextarea";
 
-interface InputFilled {
+interface InputFilledProps {
   label: string;
   placeholder?: string;
   value?: string;
@@ -11,9 +12,16 @@ interface InputFilled {
   optional?: boolean;
   characterLimit?: number;
   iconOnClick?: () => void;
+  containerClassName?: string;
   [key: string]: any; // For react-hook-form register
 }
 
+/**
+ * Canonical filled input. Renders the product's standard field look:
+ * label above, full-border rounded-xl white box (matches FieldInput / FieldTextarea).
+ * - With `icon`: a selector box (label above, trailing icon button that opens a picker).
+ * - `type="textarea"`: multi-line, with optional character counter.
+ */
 export default function InputFilled({
   label,
   placeholder,
@@ -24,56 +32,62 @@ export default function InputFilled({
   characterLimit,
   optional = false,
   iconOnClick,
+  containerClassName = "",
   ...rest
-}: InputFilled) {
-  return (
-    <>
-      <div
-        className={`flex items-center flex-row justify-between h-fit px-4 py-2 rounded-[12px] w-full bg-app-background border-b  ${
-          error ? "border-[#E93544]" : "border-primary-divider"
-        }`}
-      >
-        <div className="flex flex-col w-full">
-          <p className="font-barlow text-[14px] text-text-secondary">{label}</p>
-          {type === "textarea" ? (
-            <textarea
-              className="font-barlow text-[16px] text-text-primary placeholder:text-[#C1C1C1] w-full outline-none resize-none"
-              placeholder={placeholder}
-              value={value}
-              rows={(rest as any)?.rows ?? 3}
-              {...rest}
-            />
-          ) : (
-            <input
-              className="font-barlow text-[16px] text-text-primary placeholder:text-[#C1C1C1] w-full outline-none"
-              placeholder={placeholder}
-              value={value}
-              type={type}
-              {...rest}
-            />
-          )}
-        </div>
+}: InputFilledProps) {
+  const fullLabel = optional ? `${label} (Optional)` : label;
 
-        {icon && (
-          <div
-            className="bg-[#F6F6F6] border-b-2 border-[#E0E1E5] rounded-lg px-3 py-2 cursor-pointer"
-            onClick={iconOnClick}
-          >
+  // Selector variant: labeled box with a trailing icon button that opens a picker.
+  if (icon) {
+    return (
+      <div className={`flex w-full flex-col ${containerClassName}`}>
+        <label className="mb-1.5 text-[13px] font-medium text-text-primary">{fullLabel}</label>
+        <div
+          className={`flex h-[46px] w-full flex-row items-center justify-between rounded-xl border bg-background pl-3.5 pr-2 transition focus-within:ring-2 focus-within:ring-primary-blue/15 ${
+            error ? "border-[#E93544] focus-within:border-[#E93544]" : "border-primary-divider focus-within:border-primary-blue"
+          }`}
+        >
+          <input
+            className="w-full bg-transparent text-[14px] text-text-primary outline-none placeholder:text-[#C1C1C1]"
+            placeholder={placeholder}
+            value={value}
+            type={type}
+            {...rest}
+          />
+          <div className="ml-2 flex-shrink-0 cursor-pointer rounded-lg px-2 py-1 hover:bg-app-background" onClick={iconOnClick}>
             <img src={icon} alt="icon" className="w-5" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Multi-line variant.
+  if (type === "textarea") {
+    return (
+      <div className={`flex w-full flex-col ${containerClassName}`}>
+        <FieldTextarea label={fullLabel} placeholder={placeholder} value={value} error={!!error} {...rest} />
+        {characterLimit && (
+          <div className="flex w-full flex-row justify-end px-2">
+            <p className="text-xs text-text-secondary">
+              {(value as string)?.length ?? 0}/{characterLimit}
+            </p>
           </div>
         )}
       </div>
+    );
+  }
 
-      {(optional || type === "textarea") && (
-        <div className="w-full px-2 flex flex-row justify-between">
-          {optional && <p className="font-barlow text-xs text-text-secondary">(Optional)</p>}
-          {type === "textarea" && (
-            <p className="font-barlow text-xs text-text-secondary">
-              {((rest as any)?.value as string)?.length ?? 0}/{characterLimit ?? 200}
-            </p>
-          )}
-        </div>
-      )}
-    </>
+  // Standard text field.
+  return (
+    <FieldInput
+      label={fullLabel}
+      placeholder={placeholder}
+      value={value}
+      type={type}
+      error={!!error}
+      containerClassName={containerClassName}
+      {...rest}
+    />
   );
 }

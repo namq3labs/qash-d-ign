@@ -4,7 +4,9 @@ import { useTitle } from "@/contexts/TitleProvider";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { NavArrowRight } from "iconoir-react";
 import { SecondaryButton } from "../Common/SecondaryButton";
+import FieldTextarea from "@/components/Common/Input/FieldTextarea";
 import { useInvoice } from "@/hooks/server/useInvoice";
 import { CategoryBadge } from "../ContactBook/ContactBookContainer";
 import { useGetAllEmployeeGroups } from "@/services/api/employee";
@@ -39,12 +41,12 @@ const InvoiceItem = ({
 }) => {
   const { shape, color, groupName } = group || {};
   return (
-    <div className="grid grid-cols-[120px_120px_120px_1fr_120px] gap-10 items-center w-full border-b border-primary-divider px-4 py-3 bg-background rounded-xl">
+    <div className="grid grid-cols-[64px_minmax(0,1fr)_auto_120px_80px] gap-4 items-center w-full border-b border-primary-divider px-4 py-3 bg-background rounded-xl">
       {/* Invoice ID Column */}
-      <span className="text-sm font-medium text-text-primary">{invoiceId}</span>
+      <span className="text-sm font-medium text-text-primary truncate">{invoiceId}</span>
 
       {/* Name Column */}
-      <span className="text-sm font-medium text-text-primary">{name}</span>
+      <span className="text-sm font-medium text-text-primary truncate">{name}</span>
 
       {/* Employee Badge Column */}
       <div className="flex justify-center items-center">
@@ -57,8 +59,8 @@ const InvoiceItem = ({
       {/* Amount Column */}
       <div className="flex items-end flex-col gap-2">
         <div className="flex flex-row gap-1 items-center">
-          <img src={`/token/${token.toLowerCase()}.svg`} alt={token} className="w-5" />
-          <span className=" font-medium text-text-primary leading-none">{amount}</span>
+          <img src={`/token/${token.toLowerCase()}.svg`} alt={token} className="w-5 shrink-0" />
+          <span className="text-sm font-medium text-text-primary leading-none whitespace-nowrap">{amount}</span>
         </div>
         {/* <span className="text-sm text-text-secondary leading-none">{amountUsd}</span> */}
       </div>
@@ -97,25 +99,22 @@ const BillReviewContainer = () => {
   const { data: multisigAccounts } = useListAccountsByCompany(company?.id);
 
   useEffect(() => {
-    const handleBack = () => {
-      router.back();
-    };
-
     setTitle(
-      <div className="flex items-center gap-2">
-        <span className="text-text-secondary">Bills /</span>
-        <span className="text-text-primary">Review invoices</span>
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <button
+          type="button"
+          onClick={() => router.push("/bill")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Bills
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Review invoices</span>
       </div>,
     );
-    setShowBackArrow(true);
-    setOnBackClick(() => handleBack);
-
-    return () => {
-      // clean up when component unmounts
-      setOnBackClick(undefined);
-      setShowBackArrow(false);
-    };
-  }, [router]);
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const searchParams = useSearchParams();
   const { fetchInvoiceByUUID } = useInvoice();
@@ -261,15 +260,20 @@ const BillReviewContainer = () => {
   };
 
   return (
-    <div className="flex flex-col w-full h-full justify-start items-start p-7 gap-5">
-      <div className="flex flex-row gap-3">
-        <img src="/misc/flag-icon.svg" alt="Bill Placeholder" className="w-6" />
-        <span className="font-bold text-2xl">Review invoices</span>
+    <div className="flex w-full h-full flex-col">
+      {/* Page header (concept) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Review invoices</h1>
+          <p className="text-[14px] text-text-secondary">
+            Review the selected invoices and propose a payment from a multisig account.
+          </p>
+        </div>
       </div>
 
-      <div className="flex flex-row w-full h-full">
+      <div className="flex min-h-0 w-full flex-1 flex-row px-6 pb-6">
         {/* Left Side - Bill Details */}
-        <div className="flex-1 border-r-0 border border-primary-divider rounded-l-2xl p-5 bg-app-background flex flex-col gap-5 h-full overflow-auto">
+        <div className="flex-1 min-w-0 border-r-0 border border-primary-divider rounded-l-2xl p-5 bg-app-background flex flex-col gap-5 overflow-y-auto">
           <div className=" flex flex-row justify-between w-full items-center">
             <span className="font-semibold text-lg">Invoice list</span>
             <span className="text-lg text-text-secondary">
@@ -363,45 +367,75 @@ const BillReviewContainer = () => {
           {/* Bill details content goes here */}
         </div>
 
-        {/* Right Side - Review Summary - Edit the code here */}
-        <div className="w-150 border-l-0 border border-primary-divider rounded-r-2xl bg-[#E7E7E7] h-full flex flex-col gap-4">
-          <div className="flex flex-col h-full justify-between px-7 py-4">
-            <div className=" flex flex-col gap-2 justify-between">
-              <span className="font-bold text-3xl">Payment Overview</span>
-              <span className="text-text-secondary ">Make sure the details are correct before proceeding.</span>
-              <textarea
+        {/* Right Side - Payment Overview (clean card column, echoes the invoice-preview summary) */}
+        <div className="w-[400px] shrink-0 rounded-r-2xl border border-primary-divider bg-background flex flex-col min-h-0">
+          <div className="flex flex-1 flex-col gap-5 overflow-y-auto p-6">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-[20px] font-bold leading-tight text-text-primary">Payment Overview</h2>
+              <p className="text-sm text-text-secondary">Make sure the details are correct before proceeding.</p>
+            </div>
+
+            {/* Proposal description */}
+            <div className="flex flex-col gap-1.5">
+              <FieldTextarea
+                label="Proposal description"
                 {...register("proposalDescription")}
                 placeholder={`Payment for ${selectedInvoices.length} invoice(s)`}
                 aria-label="Proposal description"
                 maxLength={500}
-                className="w-full min-h-[96px] p-3 rounded-lg border border-primary-divider bg-white text-sm text-text-primary resize-none focus:outline-none"
+                rows={4}
               />
               {proposalDescription && proposalDescription.length > 0 && (
-                <div className="text-xs text-text-secondary mt-1">{proposalDescription.length}/500</div>
+                <span className="self-end text-xs text-text-secondary">{proposalDescription.length}/500</span>
               )}
             </div>
 
+            {/* Total by token */}
             <div className="flex flex-col gap-3">
-              <span className="font-semibold text-lg">Total by token</span>
+              <span className="text-sm font-semibold text-text-primary">Total by token</span>
               {tokenTotals.length === 0 ? (
-                <div className="text-sm text-text-secondary">No invoices selected</div>
+                <div className="rounded-xl border border-dashed border-primary-divider px-4 py-6 text-center text-sm text-text-secondary">
+                  No invoices selected
+                </div>
               ) : (
                 tokenTotals.map(t => (
-                  <TokenItem
+                  <div
                     key={t.currency}
-                    token={t.currency}
-                    amount={`${t.total} ${t.currency}`}
-                    amountUsd={t.totalUsd ? `$${t.totalUsd}` : ""}
-                  />
+                    className="flex items-center justify-between rounded-xl border border-primary-divider bg-app-background px-4 py-3"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <img
+                        src={`/token/${t.currency.toLowerCase()}.svg`}
+                        alt={t.currency}
+                        className="w-8 h-8"
+                        onError={e => {
+                          (e.target as HTMLImageElement).src = "/token/any-token.svg";
+                        }}
+                      />
+                      <span className="num text-[16px] text-text-primary">
+                        {t.total} {t.currency}
+                      </span>
+                    </div>
+                    {t.totalUsd ? <span className="text-sm text-text-secondary">${t.totalUsd}</span> : null}
+                  </div>
                 ))
               )}
             </div>
           </div>
 
-          <div className="flex w-full px-7 py-4 border-t-1 border-[#DBDCDE] justify-between">
-            <div className="flex flex-col gap-2">
-              <span className="text-text-secondary leading-none">Total amount</span>
-              <span className="font-bold text-3xl leading-none">
+          {/* Footer: total summary card + propose */}
+          <div className="flex flex-col gap-4 border-t border-primary-divider p-6">
+            <div
+              className="relative flex flex-col gap-1.5 overflow-hidden rounded-xl border border-primary-divider p-4"
+              style={{
+                backgroundImage: "url(/card/background.svg)",
+                backgroundSize: "30%",
+                backgroundPosition: "right",
+                backgroundRepeat: "no-repeat",
+              }}
+            >
+              <span className="text-sm leading-none text-text-secondary">Total amount</span>
+              <span className="num text-3xl leading-none text-text-primary">
                 {totalUsdSum > 0
                   ? `$${totalUsdSum}`
                   : tokenTotals.length === 1
@@ -411,8 +445,8 @@ const BillReviewContainer = () => {
             </div>
             <PrimaryButton
               text="Propose"
-              containerClassName="w-40 !rounded-xl"
-              buttonClassName="h-full"
+              containerClassName="w-full"
+              buttonClassName="whitespace-nowrap rounded-xl"
               onClick={handlePayInvoice}
               disabled={selectedInvoices.length === 0 || createProposalMutation.isPending}
               loading={createProposalMutation.isPending}

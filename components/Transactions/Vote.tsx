@@ -29,7 +29,7 @@ const ConfirmVote = ({ onDeny, onApprove, isLoading = false }: ConfirmVoteProps)
 
       {/* Action Buttons */}
       <div className="flex gap-2 w-full">
-        <SecondaryButton text="Deny" onClick={onDeny} buttonClassName="flex-1" disabled={isLoading} />
+        <SecondaryButton text="Deny" variant="red" onClick={onDeny} buttonClassName="flex-1" disabled={isLoading} />
         <PrimaryButton text="Approve" onClick={onApprove} containerClassName="flex-1" disabled={isLoading} />
       </div>
     </div>

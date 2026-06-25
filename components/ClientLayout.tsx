@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useMemo, useState, useEffect, useCallback } from "react";
 import { ToastBar, Toaster } from "react-hot-toast";
 import { CircleNotch } from "@phosphor-icons/react";
 import { ToastIcon } from "./Common/qashToast";
@@ -23,7 +23,7 @@ import {
 import { AccountProvider } from "@/contexts/AccountProvider";
 
 // Responsive sidebar widths
-const SIDEBAR_WIDTH_CLASSES = "w-[200px] lg:w-[240px] xl:w-[280px]";
+const SIDEBAR_WIDTH_CLASSES = "w-[176px] lg:w-[200px] xl:w-[228px]";
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -56,6 +56,20 @@ function ProtectedContent({ children }: { children: ReactNode }) {
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
   const pathname = usePathname();
+
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem("qash_sidebar_collapsed") === "1") setSidebarCollapsed(true);
+  }, []);
+  const toggleSidebar = useCallback(() => {
+    setSidebarCollapsed(prev => {
+      const next = !prev;
+      try {
+        localStorage.setItem("qash_sidebar_collapsed", next ? "1" : "0");
+      } catch {}
+      return next;
+    });
+  }, []);
 
   const isFullscreen = useMemo(() => {
     if (!pathname) return false;
@@ -113,8 +127,8 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
                         ) : (
                           <div className="flex flex-col h-screen overflow-hidden">
                             <div className="flex flex-row gap-2">
-                              <div className={`top-0 ${SIDEBAR_WIDTH_CLASSES}`}>
-                                <Sidebar />
+                              <div className={`top-0 transition-[width] duration-200 ${sidebarCollapsed ? "w-[68px]" : SIDEBAR_WIDTH_CLASSES}`}>
+                                <Sidebar collapsed={sidebarCollapsed} onToggleCollapse={toggleSidebar} />
                               </div>
                               <div className="flex-1 h-screen flex flex-col overflow-hidden gap-2">
                                 <Title />

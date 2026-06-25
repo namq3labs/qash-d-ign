@@ -1,14 +1,15 @@
 "use client";
 import { n } from "@/services/utils/normalizeToken";
 import React, { use, useEffect, useState } from "react";
-import BillDetailActionTooltip from "../Common/ToolTip/BillDetailActionTooltip";
-import { Tooltip } from "react-tooltip";
 import { Badge, BadgeStatus } from "../Common/Badge";
 import { SecondaryButton } from "../Common/SecondaryButton";
 import toast from "react-hot-toast";
 import { useModal } from "@/contexts/ModalManagerProvider";
-import { InvoiceModalProps } from "@/types/modal";
+import { PayInvoiceConfirmModalProps } from "@/types/modal";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight, Check } from "iconoir-react";
+import InvoicePreview from "@/components/Common/Invoice/InvoicePreview";
 import { useInvoice } from "@/hooks/server/useInvoice";
 import { InvoiceStatusEnum } from "@qash/types/enums";
 import { CategoryBadge } from "../ContactBook/ContactBookContainer";
@@ -20,6 +21,7 @@ import { BillTimelineDto } from "@qash/types/dto/bill";
 const BillDetailContainer = () => {
   const router = useRouter();
   const { openModal } = useModal();
+  const { setTitle, setShowBackArrow } = useTitle();
   const searchParams = useSearchParams();
   const invoiceUUID = searchParams.get("uuid") || "";
   const billUUID = searchParams.get("billUuid") || "";
@@ -123,7 +125,7 @@ const BillDetailContainer = () => {
     }
     // Fallback to invoice-based timeline
     return [
-      { label: "Invoice created", date: formatDateTime(invoice?.createdAt) },
+      { label: "Invoice created", date: formatDateTime(invoice?.createdAt || invoice?.issueDate) },
       invoice?.sentAt && { label: "Invoice sent", date: formatDateTime(invoice.sentAt) },
       invoice?.reviewedAt && { label: "Invoice reviewed", date: formatDateTime(invoice.reviewedAt) },
       invoice?.confirmedAt && { label: "Invoice confirmed", date: formatDateTime(invoice.confirmedAt) },
@@ -146,6 +148,27 @@ const BillDetailContainer = () => {
     }
   }, [invoiceUUID]);
 
+  // Breadcrumb in the top title bar: Bills › Invoice {number}
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <button
+          type="button"
+          onClick={() => router.push("/bill")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Bills
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">
+          {invoice?.invoiceNumber ? `Invoice ${invoice.invoiceNumber}` : "Invoice"}
+        </span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invoice?.invoiceNumber]);
+
   if (isLoading || !invoice) {
     return (
       <div className="flex items-center justify-center w-full h-full">
@@ -156,291 +179,158 @@ const BillDetailContainer = () => {
 
   const statusBadge = getStatusBadge(invoice.status);
 
+  const isClosed =
+    invoice.status === InvoiceStatusEnum.PAID || invoice.status === InvoiceStatusEnum.CANCELLED;
+  const lifecycleItems = [
+    ...timelineItems.map((it: any) => ({ ...it, done: true, pending: false })),
+    ...(isClosed ? [] : [{ label: "Awaiting payment", date: "In progress", done: false, pending: true }]),
+  ];
+
+  const group = groups?.find(grp => grp.id === invoice?.employee?.groupId);
+
+  // Map the bill invoice into the shared InvoicePreview document shape.
+  const invoiceData = {
+    invoiceNumber: invoice.invoiceNumber,
+    date: invoice.issueDate,
+    dueDate: invoice.dueDate,
+    logo: invoice.fromCompany?.logo || null,
+    from: {
+      name: invoice.fromDetails?.name || "",
+      email: invoice.fromDetails?.email || "",
+      company: invoice.fromCompany?.companyName || invoice.payroll?.company?.companyName || "",
+      address: invoice.fromDetails?.address || "",
+      network: invoice.paymentNetwork?.name || "Miden",
+      token: n(invoice.paymentToken?.symbol) || "USDT",
+      walletAddress: invoice.paymentWalletAddress || "",
+    },
+    billTo: {
+      name: invoice.toCompany?.companyName || invoice.toDetails?.companyName || "",
+      email: invoice.toCompany?.email || invoice.toDetails?.email || "",
+      company: invoice.toCompany?.companyName || "",
+      address: [invoice.toDetails?.address1, invoice.toDetails?.address2, invoice.toDetails?.city, invoice.toDetails?.country]
+        .filter(Boolean)
+        .join(", "),
+    },
+    items: (invoice.items || []).map((item: any) => ({
+      description: item.description || "",
+      qty: parseFloat(item.quantity || "1"),
+      price: parseFloat(item.unitPrice || "0"),
+      amount: parseFloat(item.total || "0"),
+      currency: invoice.currency || "USD",
+    })),
+    subtotal: parseFloat(invoice.subtotal || "0"),
+    total: parseFloat(invoice.total || "0"),
+    amountDue: parseFloat(invoice.total || "0"),
+    currency: n(invoice.paymentToken?.symbol) || "USDT",
+    status: invoice.status,
+  };
+
   return (
-    <div className="flex flex-col w-full h-full px-10 py-5 gap-6 bg-background">
-      <div className="flex flex-row justify-between items-center">
-        <div className="flex flex-col gap-2">
-          <span className="text-[14px] leading-none text-text-secondary">
-            {invoice.invoiceNumber} {invoice.fromDetails?.name}
-          </span>
-          <div className="flex flex-row gap-5 items-center">
-            <span className="text-xl leading-none font-bold text-text-primary">Invoice {invoice.invoiceNumber}</span>
+    <div className="flex w-full h-full flex-col overflow-y-auto bg-background">
+      {/* Page header (concept) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-3">
+            <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">
+              Invoice {invoice.invoiceNumber}
+            </h1>
             <Badge text={statusBadge.text} status={statusBadge.status} />
+            <CategoryBadge
+              shape={group?.shape || CategoryShapeEnum.CIRCLE}
+              color={group?.color || "#35ADE9"}
+              name={group?.name || "Client"}
+            />
           </div>
+          <p className="text-[14px] text-text-secondary">Invoice from {invoice.fromDetails?.name || "N/A"}</p>
         </div>
 
-        <div className="flex flex-row gap-2">
+        <div className="flex shrink-0 flex-row gap-2">
           {invoice.status !== InvoiceStatusEnum.PAID && invoice.status !== InvoiceStatusEnum.CANCELLED && (
             <SecondaryButton
-              text="Pay Invoice"
-              buttonClassName="w-[150px]"
-              icon="/misc/coin-icon.svg"
-              iconPosition="left"
+              text="Delete invoice"
+              variant="red"
+              buttonClassName="w-fit whitespace-nowrap"
               onClick={() => {
-                // redirect to `http://localhost:3000/bill/review?invoiceUUID=${invoiceUUID}`
-                router.push(`/bill/review?invoiceUUID=${invoiceUUID}`);
+                openModal("REMOVE_INVOICE", {
+                  invoiceOwnerName: invoice.fromDetails?.name || "",
+                  onRemove: handleDeleteInvoice,
+                });
               }}
             />
           )}
-          <SecondaryButton
-            text="View invoice PDF"
-            variant="light"
-            buttonClassName="w-[160px]"
-            icon="/misc/eye-icon.svg"
-            iconPosition="left"
-            onClick={() => {
-              openModal<InvoiceModalProps>("INVOICE_MODAL", {
-                invoice: {
-                  amountDue: invoice.total!,
-                  billTo: {
-                    address: [
-                      invoice.toDetails?.address1,
-                      invoice.toDetails?.address2,
-                      invoice.toDetails?.city,
-                      invoice.toDetails?.country,
-                    ]
-                      .filter(Boolean)
-                      .join(", "),
-                    email: invoice.toCompany?.email,
-                    name: invoice.toCompany?.companyName,
-                    company: [invoice.toCompany?.companyName, invoice.toCompany?.companyType].filter(Boolean).join(" "),
-                  },
-                  paymentToken: {
-                    name: n(invoice.paymentToken?.name) || "USDT",
-                  },
-                  currency: invoice.currency || "USD",
-                  date: invoice.issueDate!,
-                  dueDate: invoice.dueDate!,
-                  from: {
-                    name: invoice.fromDetails?.name!,
-                    address: invoice.fromDetails?.address!,
-                    email: invoice.fromDetails?.email!,
-                    company: `${invoice.fromCompany?.companyName || invoice.payroll?.company?.companyName}`,
-                  },
-                  invoiceNumber: invoice.invoiceNumber!,
-                  items: invoice.items.map((item: any) => ({
-                    name: item.description,
-                    rate: item.unitPrice,
-                    qty: item.quantity,
-                    amount: item.total,
-                  })),
-                  subtotal: parseFloat(invoice.subtotal!.toString()),
-                  tax: 0,
-                  total: parseFloat(invoice.total!.toString()),
-                  walletAddress: invoice.paymentWalletAddress!,
-                  network: "Miden",
-                },
-              });
-            }}
-          />
           {invoice.status !== InvoiceStatusEnum.PAID && invoice.status !== InvoiceStatusEnum.CANCELLED && (
-            <img
-              src="/misc/three-dot-icon.svg"
-              alt=""
-              data-tooltip-id="bill-detail-action-tooltip"
-              data-tooltip-content="0"
-              className="w-6 cursor-pointer"
+            <SecondaryButton
+              text="Pay Invoice"
+              buttonClassName="w-fit whitespace-nowrap"
+              onClick={() => {
+                openModal<PayInvoiceConfirmModalProps>("PAY_INVOICE_CONFIRM", { invoice, billUUID });
+              }}
             />
           )}
         </div>
       </div>
 
-      {/* Bill Detail Action Tooltip */}
-      {
-        <Tooltip
-          id="bill-detail-action-tooltip"
-          clickable
-          style={{
-            zIndex: 20,
-            borderRadius: "16px",
-            padding: "0",
-          }}
-          place="left"
-          openOnClick
-          noArrow
-          border="none"
-          opacity={1}
-          render={() => {
-            const isPaidOrCancelled =
-              invoice.status === InvoiceStatusEnum.PAID || invoice.status === InvoiceStatusEnum.CANCELLED;
-            return (
-              <BillDetailActionTooltip
-                onEdit={handleCopyInvoiceLink}
-                onDuplicate={handleDownloadPDF}
-                onRemove={handleDeleteInvoice}
-                showDelete={!isPaidOrCancelled}
-              />
-            );
-          }}
-        />
-      }
-
-      <div className="w-full h-full flex flex-row gap-10">
-        <div className="flex-1 flex-col w-full h-full">
-          {/* Invoice Details Cards */}
-          <div className="flex flex-row gap-3 w-full">
-            {/* First Card - Invoice Details */}
-            <div className="flex-1 bg-white border border-gray-200 rounded-2xl p-4 flex gap-8">
-              <div className="flex flex-col gap-4 w-24">
-                <p className="text-sm text-gray-500 font-medium">Created on</p>
-                <p className="text-sm text-gray-500 font-medium">Invoice amount</p>
-                <p className="text-sm text-gray-500 font-medium">Issued date</p>
-                <p className="text-sm text-gray-500 font-medium">Due date</p>
-                <p className="text-sm text-gray-500 font-medium">Group</p>
-              </div>
-
-              <div className="flex-1 flex flex-col gap-4">
-                <p className="text-sm text-gray-900 font-medium">{formatDate(invoice.createdAt)}</p>
-                <div className="flex items-center gap-2">
-                  <img src={`/token/${n(invoice.paymentToken?.name).toLowerCase() || 'usdt'}.svg`} alt={invoice.paymentToken?.name || "USDT"} className="w-5 h-5" />
-                  <p className="text-sm text-gray-900 font-medium">
-                    {invoice.total} {n(invoice.paymentToken?.name)}
-                  </p>
-                </div>
-                <p className="text-sm text-gray-900 font-medium">{formatDate(invoice.issueDate)}</p>
-                <p className="text-sm text-gray-900 font-medium">{formatDate(invoice.dueDate)}</p>
-                <CategoryBadge
-                  shape={groups?.find(grp => grp.id === invoice?.employee?.groupId)?.shape || CategoryShapeEnum.CIRCLE}
-                  color={groups?.find(grp => grp.id === invoice?.employee?.groupId)?.color || "#35ADE9"}
-                  name={groups?.find(grp => grp.id === invoice?.employee?.groupId)?.name || "Client"}
-                />
-              </div>
-            </div>
-
-            {/* Second Card - From/Billed To */}
-            <div className="flex-1 bg-white border border-gray-200 rounded-2xl p-4 flex flex-col gap-4">
-              <div className="flex flex-row gap-5">
-                <div className="w-30">
-                  <p className="text-sm text-gray-500 font-medium">From</p>
-                </div>
-                <div className="flex flex-col gap-0">
-                  <p className="text-sm text-gray-900 font-medium">
-                    {invoice.fromDetails?.name}{" "}
-                    <span className="text-gray-500">
-                      ({invoice.fromCompany?.companyName || invoice.payroll?.company?.companyName})
-                    </span>
-                  </p>
-                  <p className="text-sm text-blue-600 font-medium">{invoice.fromDetails?.email}</p>
-                </div>
-              </div>
-              <div className="flex flex-row gap-5">
-                <div className="w-30">
-                  <p className="text-sm text-gray-500 font-medium">Billed to</p>
-                </div>
-                <div className="flex flex-col gap-0">
-                  <p className="text-sm text-gray-900 font-medium">{invoice.toDetails?.companyName} </p>
-                  <p className="text-sm text-blue-600 font-medium">{invoice.toDetails?.email}</p>
-                </div>
-              </div>
-              <div className="flex flex-row gap-5">
-                <div className="w-30">
-                  <p className="text-sm text-gray-500 font-medium">Default method</p>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <img src={`/token/${n(invoice.paymentToken?.symbol).toLowerCase() || 'usdt'}.svg`} alt={invoice.paymentToken?.symbol || "USDT"} className="w-5 h-5" />
-                  <p className="text-sm text-gray-900 font-medium">
-                    {n(invoice.paymentToken?.symbol)} ({invoice.paymentNetwork?.name})
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-row gap-5">
-                <div className="w-30">
-                  <p className="text-sm text-gray-500 font-medium">Payment address</p>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <p className="text-sm text-gray-900 font-medium">{invoice.paymentWalletAddress}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Summary Section */}
-          <div className="flex flex-col gap-4">
-            <h2 className="text-2xl font-medium text-text-primary">Summary</h2>
-
-            {/* Summary Table */}
-            <div className="border border-gray-200 rounded-2xl overflow-hidden">
-              {/* Header */}
-              <div className="grid grid-cols-[2fr_1fr_1.5fr_1.5fr] gap-3 px-4 py-3 bg-gray-50 border-b border-gray-200">
-                <p className="text-sm text-gray-600 font-medium">Item details</p>
-                <p className="text-sm text-gray-600 font-medium text-center">Qty</p>
-                <p className="text-sm text-gray-600 font-medium text-right">Price</p>
-                <p className="text-sm text-gray-600 font-medium text-right">Amount</p>
-              </div>
-
-              {/* Items */}
-              {invoice.items?.map((item: any, idx: number) => (
-                <div
-                  key={idx}
-                  className="grid grid-cols-[2fr_1fr_1.5fr_1.5fr] gap-3 px-4 py-3 border-b border-gray-200"
-                >
-                  <p className="text-sm text-gray-900 font-medium">{item.description}</p>
-                  <p className="text-sm text-gray-900 font-medium text-center">{item.quantity}</p>
-                  <p className="text-sm text-gray-900 font-medium text-right">
-                    {Number(item.unitPrice).toFixed(2)} {n(invoice.paymentToken?.name)}
-                  </p>
-                  <p className="text-sm text-gray-900 font-medium text-right">
-                    {Number(item.total).toFixed(2)} {n(invoice.paymentToken?.name)}
-                  </p>
-                </div>
-              ))}
-
-              {/* Subtotal */}
-              <div className="grid grid-cols-[2fr_1fr_1.5fr_1.5fr] gap-3 px-4 py-3 border-b border-gray-200">
-                <div />
-                <div />
-                <p className="text-sm text-gray-900 font-medium text-right">Subtotal</p>
-                <p className="text-base text-gray-900 font-semibold text-right">
-                  {Number(invoice.subtotal).toFixed(2)} {n(invoice.paymentToken?.name)}
-                </p>
-              </div>
-
-              {/* Amount Due */}
-              <div className="grid grid-cols-[2fr_1fr_1.5fr_1.5fr] gap-3 px-4 py-3 bg-blue-50">
-                <div />
-                <div />
-                <p className="text-sm text-gray-900 font-medium text-right">Amount due</p>
-                <p className="text-base text-gray-900 font-semibold text-right">
-                  {Number(invoice.total).toFixed(2)} {n(invoice.paymentToken?.name)}
-                </p>
-              </div>
-            </div>
-          </div>
+      <div className="flex w-full items-stretch justify-center gap-5 px-6 pb-6">
+        <div className="w-[720px] shrink-0">
+          <InvoicePreview {...invoiceData} />
         </div>
 
-        {/* Timeline Section */}
-        <div className="w-80 flex flex-col gap-3">
-          <h2 className="text-2xl font-medium text-text-primary">Timeline</h2>
+        {/* Timeline Section (vertical stepper) */}
+        <div className="flex w-80 shrink-0 flex-col gap-3">
+          <h2 className="text-lg font-semibold text-text-primary">Timeline</h2>
 
-          <div className="border border-primary-divider rounded-2xl px-2 py-6 flex-1">
-            <div className="px-4 flex flex-col gap-3">
-              {/* Timeline Items */}
-              {timelineItems.map((item: any, idx: number) => (
-                <div className="flex gap-7 pb-6" key={idx}>
-                  {/* Timeline Marker with Polygon and Vertical Line */}
-                  <div className="flex flex-col items-center pt-1 relative">
-                    <img src="/misc/blue-polygon.svg" alt="Timeline Marker" className="w-6 h-6 z-10" />
-                    {/* Vertical Line (not for first item) */}
-                    {idx !== 0 && (
-                      <div
-                        className="absolute top-0 left-1/2 -translate-x-1/2"
-                        style={{ height: 75, width: 4, background: "#066EFF", zIndex: 0, marginTop: -50 }}
+          <div className="flex-1 rounded-2xl border border-primary-divider bg-app-background p-5">
+            <ol className="flex flex-col">
+              {lifecycleItems.map((item: any, idx: number) => {
+                const isLast = idx === lifecycleItems.length - 1;
+                const nextPending = lifecycleItems[idx + 1]?.pending;
+                return (
+                  <li key={idx} className="relative flex gap-3.5 pb-6 last:pb-0">
+                    {/* Connector line between markers */}
+                    {!isLast && (
+                      <span
+                        aria-hidden
+                        className={`absolute left-[15px] top-9 bottom-0 w-0.5 ${
+                          nextPending ? "bg-primary-divider" : "bg-primary-blue/40"
+                        }`}
                       />
                     )}
-                  </div>
-                  {/* Timeline Content */}
-                  <div className="flex flex-col gap-1.5 w-40">
-                    <p className="text-sm font-semibold text-text-primary leading-none">{item.label}</p>
-                    <p className="text-sm font-medium text-text-secondary leading-none">{item.date}</p>
-                    {item.metadata?.signerName && (
-                      <p className="text-xs text-text-secondary">{item.metadata.signerName}</p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+                    {/* Marker */}
+                    <span
+                      className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+                        item.done
+                          ? "bg-primary-blue text-white"
+                          : "border-2 border-primary-blue/40 bg-primary-blue/5"
+                      }`}
+                    >
+                      {item.done ? (
+                        <Check width={16} height={16} strokeWidth={2.5} />
+                      ) : (
+                        <span className="h-2.5 w-2.5 rounded-full bg-primary-blue animate-pulse" />
+                      )}
+                    </span>
+                    {/* Content */}
+                    <div className="flex flex-col gap-0.5 pt-1">
+                      <p
+                        className={`text-sm font-semibold leading-tight ${
+                          item.pending ? "text-text-secondary" : "text-text-primary"
+                        }`}
+                      >
+                        {item.label}
+                      </p>
+                      {item.date && item.date !== "N/A" && (
+                        <p className="text-xs text-text-secondary leading-tight">{item.date}</p>
+                      )}
+                      {item.metadata?.signerName && (
+                        <p className="text-xs text-text-secondary leading-tight">
+                          Signed by {item.metadata.signerName}
+                        </p>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
           </div>
         </div>
       </div>

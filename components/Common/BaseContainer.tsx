@@ -11,7 +11,9 @@ interface BaseContainerProps {
 
 export const BaseContainer = ({ children, header, containerClassName, childrenClassName }: BaseContainerProps) => {
   return (
-    <div className={`flex flex-col bg-base-container-main-background rounded-4xl p-[1px] ${containerClassName}`}>
+    <div
+      className={`flex flex-col bg-base-container-main-background rounded-4xl border border-primary-divider p-[1px] ${containerClassName}`}
+    >
       <div className="flex justify-center items-center">{header}</div>
 
       <div

@@ -311,11 +311,9 @@ const PayrollDetail = () => {
   }));
 
   return (
-    <div className="w-full h-full flex flex-col">
-      <div className="flex-1 min-h-0 overflow-y-auto">
-        <div className="p-5 pb-12 flex flex-col items-start justify-start w-full gap-4">
-      {/* Header with name, badges, and toggle */}
-      <div className="flex items-center justify-between w-full">
+    <div className="flex w-full h-full flex-col bg-background">
+      {/* Page header (concept) with name, badges, and toggle */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
         <div className="flex items-center gap-3">
           <EmployeeAvatar
             src={(employeeData as any)?.avatar || (payrollData.employee as any).avatar}
@@ -324,9 +322,9 @@ const PayrollDetail = () => {
             className="w-12 h-12"
             textClassName="text-lg"
           />
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-0.5">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-2xl text-text-primary">{payrollData.employee.name}</span>
+              <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">{payrollData.employee.name}</h1>
               {isContractor && (
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#E97135]/10 text-[#E97135]">Contractor</span>
               )}
@@ -337,10 +335,10 @@ const PayrollDetail = () => {
                 {isActive ? "Active" : "Disabled"}
               </span>
             </div>
-            <span className="text-text-secondary text-sm">{payrollData.employee.email}</span>
+            <p className="text-[14px] text-text-secondary">{payrollData.employee.email}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2.5">
+        <div className="flex shrink-0 items-center gap-2.5">
           {/* Enable / disable payment toggle */}
           <div className="flex items-center gap-2 rounded-xl border border-primary-divider bg-background px-3 py-2">
             <span className="text-sm font-medium text-text-secondary whitespace-nowrap">
@@ -363,6 +361,7 @@ const PayrollDetail = () => {
         </div>
       </div>
 
+      <div className="flex-1 min-h-0 overflow-y-auto px-6 pb-6 flex flex-col items-start justify-start w-full gap-4">
       {/* Overview Cards */}
       <div className="flex gap-3 items-stretch w-full">
         {/* Next Payment */}
@@ -511,7 +510,6 @@ const PayrollDetail = () => {
           />
         </div>
       </div>
-        </div>
       </div>
     </div>
   );

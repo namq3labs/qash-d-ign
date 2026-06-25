@@ -549,6 +549,32 @@ input:-moz-autofill:active {
 }
 /************ Table Scrollbar ************/
 
+/************ Thin (light) Scrollbar ************/
+/* Slim, subtle scrollbar for light-theme content areas. */
+.thin-scrollbar::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background: #dadbe0;
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+.thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #c2c4cb;
+}
+.thin-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+.thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #dadbe0 transparent;
+}
+/************ Thin (light) Scrollbar ************/
+
 /************ Hide Horizontal Scrollbar ************/
 /* Hide horizontal scrollbar for webkit browsers */
 .overflow-x-auto::-webkit-scrollbar {

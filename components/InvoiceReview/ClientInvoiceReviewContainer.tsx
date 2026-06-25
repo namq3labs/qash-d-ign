@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { PrimaryButton } from "../Common/PrimaryButton";
+import FieldInput from "@/components/Common/Input/FieldInput";
 import InvoicePreview from "../Common/Invoice/InvoicePreview";
 import { useInvoice } from "@/hooks/server/useInvoice";
 import { useSearchParams } from "next/navigation";
@@ -496,7 +497,7 @@ export const ClientInvoiceReviewContainer = () => {
                 {/* Payment Method Selection */}
                 <div className="relative">
                   <div
-                    className="bg-app-background rounded-lg border-b border-primary-divider cursor-pointer"
+                    className="bg-background rounded-lg border border-primary-divider cursor-pointer"
                     onClick={() => setShowMethodDropdown(!showMethodDropdown)}
                   >
                     <div className="flex items-center gap-3 px-4 py-3 h-16 w-full">
@@ -566,7 +567,7 @@ export const ClientInvoiceReviewContainer = () => {
                       <button
                         type="button"
                         onClick={() => openModal(MODAL_IDS.SELECT_NETWORK, { onNetworkSelect: setSelectedNetwork })}
-                        className="flex items-center gap-3 px-4 py-3 h-16 w-full text-left cursor-pointer bg-app-background rounded-lg border-b border-primary-divider"
+                        className="flex items-center gap-3 px-4 py-3 h-16 w-full text-left cursor-pointer bg-background rounded-lg border border-primary-divider"
                       >
                         {selectedNetwork && <img src={selectedNetwork.icon} alt="network" className="w-8 h-8" />}
                         <div className="flex-1">
@@ -582,7 +583,7 @@ export const ClientInvoiceReviewContainer = () => {
                       <button
                         type="button"
                         onClick={() => openModal(MODAL_IDS.SELECT_TOKEN, { onTokenSelect: setSelectedToken })}
-                        className="flex items-center gap-3 px-4 py-3 h-16 w-full text-left cursor-pointer bg-app-background rounded-lg border-b border-primary-divider"
+                        className="flex items-center gap-3 px-4 py-3 h-16 w-full text-left cursor-pointer bg-background rounded-lg border border-primary-divider"
                       >
                         {selectedToken && (
                           <img
@@ -603,7 +604,7 @@ export const ClientInvoiceReviewContainer = () => {
 
                     {/* Amount Input */}
                     <div className="flex flex-col gap-2">
-                      <div className="flex items-center justify-between px-4 py-3 h-16 w-full bg-app-background rounded-lg border-b border-primary-divider">
+                      <div className="flex items-center justify-between px-4 py-3 h-16 w-full bg-background rounded-lg border border-primary-divider">
                         <div className="flex-1">
                           <p className="text-text-secondary text-sm leading-none mb-1">Total Amount</p>
                           <p className="text-text-primary text-base font-medium">{invoiceData?.total || "0"}</p>
@@ -632,73 +633,56 @@ export const ClientInvoiceReviewContainer = () => {
                 ) : (
                   <>
                     {/* Card number */}
-                    <div className="bg-app-background rounded-lg border-b border-primary-divider">
-                      <div className="flex flex-col gap-1 px-4 py-3">
-                        <label className="text-text-secondary text-sm font-medium">Card number</label>
-                        <div className="flex items-center">
-                          <input
-                            placeholder="1234 5678 9012 3456"
-                            value={cardNumber}
-                            onChange={e => setCardNumber(formatCardNumber(e.target.value))}
-                            className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-                            autoComplete="cc-number"
-                            inputMode="numeric"
-                          />
-                          {getCardBrand(cardNumber) && (
-                            <span className="text-text-secondary text-xs font-medium whitespace-nowrap">
-                              {getCardBrand(cardNumber)}
-                            </span>
-                          )}
-                        </div>
-                      </div>
+                    <div className="relative">
+                      <FieldInput
+                        label="Card number"
+                        placeholder="1234 5678 9012 3456"
+                        value={cardNumber}
+                        onChange={e => setCardNumber(formatCardNumber(e.target.value))}
+                        className="pr-20"
+                        autoComplete="cc-number"
+                        inputMode="numeric"
+                      />
+                      {getCardBrand(cardNumber) && (
+                        <span className="pointer-events-none absolute bottom-0 right-3.5 flex h-[46px] items-center text-text-secondary text-xs font-medium whitespace-nowrap">
+                          {getCardBrand(cardNumber)}
+                        </span>
+                      )}
                     </div>
 
                     {/* Expiry + CVC */}
                     <div className="flex gap-2">
-                      <div className="bg-app-background rounded-lg border-b border-primary-divider flex-1">
-                        <div className="flex flex-col gap-1 px-4 py-3">
-                          <label className="text-text-secondary text-sm font-medium">Expiry</label>
-                          <input
-                            placeholder="MM/YY"
-                            value={cardExpiry}
-                            onChange={e => setCardExpiry(formatExpiry(e.target.value))}
-                            className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-                            autoComplete="cc-exp"
-                            inputMode="numeric"
-                          />
-                        </div>
-                      </div>
-                      <div className="bg-app-background rounded-lg border-b border-primary-divider flex-1">
-                        <div className="flex flex-col gap-1 px-4 py-3">
-                          <label className="text-text-secondary text-sm font-medium">CVC</label>
-                          <input
-                            placeholder="123"
-                            value={cardCvc}
-                            onChange={e => setCardCvc(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                            className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-                            autoComplete="cc-csc"
-                            inputMode="numeric"
-                          />
-                        </div>
-                      </div>
+                      <FieldInput
+                        containerClassName="flex-1"
+                        label="Expiry"
+                        placeholder="MM/YY"
+                        value={cardExpiry}
+                        onChange={e => setCardExpiry(formatExpiry(e.target.value))}
+                        autoComplete="cc-exp"
+                        inputMode="numeric"
+                      />
+                      <FieldInput
+                        containerClassName="flex-1"
+                        label="CVC"
+                        placeholder="123"
+                        value={cardCvc}
+                        onChange={e => setCardCvc(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                        autoComplete="cc-csc"
+                        inputMode="numeric"
+                      />
                     </div>
 
                     {/* Cardholder name */}
-                    <div className="bg-app-background rounded-lg border-b border-primary-divider">
-                      <div className="flex flex-col gap-1 px-4 py-3">
-                        <label className="text-text-secondary text-sm font-medium">Cardholder name</label>
-                        <input
-                          placeholder="John Doe"
-                          value={cardName}
-                          onChange={e => setCardName(e.target.value)}
-                          className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-                          autoComplete="cc-name"
-                        />
-                      </div>
-                    </div>
+                    <FieldInput
+                      label="Cardholder name"
+                      placeholder="John Doe"
+                      value={cardName}
+                      onChange={e => setCardName(e.target.value)}
+                      autoComplete="cc-name"
+                    />
 
                     {/* Amount */}
-                    <div className="bg-app-background rounded-lg border-b border-primary-divider">
+                    <div className="bg-background rounded-lg border border-primary-divider">
                       <div className="flex flex-col gap-1 px-4 py-3">
                         <label className="text-text-secondary text-sm font-medium">Amount</label>
                         <span className="text-text-primary text-base font-medium">

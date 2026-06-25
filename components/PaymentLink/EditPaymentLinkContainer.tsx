@@ -3,6 +3,8 @@ import { AssetWithMetadata } from "@/types/faucet";
 import { MODAL_IDS } from "@/types/modal";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import FieldInput from "@/components/Common/Input/FieldInput";
+import FieldTextarea from "@/components/Common/Input/FieldTextarea";
 import { PrimaryButton } from "../Common/PrimaryButton";
 import { BaseContainer } from "../Common/BaseContainer";
 import { blo } from "blo";
@@ -20,6 +22,8 @@ import { PaymentLinkPreview } from "./PaymentLinkPreview";
 import { useAuth } from "@/services/auth/context";
 import { useListAccountsByCompany } from "@/services/api/multisig";
 import { useGetMyCompany } from "@/services/api/company";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
 
 interface CreatePaymentLinkFormData {
   title: string;
@@ -85,31 +89,19 @@ const ChainItem = ({ text, icon, isSelected, onClick }: ChainItemProps) => {
   );
 };
 
-const inputContainerClass = "bg-background rounded-xl p-3 border-b-2 border-primary-divider";
+const inputContainerClass = "bg-background rounded-xl p-3 border border-primary-divider";
 
 const FormInput = ({ label, placeholder, type = "text", register, error, disabled, required }: FormInputProps) => (
-  <div className="flex flex-col gap-2">
-    <div className="bg-background rounded-xl border-b-2 border-primary-divider">
-      <div className="flex flex-col gap-1 px-4 py-2">
-        <label className="text-text-secondary text-sm font-medium">{label}</label>
-        <input
-          {...register}
-          type={type}
-          placeholder={placeholder}
-          className="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary"
-          autoFocus={label === "Name"}
-          disabled={disabled}
-          autoComplete="off"
-        />
-      </div>
-    </div>
-    {error && (
-      <div className="flex items-center gap-1 pl-2">
-        <img src="/misc/red-circle-warning.svg" alt="warning" className="w-4 h-4" />
-        <span className="text-[#E93544] text-sm">{error}</span>
-      </div>
-    )}
-  </div>
+  <FieldInput
+    label={label}
+    type={type}
+    placeholder={placeholder}
+    error={!!error}
+    errorMessage={error}
+    disabled={disabled}
+    autoComplete="off"
+    {...register}
+  />
 );
 
 const NetworkBadge = ({ networkId }: { networkId: string }) => {
@@ -122,6 +114,7 @@ const NetworkBadge = ({ networkId }: { networkId: string }) => {
 
 const EditPaymentLinkContainer = () => {
   const router = useRouter();
+  const { setTitle, setShowBackArrow } = useTitle();
   const { user } = useAuth();
   const searchParams = useSearchParams();
   const paymentLinkCode = searchParams.get("code");
@@ -155,6 +148,25 @@ const EditPaymentLinkContainer = () => {
       walletAddress: "",
     },
   });
+
+  // Breadcrumb in the top title bar: Payment Link › Edit
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <button
+          type="button"
+          onClick={() => router.push("/payment-link")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Payment Link
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Edit</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Populate form when payment link data is loaded
   useEffect(() => {
@@ -254,14 +266,19 @@ const EditPaymentLinkContainer = () => {
   };
 
   return (
-    <div className="flex flex-col w-full h-full p-4 items-center justify-start gap-10">
-      {/* Header */}
-      <div className="w-full flex flex-row gap-2 px-7">
-        <img src="/misc/star-icon.svg" alt="Payment Link" />
-        <h1 className="text-2xl font-bold">Edit Payment Link</h1>
+    <div className="flex w-full h-full flex-col bg-background">
+      {/* Page header (concept) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Edit payment link</h1>
+          <p className="text-[14px] text-text-secondary">
+            Update the details, receiving account and accepted token for this payment link.
+          </p>
+        </div>
       </div>
 
-      <div className="w-full h-full flex flex-row justify-between items-start gap-5 p-1 bg-[#E7E7E7] rounded-4xl">
+      <div className="w-full flex-1 min-h-0 px-6 pb-6">
+        <div className="w-full h-full flex flex-row justify-between items-start gap-5 p-1 bg-[#E7E7E7] rounded-4xl">
         <div className="flex flex-col gap-4 w-[40%] rounded-4xl bg-app-background h-full border-t-2 border-background p-4 items-center justify-between">
           <div className="flex flex-col gap-4 w-full">
             <span className="text-text-primary text-lg font-semibold leading-none">Informations</span>
@@ -276,30 +293,22 @@ const EditPaymentLinkContainer = () => {
             />
             {/* Message Input */}
             <div className="flex flex-col gap-1">
-              <div className={`${inputContainerClass} h-[175px] flex flex-col gap-2`}>
-                <div className="flex flex-col gap-0.5 flex-1">
-                  <p className="text-text-secondary text-sm">Description</p>
-                  <textarea
-                    {...register("description", {
-                      maxLength: { value: 250, message: "Description cannot exceed 250 characters" },
-                    })}
-                    className={`w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary h-full resize-none`}
-                    autoComplete="off"
-                    placeholder="Hey there! Just a quick note to confirm your cryptocurrency transfer."
-                    maxLength={250}
-                  />
-                </div>
-              </div>
+              <FieldTextarea
+                label="Description"
+                rows={6}
+                {...register("description", {
+                  maxLength: { value: 250, message: "Description cannot exceed 250 characters" },
+                })}
+                autoComplete="off"
+                placeholder="Hey there! Just a quick note to confirm your cryptocurrency transfer."
+                maxLength={250}
+                error={!!errors.description}
+                errorMessage={errors.description?.message}
+              />
               <div className="flex justify-between px-3">
                 <p className="text-xs text-text-secondary">(Optional)</p>
                 <p className="text-xs text-text-secondary">{watch("description")?.length || 0}/250</p>
               </div>
-              {errors.description && (
-                <div className="flex items-center gap-1 pl-2">
-                  <img src="/misc/red-circle-warning.svg" alt="warning" className="w-4 h-4" />
-                  <span className="text-[#E93544] text-sm">{errors.description.message}</span>
-                </div>
-              )}
             </div>
 
             <div className={`${inputContainerClass} flex flex-col gap-2 h-73 overflow-y-auto`}>
@@ -348,7 +357,7 @@ const EditPaymentLinkContainer = () => {
 
             {/* Token Selector */}
             <div
-              className={`bg-background rounded-xl p-3 border-b-2 border-primary-divider flex items-center justify-between cursor-pointer`}
+              className={`bg-background rounded-xl p-3 border border-primary-divider flex items-center justify-between cursor-pointer`}
               onClick={() =>
                 openModal(MODAL_IDS.SELECT_TOKEN, {
                   selectedToken,
@@ -408,6 +417,7 @@ const EditPaymentLinkContainer = () => {
             <span className="text-text-primary text-2xl font-semibold">Preview</span>
           </div>
           <PaymentLinkPreview
+            chrome
             recipient={myCompany?.companyName || "Your Company"}
             recipientAvatar={myCompany?.logo}
             paymentWalletAddress={watch("walletAddress") || ""}
@@ -416,6 +426,7 @@ const EditPaymentLinkContainer = () => {
             description={watch("description") || ""}
             selectedToken={selectedToken || null}
           />
+        </div>
         </div>
       </div>
     </div>

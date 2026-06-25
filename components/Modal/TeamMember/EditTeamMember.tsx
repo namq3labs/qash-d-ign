@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { EditTeamMemberProps } from "@/types/modal";
-import { ModalProp } from "@/contexts/ModalManagerProvider";
+import { EditTeamMemberProps, MODAL_IDS } from "@/types/modal";
+import { ModalProp, useModal } from "@/contexts/ModalManagerProvider";
 import BaseModal from "../BaseModal";
 import { SecondaryButton } from "@/components/Common/SecondaryButton";
 import { PrimaryButton } from "@/components/Common/PrimaryButton";
@@ -16,6 +16,7 @@ import { useAuth } from "@/services/auth/context";
 
 export function EditTeamMember({ isOpen, onClose, zIndex, id }: ModalProp<EditTeamMemberProps>) {
   const { user } = useAuth();
+  const { openModal } = useModal();
   const { register, handleSubmit, reset } = useForm<{ position: string }>({ defaultValues: { position: "" } });
   const { data: teamMember, isLoading } = useGetTeamMemberById(id, { enabled: !!id });
   const updateTeamMember = useUpdateTeamMember();
@@ -84,7 +85,7 @@ export function EditTeamMember({ isOpen, onClose, zIndex, id }: ModalProp<EditTe
               {/* Footer Buttons */}
               <div className="flex gap-3 items-center w-full">
                 <SecondaryButton
-                  onClick={onClose}
+                  onClick={() => openModal(MODAL_IDS.DISCARD_CHANGES, { onConfirm: onClose })}
                   buttonClassName="flex-1"
                   variant="light"
                   text="Cancel"

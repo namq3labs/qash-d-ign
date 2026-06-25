@@ -33,7 +33,7 @@ const buttonVariantsOuter = cva("", {
   },
 });
 
-const innerDivVariants = cva("w-full h-full flex items-center justify-center text-muted-foreground", {
+const innerDivVariants = cva("w-full h-full flex items-center justify-center whitespace-nowrap text-muted-foreground", {
   variants: {
     variant: {
       primary:
@@ -50,8 +50,8 @@ const innerDivVariants = cva("w-full h-full flex items-center justify-center tex
     },
     size: {
       sm: "text-xs rounded-[4px] px-4 py-1",
-      default: "text-sm rounded-[10px] px-4 py-2",
-      lg: "text-base rounded-[10px] px-4 py-2",
+      default: "text-sm rounded-[10px] px-5 py-2",
+      lg: "text-base rounded-[10px] px-5 py-2",
       icon: " rounded-full p-1",
     },
   },

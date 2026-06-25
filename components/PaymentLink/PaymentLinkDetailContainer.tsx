@@ -14,7 +14,7 @@ import { ViewOnExplorerTooltip } from "./ViewOnExplorerTooltip";
 import { Tooltip } from "react-tooltip";
 import { useTitle } from "@/contexts/TitleProvider";
 import { getAppUrl } from "@/services/utils/getAppUrl";
-import { NavArrowRight } from "iconoir-react";
+import { Copy, NavArrowRight } from "iconoir-react";
 
 const Card = ({ title, text }: { title: string; text: React.ReactNode }) => {
   return (
@@ -234,10 +234,8 @@ const PaymentLinkDetailContainer = () => {
           />
           <PrimaryButton
             text="Copy link"
-            icon="/misc/thin-copy-icon.svg"
-            iconPosition="left"
             onClick={handleCopyLink}
-            containerClassName="w-[150px]"
+            containerClassName="w-fit"
             buttonClassName="whitespace-nowrap"
           />
         </div>
@@ -248,9 +246,19 @@ const PaymentLinkDetailContainer = () => {
         <Card
           title="Link"
           text={
-            <span className="text-text-primary underline truncate w-full">
-              {getAppUrl()}/payment/{paymentLink.code}
-            </span>
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="truncate text-sm text-text-primary">
+                {getAppUrl()}/payment/{paymentLink.code}
+              </span>
+              <button
+                type="button"
+                onClick={handleCopyLink}
+                title="Copy link"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-blue/10 text-primary-blue transition-colors hover:bg-primary-blue/15 active:scale-95"
+              >
+                <Copy width={14} height={14} strokeWidth={2} />
+              </button>
+            </div>
           }
         />
         <Card

@@ -1,9 +1,12 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { StatusCard } from "./StatusCard";
 import { ActionButton } from "../../Common/ActionButton";
 import { CustomCheckbox } from "../../Common/CustomCheckbox";
 import { useRecallableNotes } from "@/hooks/server/useRecallableNotes";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
 import SkeletonLoading from "@/components/Common/SkeletonLoading";
 import { formatAddress } from "@/services/utils/miden/address";
 import { MIDEN_EXPLORER_URL, QASH_TOKEN_ADDRESS, REFETCH_DELAY } from "@/services/utils/constant";
@@ -71,14 +74,14 @@ const TableSection = ({
   }) => {
     return (
       <thead>
-        <tr className="bg-[#181818] ">
-          <th className=" text-center text-sm font-medium text-neutral-400 rounded-tl-lg py-2">
+        <tr className="bg-app-background ">
+          <th className=" text-center text-sm font-medium text-text-secondary rounded-tl-lg py-2">
             <CustomCheckbox checked={allChecked} onChange={onCheckAll} />
           </th>
           {columns.map((column, index) => (
             <th
               key={column}
-              className={` text-center font-medium text-neutral-400 border-r border-[#292929] py-2 ${
+              className={` text-center font-medium text-text-secondary border-r border-primary-divider py-2 ${
                 index === 0 ? "rounded-tl-lg" : ""
               } ${index === columns.length - 1 ? "rounded-tr-lg border-r-0" : ""} ${index === 1 ? "min-w-[300px]" : ""}`}
             >
@@ -102,15 +105,15 @@ const TableSection = ({
     onCheck: () => void;
   }) => {
     return (
-      <tr className="bg-[#1E1E1E] border-b border-zinc-800 last:border-b-0 hover:bg-[#292929]">
-        <td className="px-2 py-2 border-r border-zinc-800 text-center">
+      <tr className="bg-background border-b border-primary-divider last:border-b-0 hover:bg-app-background">
+        <td className="px-2 py-2 border-r border-primary-divider text-center">
           <CustomCheckbox checked={checked} onChange={onCheck} />
         </td>
         {headers.map((header, headerIndex) => (
           <td
             key={header}
             className={`px-2 py-2 ${headerIndex === 0 ? "min-w-[300px]" : ""} ${
-              headerIndex === headers.length - 1 ? "" : "border-r border-zinc-800"
+              headerIndex === headers.length - 1 ? "" : "border-r border-primary-divider"
             } ${headerIndex === 0 ? "text-left" : "text-center"}`}
           >
             {header === "Action" ? actionRenderer(rowData, index) : rowData[header]}
@@ -125,13 +128,13 @@ const TableSection = ({
       <div className="w-full max-md:max-w-full">
         <div className="flex gap-2.5 items-start w-full max-md:max-w-full">
           <div className="flex flex-col flex-1 shrink justify-center w-full basis-0 min-w-60 max-md:max-w-full">
-            <h1 className="text-white text-xl font-bold">{title}</h1>
-            <p className="mt-2 text-base tracking-tight leading-none text-neutral-500 max-md:max-w-full">{subtitle}</p>
+            <h2 className="text-text-primary text-xl font-bold">{title}</h2>
+            <p className="mt-2 text-base tracking-tight leading-none text-text-secondary max-md:max-w-full">{subtitle}</p>
           </div>
         </div>
         <div className="mt-2.5">
           {data.length > 0 ? (
-            <div className="overflow-x-auto rounded-lg border border-zinc-800">
+            <div className="overflow-x-auto rounded-lg border border-primary-divider">
               <table className="w-full min-w-[800px]">
                 <TableHeader columns={headers} allChecked={isAllChecked} onCheckAll={onCheckAll} />
                 <tbody>
@@ -157,6 +160,28 @@ const TableSection = ({
 };
 
 export const CancelDashboardContainer: React.FC = () => {
+  const router = useRouter();
+  const { setTitle, setShowBackArrow } = useTitle();
+
+  // Breadcrumb in the top title bar: Dashboard › Cancel payment
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <button
+          type="button"
+          onClick={() => router.push("/")}
+          className="text-text-secondary transition-colors cursor-pointer hover:text-text-primary"
+        >
+          Dashboard
+        </button>
+        <NavArrowRight width={12} height={12} strokeWidth={2.2} className="text-text-secondary/50" />
+        <span className="font-medium text-text-primary">Cancel payment</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // **************** Server Hooks *******************
   const {
     data: recallableNotes,
@@ -462,14 +487,26 @@ export const CancelDashboardContainer: React.FC = () => {
   );
 
   return (
-    <section className="rounded-2xl bg-neutral-900 w-full h-full px-[16px] py-[20px]">
+    <div className="flex w-full h-full flex-col bg-background">
+      {/* Page header (concept) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Cancel payment</h1>
+          <p className="text-[14px] text-text-secondary">
+            Review and cancel scheduled payments before they reach their recipient.
+          </p>
+        </div>
+      </div>
+
       {recallableNotesLoading ? (
-        <SkeletonLoading />
+        <div className="px-6 pb-6">
+          <SkeletonLoading />
+        </div>
       ) : (
-        <div className="flex-1 w-full max-md:max-w-full">
-          <article className="overflow-hidden flex-1 text-white rounded-xl bg-[#1E1E1E] min-w-60"></article>
-          <div className="flex flex-wrap gap-2 p-1.5 w-full rounded-2xl bg-neutral-950 min-h-[164px] max-md:max-w-full">
-            <article className=" flex-1 text-white rounded-xl bg-[#1E1E1E] ">
+        <div className="flex-1 w-full px-6 pb-6 max-md:max-w-full">
+          <article className="overflow-hidden flex-1 rounded-xl border border-primary-divider bg-background min-w-60"></article>
+          <div className="flex flex-wrap gap-2 p-1.5 w-full rounded-2xl border border-primary-divider bg-app-background min-h-[164px] max-md:max-w-full">
+            <article className=" flex-1 text-white rounded-xl bg-transparent ">
               <div
                 className=" relative flex-1 shrink rounded-2xl basis-0 bg-[#1150AE] min-w-60 border-white border-solid shadow-md border-[3px] mt-5 h-[87%]"
                 style={{
@@ -526,15 +563,15 @@ export const CancelDashboardContainer: React.FC = () => {
                         alt={note.assets[0].metadata?.symbol || "Token"}
                         className="w-4 h-4 flex-shrink-0 rounded-full"
                       />
-                      <span className="text-white">{note.assets[0].amount}</span>
+                      <span className="text-text-primary">{note.assets[0].amount}</span>
                       {/* Tooltip on hover */}
-                      <div className="invisible group-hover:visible absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded whitespace-nowrap z-50">
+                      <div className="invisible group-hover:visible absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-text-primary text-background text-xs rounded whitespace-nowrap z-50">
                         {note.assets[0].metadata?.symbol || "Unknown Token"}
                       </div>
                     </div>
                     {note.isGift && (
-                      <span className="ml-3 bg-[#292929] flex items-center justify-between px-3 py-0.5 rounded-lg w-fit">
-                        <span className="text-white text-[14px] font-medium tracking-[0.07px] leading-[20px]">
+                      <span className="ml-3 bg-app-background border border-primary-divider flex items-center justify-between px-3 py-0.5 rounded-lg w-fit">
+                        <span className="text-text-primary text-[14px] font-medium tracking-[0.07px] leading-[20px]">
                           Gift
                         </span>
                       </span>
@@ -544,15 +581,15 @@ export const CancelDashboardContainer: React.FC = () => {
                 To: (
                   <div className="items-center bg-opacity-10  flex justify-center">
                     {note.isGift ? (
-                      <div className="text-white">-</div>
+                      <div className="text-text-primary">-</div>
                     ) : (
-                      <span className="text-white py-1 bg-[#363636] px-5 rounded-[34px]">
+                      <span className="text-text-primary py-1 bg-app-background border border-primary-divider px-5 rounded-[34px]">
                         {formatAddress(note.recipient)}
                       </span>
                     )}
                   </div>
                 ),
-                "Date/Time": <span className="text-stone-300 text-sm">{formatDate(note.createdAt)}</span>,
+                "Date/Time": <span className="text-text-secondary text-sm">{formatDate(note.createdAt)}</span>,
                 actionDisabled: false,
                 originalNote: note,
               })) || []
@@ -593,15 +630,15 @@ export const CancelDashboardContainer: React.FC = () => {
                         alt={note.assets[0].metadata?.symbol || "Token"}
                         className="w-4 h-4 flex-shrink-0 rounded-full"
                       />
-                      <span className="text-white">{note.assets[0].amount}</span>
+                      <span className="text-text-primary">{note.assets[0].amount}</span>
                       {/* Tooltip on hover */}
-                      <div className="invisible group-hover:visible absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded whitespace-nowrap z-50">
+                      <div className="invisible group-hover:visible absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-text-primary text-background text-xs rounded whitespace-nowrap z-50">
                         {note.assets[0].metadata?.symbol || "Unknown Token"}
                       </div>
                     </div>
                     {note.isGift && (
-                      <span className="ml-3 bg-[#292929] flex items-center justify-between px-3 py-0.5 rounded-lg w-fit">
-                        <span className="text-white text-[14px] font-medium tracking-[0.07px] leading-[20px]">
+                      <span className="ml-3 bg-app-background border border-primary-divider flex items-center justify-between px-3 py-0.5 rounded-lg w-fit">
+                        <span className="text-text-primary text-[14px] font-medium tracking-[0.07px] leading-[20px]">
                           Gift
                         </span>
                       </span>
@@ -611,16 +648,16 @@ export const CancelDashboardContainer: React.FC = () => {
                 To: (
                   <div className="items-center bg-opacity-10  flex justify-center">
                     {note.isGift ? (
-                      <div className="text-white">-</div>
+                      <div className="text-text-primary">-</div>
                     ) : (
-                      <span className="text-white py-1 bg-[#363636] px-5 rounded-[34px]">
+                      <span className="text-text-primary py-1 bg-app-background border border-primary-divider px-5 rounded-[34px]">
                         {formatAddress(note.recipient)}
                       </span>
                     )}
                   </div>
                 ),
-                "Date/Time": <span className="text-stone-300 text-sm">{formatDate(note.createdAt)}</span>,
-                "Recall in": <span className="text-stone-300 text-sm">{formatDate(note.recallableTime)}</span>,
+                "Date/Time": <span className="text-text-secondary text-sm">{formatDate(note.createdAt)}</span>,
+                "Recall in": <span className="text-text-secondary text-sm">{formatDate(note.recallableTime)}</span>,
                 actionDisabled: new Date(note.recallableTime) > new Date(),
                 originalNote: note,
               })) || []
@@ -638,7 +675,7 @@ export const CancelDashboardContainer: React.FC = () => {
           />
         </div>
       )}
-    </section>
+    </div>
   );
 };
 

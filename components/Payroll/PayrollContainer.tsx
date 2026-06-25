@@ -11,8 +11,9 @@ import { useGetAllEmployeeGroups } from "@/services/api/employee";
 import { CategoryShapeEnum } from "@qash/types/enums";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/contexts/ModalManagerProvider";
-import { PageHeader } from "../Common/PageHeader";
 import { PrimaryButton } from "../Common/PrimaryButton";
+import { useTitle } from "@/contexts/TitleProvider";
+import { NavArrowRight } from "iconoir-react";
 import { useAuth } from "@/services/auth/context";
 import { trackEvent } from "@/services/analytics/posthog";
 import { PostHogEvent } from "@/types/posthog";
@@ -20,6 +21,7 @@ import { PostHogEvent } from "@/types/posthog";
 const PayrollContainer = () => {
   const router = useRouter();
   const { user } = useAuth();
+  const { setTitle, setShowBackArrow } = useTitle();
   const isAdmin = user?.teamMembership?.role === "ADMIN" || user?.teamMembership?.role === "OWNER";
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -27,6 +29,17 @@ const PayrollContainer = () => {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const { data: groups } = useGetAllEmployeeGroups();
   const { openModal } = useModal();
+
+  // Breadcrumb in the top title bar: Payroll
+  useEffect(() => {
+    setTitle(
+      <div className="flex items-center gap-1.5 text-[14px]">
+        <span className="font-medium text-text-primary">Payroll</span>
+      </div>,
+    );
+    setShowBackArrow(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Debounce search input - update debouncedSearch after 1 second of no typing
   useEffect(() => {
@@ -108,33 +121,29 @@ const PayrollContainer = () => {
   });
 
   return (
-    <div className="w-full h-full p-5 flex flex-col items-start gap-4">
-      <PageHeader
-        icon="/sidebar/payroll.svg"
-        label="Payroll"
-        button={
-          <PrimaryButton
-            text="New payroll"
-            icon="/misc/plus-icon.svg"
-            iconPosition="left"
-            onClick={() => {
-              router.push("/payroll/create");
-            }}
-            containerClassName="w-[125px]"
-          />
-        }
-      />
+    <div className="flex w-full h-full flex-col bg-background">
+      {/* Page header (concept) */}
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Payroll</h1>
+          <p className="text-[14px] text-text-secondary">
+            Create payroll for your employees and wait for them to review auto sent invoices then pay the bills in one
+            click.
+          </p>
+        </div>
+        <PrimaryButton
+          text="New payroll"
+          onClick={() => {
+            router.push("/payroll/create");
+          }}
+          containerClassName="w-fit"
+          buttonClassName="whitespace-nowrap"
+        />
+      </div>
 
       <BaseContainer
         header={
-          <div className="flex w-full justify-between items-center p-5">
-            <div className="flex flex-col gap-1">
-              <span className="text-text-primary text-2xl font-medium leading-none">Overview</span>
-              <span className="text-text-secondary text-[14px] font-medium leading-none">
-                Create payroll for your employees and wait for them to review auto sent invoices then pay the bills in
-                one click.
-              </span>
-            </div>
+          <div className="flex w-full justify-end items-center p-5">
             <div className="flex flex-row gap-5">
               {/* Search Bar */}
               <form
@@ -188,7 +197,7 @@ const PayrollContainer = () => {
           </div>
         }
         childrenClassName="p-5"
-        containerClassName="w-full h-full bg-[#F6F6F6]"
+        containerClassName="w-[calc(100%-3rem)] h-full mx-6 mb-6"
       >
         {isLoading ? (
           <div className="w-full flex justify-center items-center py-10">Loading payrolls...</div>

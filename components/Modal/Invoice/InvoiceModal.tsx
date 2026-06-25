@@ -53,9 +53,9 @@ export function InvoiceModal({ isOpen, onClose, zIndex, invoice }: ModalProp<Inv
         {/* Browser chrome */}
         <div className="flex items-center gap-3 border-b border-neutral-200 px-4 py-3">
           <div className="flex gap-1.5">
-            <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-            <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
-            <span className="h-3 w-3 rounded-full bg-[#28c840]" />
+            <span className="h-3 w-3 rounded-full bg-neutral-300" />
+            <span className="h-3 w-3 rounded-full bg-neutral-300" />
+            <span className="h-3 w-3 rounded-full bg-neutral-300" />
           </div>
           <div className="mx-auto flex items-center gap-1.5 rounded-md bg-neutral-100 px-3 py-1 text-[11px] text-neutral-500">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" aria-hidden="true">

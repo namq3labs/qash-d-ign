@@ -4,7 +4,10 @@ import { MODAL_IDS, PermissionRequiredModalProps } from "@/types/modal";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { PrimaryButton } from "../Common/PrimaryButton";
+import { SecondaryButton } from "../Common/SecondaryButton";
 import InputOutlined from "../Common/Input/InputOutlined";
+import FieldInput from "@/components/Common/Input/FieldInput";
+import FieldTextarea from "@/components/Common/Input/FieldTextarea";
 import toast from "react-hot-toast";
 import { QASH_TOKEN_ADDRESS } from "@/services/utils/constant";
 import { useCreatePaymentLink } from "@/services/api/payment-link";
@@ -147,30 +150,42 @@ const CreatePaymentLinkContainer = () => {
   return (
     <div className="flex h-full w-full flex-col bg-background">
       {/* Header with the primary action (no need to scroll to the bottom to create) */}
-      <div className="flex items-start justify-between gap-4 px-6 pt-6 pb-4">
+      <div className="flex w-full items-start justify-between gap-4 px-6 pt-6 pb-3">
         <div className="flex flex-col gap-0.5">
-          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Create Payment Link</h1>
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text-primary">Create payment link</h1>
           <p className="text-[14px] text-text-secondary">Create a shareable link to get paid in crypto.</p>
         </div>
-        <PrimaryButton
-          text={isPending ? "Creating..." : "Create Payment Link"}
-          onClick={handleSubmit(handleCreatePaymentLink)}
-          disabled={!canCreate}
-          loading={isPending}
-          containerClassName="w-[210px]"
-          buttonClassName="whitespace-nowrap"
-        />
+        <div className="flex shrink-0 items-center gap-2">
+          <SecondaryButton
+            text="Cancel"
+            variant="light"
+            buttonClassName="w-fit"
+            onClick={() =>
+              openModal(MODAL_IDS.DISCARD_CHANGES, {
+                onConfirm: () => router.push("/payment-link"),
+              })
+            }
+          />
+          <PrimaryButton
+            text={isPending ? "Creating..." : "Create Payment Link"}
+            onClick={handleSubmit(handleCreatePaymentLink)}
+            disabled={!canCreate}
+            loading={isPending}
+            containerClassName="w-fit"
+            buttonClassName="whitespace-nowrap"
+          />
+        </div>
       </div>
 
       {/* Body: form + live preview */}
       <div className="flex min-h-0 flex-1 gap-6 overflow-hidden px-6 pb-6">
         {/* Form */}
-        <div className="flex flex-1 flex-col overflow-y-auto pb-4">
+        <div className="flex flex-1 min-w-0 flex-col overflow-y-auto pb-4">
           <div className="flex flex-col gap-6 rounded-2xl border border-primary-divider bg-background p-6">
             {/* === Information === */}
             <div className="flex flex-col gap-3">
               <SectionTitle subtitle="What this payment is for.">Information</SectionTitle>
-              <InputOutlined
+              <FieldInput
                 label="Title"
                 placeholder="e.g. Q3 Consulting Services"
                 error={!!errors.title}
@@ -181,25 +196,20 @@ const CreatePaymentLinkContainer = () => {
                 })}
               />
               <div className="flex flex-col gap-1">
-                <div className="flex flex-col rounded-[12px] border border-primary-divider px-4 py-2">
-                  <label className="text-[14px] text-text-secondary">Description</label>
-                  <textarea
-                    {...register("description", {
-                      required: "Description is required",
-                      maxLength: { value: 250, message: "Description cannot exceed 250 characters" },
-                    })}
-                    className="h-24 w-full resize-none bg-transparent text-[16px] text-text-primary outline-none placeholder:text-[#C1C1C1]"
-                    placeholder="Payment for software development services as per contract agreement."
-                    maxLength={250}
-                    autoComplete="off"
-                  />
-                </div>
-                <div className="flex items-center justify-between px-1">
-                  {errors.description ? (
-                    <span className="text-[12px] text-[#E93544]">{errors.description.message}</span>
-                  ) : (
-                    <span />
-                  )}
+                <FieldTextarea
+                  label="Description"
+                  rows={3}
+                  {...register("description", {
+                    required: "Description is required",
+                    maxLength: { value: 250, message: "Description cannot exceed 250 characters" },
+                  })}
+                  placeholder="Payment for software development services as per contract agreement."
+                  maxLength={250}
+                  autoComplete="off"
+                  error={!!errors.description}
+                  errorMessage={errors.description?.message}
+                />
+                <div className="flex items-center justify-end px-1">
                   <p className="text-xs text-text-secondary">{watch("description")?.length || 0}/250</p>
                 </div>
               </div>
@@ -267,7 +277,7 @@ const CreatePaymentLinkContainer = () => {
                   })
                 }
               />
-              <InputOutlined
+              <FieldInput
                 label="Amount"
                 placeholder="Enter amount"
                 error={!!errors.amount}
@@ -285,8 +295,9 @@ const CreatePaymentLinkContainer = () => {
         </div>
 
         {/* Live preview */}
-        <div className="w-[42%] shrink-0 overflow-y-auto">
+        <div className="flex flex-1 min-w-0 flex-col gap-3 overflow-y-auto">
           <PaymentLinkPreview
+            chrome
             recipient={myCompany?.companyName || "Your Company"}
             recipientAvatar={myCompany?.logo}
             paymentWalletAddress={watch("walletAddress") || ""}
@@ -295,6 +306,10 @@ const CreatePaymentLinkContainer = () => {
             description={watch("description") || ""}
             selectedToken={selectedToken || null}
           />
+          <p className="px-1 text-[13px] leading-relaxed text-text-secondary">
+            This is a preview of what your payers will see when they open the link. The values here are filled in from
+            the form on the left, this side is view-only.
+          </p>
         </div>
       </div>
     </div>
