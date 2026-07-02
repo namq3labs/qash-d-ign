@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @import "./theme.css";
 
+/* Make the `dark:` variant CLASS-based (matches the `.dark` class the theme system
+   toggles on <html>), NOT `prefers-color-scheme`. Without this, Tailwind v4 fires
+   `dark:` utilities from the OS dark mode while the app theme stays light — turning
+   TextureButton (Add employee, etc.) white on dark-mode machines. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @font-face {
   font-family: "Repetition Scrolling";
   src: url("../public/fonts/repet___.ttf") format("truetype");
